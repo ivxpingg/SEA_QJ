@@ -1,0 +1,403 @@
+<template>
+    <div class="content-container">
+        <div class="content-panel content-panel-1">
+            <div class="content-inner">
+                <div class="text-1">提供国内顶尖、快速、稳定的云服务器</div>
+                <div class="text-2">计算、存储、监控、安全、完善的云产品满足您的一切所需</div>
+
+                <div class="item-panel">
+                    <div class="item">
+                        <div class="mbtn-box">
+                            <div class="mbtn-icon mbtn-icon-1"></div>
+                            <div class="mbtn-info">
+                                <div class="mbtn-title">自定义配置</div>
+                                <div class="mbtn-desc">稳定、安全、弹性、高性能的云端计算服务， 实时满足您的多样性业务需求</div>
+                                <div class="mbtn-btn">
+                                    <Button>直接购买</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="mbtn-box">
+                            <div class="mbtn-icon mbtn-icon-2"></div>
+                            <div class="mbtn-info">
+                                <div class="mbtn-title">通用性</div>
+                                <div class="mbtn-config">
+                                    <div class="attr">
+                                        <span class="label">CPU : </span>
+                                        <span class="value">2核</span>
+                                    </div>
+                                    <div class="attr">
+                                        <span class="label">内存 : </span>
+                                        <span class="value">4G</span>
+                                    </div>
+                                </div>
+                                <div class="mbtn-config">
+                                    <div class="attr">
+                                        <span class="label">宽带 : </span>
+                                        <span class="value">1Mbps</span>
+                                    </div>
+                                    <div class="attr">
+                                        <span class="label">硬盘 : </span>
+                                        <span class="value">50G云硬盘</span>
+                                    </div>
+                                </div>
+                                <div class="mbtn-btn"><Button>直接购买</Button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-panel">
+                    <div class="item">
+                        <div class="mbtn-box">
+                            <div class="mbtn-icon mbtn-icon-3"></div>
+                            <div class="mbtn-info">
+                                <div class="mbtn-title">专业型</div>
+                                <div class="mbtn-config">
+                                    <div class="attr">
+                                        <span class="label">CPU : </span>
+                                        <span class="value">4核</span>
+                                    </div>
+                                    <div class="attr">
+                                        <span class="label">内存 : </span>
+                                        <span class="value">8G</span>
+                                    </div>
+                                </div>
+                                <div class="mbtn-config">
+                                    <div class="attr">
+                                        <span class="label">宽带 : </span>
+                                        <span class="value">5Mbps</span>
+                                    </div>
+                                    <div class="attr">
+                                        <span class="label">硬盘 : </span>
+                                        <span class="value">50G云硬盘</span>
+                                    </div>
+                                </div>
+                                <div class="mbtn-btn"><Button>直接购买</Button></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="mbtn-box">
+                            <div class="mbtn-icon mbtn-icon-4"></div>
+                            <div class="mbtn-info">
+                                <div class="mbtn-title">高计算场景</div>
+                                <div class="mbtn-config">
+                                    <div class="attr">
+                                        <span class="label">CPU : </span>
+                                        <span class="value">8核</span>
+                                    </div>
+                                    <div class="attr">
+                                        <span class="label">内存 : </span>
+                                        <span class="value">16G</span>
+                                    </div>
+                                </div>
+                                <div class="mbtn-config">
+                                    <div class="attr">
+                                        <span class="label">宽带 : </span>
+                                        <span class="value">10Mbps</span>
+                                    </div>
+                                    <div class="attr">
+                                        <span class="label">硬盘 : </span>
+                                        <span class="value">100G云硬盘</span>
+                                    </div>
+                                </div>
+                                <div class="mbtn-btn"><Button>直接购买</Button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-panel content-panel-2">
+            <div class="content-inner">
+                <div class="text-1">中国海洋产业海量数据全方位开放</div>
+                <div class="text-2">行业数据分享、接入、对比分析满足您的一切所需</div>
+
+                <div class="item-panel">
+
+                    <div class="item">
+                        <div class="img img-1"></div>
+                        <div class="title">数据定制分析</div>
+                        <div class="desc">基于平台强大的云计算能力、 海量数据资源、为用户提供 数据分析服务，支持多种数 据上传分析对比，人工录入 对比分析</div>
+                        <div class="btn-panel">
+                            <Button size="large">数据分析</Button>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="img img-2"></div>
+                        <div class="title">海洋水质数据</div>
+                        <div class="attr">
+                            <span class="label">数据数量</span>
+                            <span class="value">1000条</span>
+                        </div>
+                        <div class="attr">
+                            <span class="label">数据时效</span>
+                            <span class="value">近2年</span>
+                        </div>
+                        <div class="attr">
+                            <span class="label">数据格式</span>
+                            <span class="value">EXCEL</span>
+                        </div>
+                        <div class="btn-panel">
+                            <Button size="large">前往申请</Button>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="img img-3"></div>
+                        <div class="title">海洋水质数据</div>
+                        <div class="attr">
+                            <span class="label">数据数量</span>
+                            <span class="value">1000条</span>
+                        </div>
+                        <div class="attr">
+                            <span class="label">数据时效</span>
+                            <span class="value">近2年</span>
+                        </div>
+                        <div class="attr">
+                            <span class="label">数据格式</span>
+                            <span class="value">EXCEL</span>
+                        </div>
+                        <div class="btn-panel">
+                            <Button size="large">前往申请</Button>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="img img-4"></div>
+                        <div class="title">海洋水质数据</div>
+                        <div class="attr">
+                            <span class="label">数据数量</span>
+                            <span class="value">1000条</span>
+                        </div>
+                        <div class="attr">
+                            <span class="label">数据时效</span>
+                            <span class="value">近2年</span>
+                        </div>
+                        <div class="attr">
+                            <span class="label">数据格式</span>
+                            <span class="value">EXCEL</span>
+                        </div>
+                        <div class="btn-panel">
+                            <Button size="large">前往申请</Button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "h-content",
+        data() {
+            return {};
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .content-container {
+        /*background-color: #0086b3;*/
+
+        .content-panel {
+
+            .content-inner {
+                margin: 0 auto;
+                width: 1200px;
+            }
+
+            &.content-panel-1 {
+                height: 773px;
+
+                .text-1 {
+                    padding-top: 70px;
+                    color: #323232;
+                    font-size: 32px;
+                    line-height: 32px;
+                    text-align: center;
+                }
+
+                .text-2 {
+                    padding-top: 24px;
+                    padding-bottom: 74px;
+                    color: #5f6367;
+                    font-size: 17px;
+                    line-height: 17px;
+                    text-align: center;
+                }
+
+                .item-panel {
+                    display: flex;
+                    margin-bottom: 35px;
+                    .item {
+                        flex: 1;
+
+                        &:first-child{
+                            margin-right: 88px;
+                        }
+
+                        .mbtn-box {
+                            display: flex;
+                            height: 210px;
+
+                            &:hover {
+                                background-color: #f8f8f8;
+                            }
+                            .mbtn-icon {
+                                height: 194px;
+                                width: 230px;
+                                margin: 7px 9px 9px 7px;
+                                background-color: #FFF;
+                                box-shadow: 9px 0 9px #f0f0f0, 0 9px 9px #f0f0f0;
+
+                                &.mbtn-icon-1 {
+                                    background: #FFF url('./images/fwq-1.png') no-repeat center;
+                                }
+                                &.mbtn-icon-2 { background: #FFF url('./images/fwq-2.png') no-repeat center; }
+                                &.mbtn-icon-3 { background: #FFF url('./images/fwq-3.png') no-repeat center; }
+                                &.mbtn-icon-4 { background: #FFF url('./images/fwq-4.png') no-repeat center; }
+                            }
+
+                            .mbtn-info {
+                                flex: 1;
+                                margin-left: 25px;
+
+                                .mbtn-title {
+                                    padding-top: 26px;
+                                    color: #323232;
+                                    font-size: 18px;
+                                    text-align: left;
+                                    line-height: 45px;
+                                }
+                                .mbtn-desc {
+                                    color: #909090;
+                                    font-size: 15px;
+                                    line-height: 28px;
+                                }
+                                .mbtn-config {
+                                    display: flex;
+                                    .attr {
+                                        flex: 1;
+                                        .label {
+                                            color: #808080;
+                                            font-size: 15px;
+                                            line-height: 28px;
+                                        }
+                                        .value {
+                                            color: #333333;
+                                            font-size: 17px;
+                                            line-height: 28px;
+                                        }
+                                    }
+                                }
+                                .mbtn-btn {
+                                    margin-top: 10px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.content-panel-2 {
+                height: 735px;
+                background-color: #f5f5f6;
+
+                .content-inner {
+                    margin: 0 auto;
+                    width: 1200px;
+
+                    .text-1 {
+                        padding-top: 70px;
+                        color: #323232;
+                        font-size: 32px;
+                        line-height: 32px;
+                        text-align: center;
+                    }
+
+                    .text-2 {
+                        padding-top: 24px;
+                        padding-bottom: 60px;
+                        color: #5f6367;
+                        font-size: 17px;
+                        line-height: 17px;
+                        text-align: center;
+                    }
+
+                    .item-panel {
+                        display: flex;
+                        height: 390px;
+
+                        .item {
+                            position: relative;
+                            flex: 1;
+                            margin-left: 20px;
+                            padding:  24px 44px 42px;
+                            border: 2px solid #ececec;
+
+                            &:first-child {
+                                margin-left: auto;
+                            }
+
+                            &:hover {
+                                //box-shadow: 0 -5px 3px #e6e6e6, 0 5px 3px #e6e6e6, 5px 0 3px #e6e6e6, -5px 0 3px #e6e6e6;
+                                box-shadow: 0 0 10px #e6e6e6;
+                            }
+
+                            .img {
+                                margin: 0 auto;
+                                width: 54px;
+                                height: 54px;
+                                &.img-1 { background: url('./images/fx-icon-1.png') no-repeat center; }
+                                &.img-2 { background: url('./images/fx-icon-2.png') no-repeat center; }
+                                &.img-3 { background: url('./images/fx-icon-2.png') no-repeat center; }
+                                &.img-4 { background: url('./images/fx-icon-2.png') no-repeat center; }
+                            }
+
+                            .title {
+                                padding: 22px 0 22px;
+                                color: #323232;
+                                font-size: 18px;
+                                text-align: center;
+                                line-height: 18px;
+                            }
+                            
+                            .desc {
+                                color: #808080;
+                                font-size: 15px;
+                                line-height: 28px;
+                            }
+
+                            .attr {
+                                font-size: 15px;
+                                line-height: 28px;
+                                .label {
+                                    padding-left: 20px;
+                                    color: #808080;
+                                }
+                                .value {
+                                    padding-left: 40px;
+                                    color: #333333;
+                                }
+                            }
+
+                            .btn-panel {
+                                position: absolute;
+                                bottom: 42px;
+                                left: 0;
+                                right: 0;
+                                text-align: center;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+</style>
