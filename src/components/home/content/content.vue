@@ -110,7 +110,7 @@
                 </div>
             </div>
         </div>
-        <div class="content-panel content-panel-2">
+        <div class="content-panel content-panel-2 iscrollP">
             <div class="content-inner">
                 <div class="text-1">中国海洋产业海量数据全方位开放</div>
                 <div class="text-2">行业数据分享、接入、对比分析满足您的一切所需</div>
