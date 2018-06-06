@@ -1,7 +1,7 @@
 <template>
     <div class="p-header-container">
         <div class="header-inner">
-            <h2 class="logo-title" @click="onGotoHome">海洋装备全景分析</h2>
+            <h2 class="logo-title">海洋装备全景分析</h2>
 
             <div class="user-menu-panel">
                 <ul class="user-ul">
@@ -20,14 +20,14 @@
                         <!--<span>个人中心</span>-->
                         <!--</div>-->
 
-                        <div class="person-box">
-                            <ul class="person-list-menu">
-                                <li @click="onClick_gotoPerson">个人中心</li>
-                                <li @click="onClick_gotoManage">后台管理</li>
-                            </ul>
-                        </div>
+                        <!--<div class="person-box">-->
+                            <!--<ul class="person-list-menu">-->
+                                <!--<li @click="onClick_gotoPerson">个人中心</li>-->
+                                <!--<li @click="onClick_gotoManage">后台管理</li>-->
+                            <!--</ul>-->
+                        <!--</div>-->
 
-                        <Button class="m-btn" type="text" icon="android-person">个人中心</Button>
+                        <Button class="m-btn" type="text" icon="android-person">用户名</Button>
 
                     </li>
                     <li class="user-li user-li-logout">
@@ -76,10 +76,9 @@
             onClick_logout() {
                 Cookie.remove('uid');
                 Cookie.remove('token');
-                Cookie.remove('usertype');
-                this.$router.push({
-                    name: 'index'
-                });
+                Cookie.remove('type');
+                Cookie.remove('syscode');
+                window.location.href = 'http://218.5.80.6:8091/OCEANAM/logout';
             },
 
             // 获取未读消息数据量

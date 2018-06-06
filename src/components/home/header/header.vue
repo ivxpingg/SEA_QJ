@@ -4,24 +4,32 @@
              <h2 class="logo-title">海洋装备全景分析</h2>
              <div class="header-menu-panel">
                  <ul class="menu-ul">
-                     <li class="menu-li active" @click="goto($event, '/home/index')">首页</li>
-                     <li class="menu-li" @click="goto($event, '/home/cloudService')">云服务器</li>
-                     <li class="menu-li" @click="goto($event, '/home/industryData')">行业数据</li>
+                     <li class="menu-li" ref="menu1" @click="goto($event, '/home/mapShow')">装备全景分析展示</li>
+                     <li class="menu-li" ref="menu2" @click="goto($event, '/home/index')">行业服务中心
+                         <div class="pull-down-box">
+                             <ul class="pull-down-list-menu">
+                                 <li @click.stop="goto2($event, '/home/cloudService')">云服务器</li>
+                                 <li @click.stop="goto2($event, '/home/industryData')">行业数据</li>
+                             </ul>
+                         </div>
+                     </li>
+                     <!--<li class="menu-li" @click="goto($event, '/home/cloudService')">云服务器</li>-->
+                     <!--<li class="menu-li" @click="goto($event, '/home/industryData')">行业数据</li>-->
                  </ul>
              </div>
              <div class="user-menu-panel">
 
                  <ul class="user-ul">
-                     <li class="user-li">
+                     <li v-if="isLogin" class="user-li">
 
                          <Button type="text">
-                             <Badge class="my-badge" count="1">
+                             <Badge class="my-badge" :count="unReadMessage">
                                  <Avatar icon="ios-bell" size="small" />
                              </Badge>
                              站内信
                          </Button>
                      </li>
-                     <li class="user-li" :class="{'active_person': active_person}" @mouseover="onmousemove_person" @mouseleave="onmouseleave_person">
+                     <li v-if="isLogin" class="user-li" :class="{'active_person': active_person}" @mouseover="onmousemove_person" @mouseleave="onmouseleave_person">
                          <!--<div class="ivu-btn ivu-btn-text">-->
                              <!--<i class="ivu-icon ivu-icon-android-person"></i>-->
                              <!--<span>个人中心</span>-->
@@ -29,21 +37,18 @@
 
                          <div class="person-box">
                              <ul class="person-list-menu">
-                                 <li>账号名</li>
-                                 <li>账号ID</li>
-                                 <li>订单管理</li>
-                                 <li>工单管理</li>
-                                 <li>账号管理</li>
+                                 <li @click="onClick_gotoPerson">个人中心</li>
+                                 <li @click="onClick_layout">退出</li>
                              </ul>
                          </div>
 
-                         <Button class="m-btn" type="text" icon="android-person">个人中心</Button>
+                         <Button class="m-btn" type="text" icon="android-person" style="min-width: 100px">{{userName}}</Button>
 
                      </li>
-                     <li class="user-li user-li-login">
-                         <Button type="text">登录</Button>
+                     <li v-if="!isLogin" class="user-li user-li-login">
+                         <Button type="text" @click="onclick_login">登录</Button>
                      </li>
-                     <li class="user-li user-li-sign">
+                     <li v-if="!isLogin" class="user-li user-li-sign">
                          <Button type="text">注册</Button>
                      </li>
                  </ul>
@@ -54,14 +59,41 @@
 </template>
 
 <script>
+    import Config from '../../../libs/appConfig/config';
+    import Cookie from '../../../libs/helpers/cookies';
     export default {
         name: "h-header",
         data() {
             return {
-                active_person: false
+                active: true,
+                isLogin: false,
+                active_person: false,
+                unReadMessage: 0,
+                userId: '',
+                userName: '用户名'
             };
         },
-        mounted() {},
+        created() {
+
+            if(!!Cookie.read('uid') && !!Cookie.read('token') && !!Cookie.read('usertype')) {
+                this.userId = Cookie.read('uid');
+                this.isLogin = true;
+            }
+            else {
+                this.userId = '';
+                this.isLogin = false;
+            }
+
+        },
+        mounted() {
+            if (this.$route.path === '/home/mapShow') {
+                this.$refs.menu1.className += ' active';
+            }
+            else {
+                this.$refs.menu2.className += ' active';
+            }
+            // this.getUnReadMessage();
+        },
         methods: {
             goto(event, name) {
                 var dom = event.target.parentNode.querySelector('.active');
@@ -72,15 +104,61 @@
                 this.$emit('parentIScroll', name);
             },
 
+            goto2(event, name) {
+                var dom = event.target.parentNode.parentNode.parentNode.parentNode.querySelector('.active');
+                dom.className = dom.className.replace(' active', '');
+                event.target.parentNode.parentNode.parentNode.className += ' active';
+                this.$router.push(name);
+
+                this.$emit('parentIScroll', name);
+            },
+
+            onClick_gotoPerson() {
+                this.$router.push({
+                    name: 'orderManage'
+                });
+            },
+            onClick_layout() {
+                Cookie.remove('uid');
+                Cookie.remove('token');
+                Cookie.remove('usertype');
+                this.isLogin = false;
+                this.userId = '';
+            },
+
+            // 获取未读消息数据量
+            getUnReadMessage() {
+                var that = this;
+                this.$http({
+                    method: 'get',
+                    url: '',
+                    params: {
+                        userId: that.userId
+                    }
+                }).then(function (response) {
+                    if(response.status === 1) {
+                        that.unReadMessage = response.result;
+                    }
+                }).catch(function () {
+                    
+                });
+            },
+
             onmousemove_person() {
-                console.log('over');
                 this.active_person = true;
             },
 
             onmouseleave_person() {
-                console.log('leave');
                 this.active_person = false;
+            },
+
+            onclick_login() {
+
+                var pUrl = window.location.origin+ '/\%23' + Config[Config.env].baseUrl + this.$route.path.split('/')[1];
+                var url = "http://218.5.80.6:8070/OCEAN/api/login?url=" + pUrl;
+                window.location.href = url;
             }
+
         }
     }
 </script>
@@ -120,11 +198,11 @@
             .header-menu-panel {
                 float: left;
                 height: 100%;
-                overflow: hidden;
+                /*overflow: hidden;*/
                 .menu-ul {
                     height: 100%;
                     list-style-type: none;
-                    overflow: hidden;
+                    /*overflow: hidden;*/
                     .menu-li {
                         position: relative;
                         padding: 0 30px;
@@ -134,6 +212,36 @@
                         color: #FFF;
                         font-size: 14px;
                         cursor: pointer;
+
+                        .pull-down-box{
+                            height: 0;
+                            position: absolute;
+                            top: 100%;
+                            left: 0;
+                            right: 0;
+                            overflow: hidden;
+                            padding-left: 30px;
+                            background-color: rgba(0, 0, 0, 0.8);
+                            color: #FFF;
+                            transition: all 0.2s;
+
+                            .pull-down-list-menu {
+                                padding-top: 5px;
+                                padding-bottom: 10px;
+                                list-style-type: none;
+                                font-size: 14px;
+                                line-height: 24px;
+
+                                li {
+                                    padding: 5px 0;
+                                    cursor: pointer;
+
+                                    &:hover {
+                                        color: rgba(255,255,255,0.8);
+                                    }
+                                }
+                            }
+                        }
 
                         &:first-child {
                             margin-left: 24px;
@@ -151,6 +259,11 @@
                         }
 
                         &:hover {
+                            background-color: rgba(0, 0, 0, 0.8);
+
+                            .pull-down-box {
+                                height: 83px;
+                            }
                             &:after {
                                 background-color: #FFF;
                             }
@@ -163,6 +276,9 @@
                                 background-color: #00c0dd;
                             }
                         }
+
+
+
                     }
                 }
 

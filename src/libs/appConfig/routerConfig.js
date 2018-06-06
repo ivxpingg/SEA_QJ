@@ -5,7 +5,7 @@
 import VueRouter from 'vue-router';
 import Routers from "./router";
 import iView from 'iview';
-
+import Cookie from '../helpers/cookies';
 
 const Title = function(title) {
     title = title ? title + '' : '';
@@ -29,7 +29,64 @@ const routerConfig = function () {
     router.beforeEach((to, from, next) => {
         // console.dir('router');
         Title(to.meta.title);
-        next();
+        iView.LoadingBar.start();
+
+        if (to.query.token !== undefined) {
+            // 登陆有效期2个小时
+            var addTimes = 2 * 60 * 60 * 1000;
+            Cookie.write('token', to.query.token, new Date().getTime() + addTimes);       // 前台&后台
+
+            if(to.query.uid !== undefined) {
+                Cookie.write('uid', to.query.uid, new Date().getTime() + addTimes);           // 前台&后台
+            }
+            else {
+                Cookie.remove('uid');
+            }
+
+            if(to.query.usertype !== undefined) {
+                Cookie.write('usertype', to.query.usertype, new Date().getTime() + addTimes); // 前台
+            }
+            else {
+                Cookie.remove('usertype');
+            }
+
+            if(to.query.type !== undefined) {
+                Cookie.write('type', to.query.type, new Date().getTime() + addTimes);      // 后台
+            }
+            else {
+                Cookie.remove('type');
+            }
+
+            if(to.query.syscode !== undefined) {
+                Cookie.write('syscode', to.query.syscode, new Date().getTime() + addTimes);// 后台
+            }
+            else {
+                Cookie.remove('syscode');
+            }
+
+            // next();s
+            next({
+                path: to.path
+            });
+        }
+        else if (to.meta.requireAuth && Cookie.read('token') == null) {
+            if (to.path.indexOf('/manage') === 0) {
+                // window.location.href = 'http://218.5.80.6:8091/OCEANAM/logout';
+                next();
+            }
+            else {
+
+                next({
+                    path: '/home/index'
+                });
+            }
+
+        }
+        else {
+            next();
+        }
+
+
 
         // 目前没有拦截配置
 

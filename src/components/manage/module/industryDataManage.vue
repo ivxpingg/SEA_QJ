@@ -1,6 +1,6 @@
 <template>
     <div class="industryDataManage-container">
-        <vMenuTitle name="行业数据"></vMenuTitle>
+        <vMenuTitle :menuName="menuName"></vMenuTitle>
     </div>
 </template>
 
@@ -10,6 +10,14 @@
         name: "industryDataManage",
         data() {
             return {};
+        },
+        props: {
+            menuName: {
+                type: String,
+                default() {
+                    return '';
+                }
+            }
         },
         components: {vMenuTitle}
     }

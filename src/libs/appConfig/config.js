@@ -5,14 +5,16 @@ let config = {
     development: {
         // domain: 'http://localhost',
         // port: '8090',
-        baseUrl: '/oceanobservation',
-        staticUrl: '/'
+        ajaxUrl: '/oceanobservation/ocean',
+        staticUrl: '/',
+        baseUrl: '/'
     },
     production: {
         // domain: 'http://localhost',
         // port: '8090',
-        baseUrl: '/oceanobservation',
-        staticUrl: '/'
+        ajaxUrl: '/oceanobservation/ocean',
+        staticUrl: '/',
+        baseUrl: '/'
     }
 };
 export default config;

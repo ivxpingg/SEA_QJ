@@ -1,8 +1,9 @@
 'use strict';
 
-var utils = require('./../utils');
+// var utils = require('./../utils').default;
+import utils from '../utils';
 
-module.exports = (
+export default (
   utils.isStandardBrowserEnv() ?
 
   // Standard browser envs support document.cookie

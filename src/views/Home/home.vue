@@ -81,7 +81,11 @@
                 }, 100);
 
                 if (name === '/home/index') {
-                    this.myScroll.scrollTo(0, 0,300);
+                    this.myScroll.scrollTo(0, 0, 300);
+                    this.headerBg = false;
+                }
+                else if(name === '/home/mapShow') {
+                    this.myScroll.scrollTo(0, 0, 300);
                     this.headerBg = false;
                 }
                 else {

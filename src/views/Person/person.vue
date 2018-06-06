@@ -4,9 +4,9 @@
         <div class="content-box">
             <div class="left-panel">
                 <div class="menu-title">个人中心</div>
-                <Menu theme="light"
-                      :open-names="['1']"
-                      active-name="1-1"
+                <Menu theme="dark"
+                      :open-names="open_names"
+                      :active-name= "active_name"
                       @on-select="onSelect_menu"
                       @on-open-change="onOpenChange_menu"
                       accordion>
@@ -34,7 +34,6 @@
                         </template>
                             <MenuItem name="3-1">账号管理</MenuItem>
                     </Submenu>
-
                     <Submenu name="4">
                         <template slot="title">
                             <Icon type="stats-bars"></Icon>
@@ -57,18 +56,46 @@
         name: "person",
         data() {
             return {
-                menu: [{
-                    '1-1': {}
-                }]
+                menu: {
+                    '1-1': { name: 'orderManage' },
+                    '1-2': { name: 'invoiceManage' },
+                    '1-3': { name: 'workOrderManage' },
+                    '2-1': { name: 'cloudServiceManage' },
+                    '2-2': { name: 'industryDataManage' },
+                    '3-1': { name: 'personInfoMange' },
+                    '4-1': { name: 'messageManage' },
+
+                },
+                open_names: ['1'],
+                active_name: '1-1'
             };
         },
         components: {vHeader},
+        created() {
+            if (this.$route.name === 'person') {
+                this.$router.replace({
+                    name: 'orderManage'
+                });
+            }
+
+            for (var key in this.menu) {
+                if (this.menu[key].name === this.$route.name) {
+                    this.active_name = key;
+                    this.open_names = [key.split('-')[0]];
+                    break;
+                }
+            }
+        },
         methods: {
             onSelect_menu(name) {
-               // alert(name);
+                this.$router.push({
+                    name: this.menu[name].name
+                });
             },
             onOpenChange_menu(name) {
-                // alert(name);
+                // this.$router.push({
+                //     name: this.menu[name].name
+                // });
             }
         }
     }
@@ -87,20 +114,22 @@
 
         .content-box {
             display: flex;
-            padding-top: 64px;
+            padding-top: 62px;
             height: 100%;
 
             .left-panel {
                 width: 241px;
                 height: 100%;
                 border-right: 1px solid #dddee1;
+                background-color: #495060;
 
                 .menu-title {
+                    color: #FFF;
                     font-size: 20px;
                     text-align: center;
                     line-height: 45px;
                     font-weight: 700;
-                    border-bottom: 1px solid #dddee1;
+                    border-bottom: 1px solid #363e4f;
                 }
 
                 .ivu-menu {
@@ -111,6 +140,7 @@
             }
             .right-panel {
                 flex: 1;
+                padding: 0 52px 0 22px;
             }
         }
     }
