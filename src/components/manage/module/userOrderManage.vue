@@ -206,11 +206,7 @@
                         }
                     }
                 ],
-                tableData: [
-                    {
-                        bannerName: 'ddd'
-                    }
-                ],
+                tableData: [],
 
                 // 状态字典
                 dict_workOrderStatus: [],

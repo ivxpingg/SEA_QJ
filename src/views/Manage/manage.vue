@@ -53,7 +53,7 @@
                 active_name: '',
                 menu_nameInName: {},
 
-                active_tab: 'userOrderManage'
+                active_tab: 'invoiceApplyManage'
             };
         },
         watch: {

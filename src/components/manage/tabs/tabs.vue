@@ -41,9 +41,9 @@
                     invoiceApplyManage: false,
                     seaSystem: false,
                     serverManage: false,
-                    slideshowManage: true,
+                    slideshowManage: false,
                     userManage: false,
-                    userOrderManage: true
+                    userOrderManage: false
                 },
             };
         },
