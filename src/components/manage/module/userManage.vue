@@ -219,7 +219,7 @@
                 addUserInfo: {
 
                 },
-                userInfo_rules: [],
+                userInfo_rules: {},
 
                 //修改用户
                 modal_edit_user: false,
@@ -229,6 +229,13 @@
             };
         },
         components: {},
+        watch: {
+            'searchParams.pageNo': {
+                handler(val) {
+                    this.getTableData();
+                }
+            }
+        },
         methods: {
             onClick_search() {
                 this.getTableData();

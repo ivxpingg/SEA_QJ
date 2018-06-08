@@ -53,7 +53,7 @@
                 active_name: '',
                 menu_nameInName: {},
 
-                active_tab: 'invoiceApplyManage'
+                active_tab: 'serverManage'
             };
         },
         watch: {
