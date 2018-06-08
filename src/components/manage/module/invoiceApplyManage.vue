@@ -182,7 +182,6 @@
         },
         methods: {
             datePicker_onChange(val) {
-
                 this.searchParams.startTime = val[0];
                 this.searchParams.endTime = val[1];
             },
