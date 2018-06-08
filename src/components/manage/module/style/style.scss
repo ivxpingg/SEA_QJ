@@ -1,0 +1,20 @@
+.table-icon-btn {
+  margin: 0 11px;
+  font-size: 24px;
+  cursor: pointer;
+  opacity: 0.8;
+
+  &:hover{
+    opacity: 1;
+  }
+
+  &.table-icon-edit {
+    color: #FFF;
+    background-color: #04a73e;
+  }
+
+  &.table-icon-del {
+    color: #FFF;
+    background-color: #e43d3d;
+  }
+}

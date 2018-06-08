@@ -6,6 +6,7 @@ let config = {
         // domain: 'http://localhost',
         // port: '8090',
         ajaxUrl: '/oceanobservation/ocean',
+        imgUrl: '/oceanobservation',
         staticUrl: '/',
         baseUrl: '/'
     },
@@ -13,6 +14,7 @@ let config = {
         // domain: 'http://localhost',
         // port: '8090',
         ajaxUrl: '/oceanobservation/ocean',
+        imgUrl: '/oceanobservation',
         staticUrl: '/',
         baseUrl: '/'
     }

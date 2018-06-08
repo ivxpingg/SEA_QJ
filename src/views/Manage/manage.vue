@@ -3,29 +3,37 @@
         <vHeader class="p-header"></vHeader>
         <div class="content-box">
             <div class="left-panel">
-                <div class="menu-title">后台管理</div>
+                <!--<div class="menu-title">后台管理</div>-->
 
                 <Menu ref="menuManage"
-                      theme="dark"
+                      theme="light"
                       :open-names="open_names"
                       :active-name="active_name"
                       @on-select="onSelect_menu"
                       @on-open-change="onOpenChange_menu"
                       accordion>
 
-                      <Submenu v-for="(itemSub, idx) in menuData" :name="itemSub.menuId">
+                      <Submenu v-for="(itemSub, idx) in menuData"
+                               :name="itemSub.menuId"
+                               :key="itemSub.menuId">
+
                           <template slot="title">
                               <Icon type="ios-paper"></Icon>
                               {{itemSub.menuName}}
                           </template>
 
-                          <MenuItem v-for="item in itemSub.subMenu" :name="item.menuId">{{item.menuName}}</MenuItem>
+                          <MenuItem v-for="item in itemSub.subMenu"
+                                    :name="item.menuId"
+                                    :key="item.menuId">{{item.menuName}}</MenuItem>
                       </Submenu>
                 </Menu>
 
             </div>
             <div class="right-panel">
-                <router-view :menuName="name"></router-view>
+
+                <vTabs :active-tab="active_tab"></vTabs>
+
+                <!--<router-view :menuName="name"></router-view>-->
             </div>
         </div>
     </div>
@@ -33,6 +41,7 @@
 
 <script>
     import vHeader from '../../components/manage/header/p-header';
+    import vTabs from '../../components/manage/tabs/tabs';
     export default {
         name: "manage",
         data() {
@@ -42,7 +51,9 @@
                 menuUrl: {},
                 open_names: [],
                 active_name: '',
-                menu_nameInName: {}
+                menu_nameInName: {},
+
+                active_tab: 'userOrderManage'
             };
         },
         watch: {
@@ -52,37 +63,36 @@
                     this.menuUrl = {};
                     this.getMenuUrl(val);
 
-                    if (this.menu_nameInName[this.$route.name]) {
+                    this.open_names = [ this.menu_nameInName[this.active_tab].parentName ];
+                    this.active_name = this.menu_nameInName[this.active_tab].name;
 
-                        this.open_names = [ this.menu_nameInName[this.$route.name].parentName ];
-                        this.active_name = this.menu_nameInName[this.$route.name].name;
-
-                        this.$nextTick(function () {
-                            this.$refs.menuManage.updateOpened();
-                            this.$refs.menuManage.updateActiveName();
-                        })
-                    }
+                    this.$nextTick(function () {
+                        this.$refs.menuManage.updateOpened();
+                        this.$refs.menuManage.updateActiveName();
+                    })
                 }
             }
         },
         computed: {},
-        components: {vHeader},
+        components: {vHeader, vTabs},
         created() {
-            if (this.$route.name === 'manage') {
-                this.$router.replace({
-                    name: 'muserManage'
-                });
-            }
+            // if (this.$route.name === 'manage') {
+            //     this.$router.replace({
+            //         name: 'muserManage'
+            //     });
+            // }
         },
         mounted() {
             this.getMenuData();
         },
         methods: {
             onSelect_menu(name) {
-                this.name = this.menuUrl[name].name;
-                this.$router.push({
-                    name: this.menuUrl[name].url
-                });
+
+                this.active_tab = this.menuUrl[name].url;
+                // this.name = this.menuUrl[name].url;
+                // this.$router.push({
+                //     name: this.menuUrl[name].url
+                // });
             },
             onOpenChange_menu(name) {
                 // console.dir(name);
@@ -103,7 +113,7 @@
                         parentId: '01',
                         menuId: '1001',
                         menuName: '用户管理',
-                        menuUrl: 'muserManage',
+                        menuUrl: 'userManage',
                         menuOrder: '1',
                     }]
                 },{
@@ -116,7 +126,7 @@
                         parentId: '02',
                         menuId: '2001',
                         menuName: '服务器管理',
-                        menuUrl: 'mserverManage',
+                        menuUrl: 'serverManage',
                         menuOrder: '1',
                     }]
                 },{
@@ -129,7 +139,7 @@
                         parentId: '03',
                         menuId: '3001',
                         menuName: '数据资源管理',
-                        menuUrl: 'mdataResourceMange',
+                        menuUrl: 'dataResourceMange',
                         menuOrder: '1',
                     }]
                 },{
@@ -142,25 +152,25 @@
                         parentId: '04',
                         menuId: '4001',
                         menuName: '云服务器订单',
-                        menuUrl: 'mcloudServeManage',
+                        menuUrl: 'cloudServeManage',
                         menuOrder: '1',
                     },{
                         parentId: '04',
                         menuId: '4002',
                         menuName: '行业数据订单',
-                        menuUrl: 'mindustryDataManage',
+                        menuUrl: 'industryDataManage',
                         menuOrder: '2',
                     },{
                         parentId: '04',
                         menuId: '4003',
                         menuName: '发票申请管理',
-                        menuUrl: 'minvoiceApplyManage',
+                        menuUrl: 'invoiceApplyManage',
                         menuOrder: '3',
                     },{
                         parentId: '04',
                         menuId: '4004',
                         menuName: '用户工单管理',
-                        menuUrl: 'muserOrderManage',
+                        menuUrl: 'userOrderManage',
                         menuOrder: '4',
                     }]
                 },{
@@ -173,7 +183,7 @@
                         parentId: '05',
                         menuId: '5001',
                         menuName: '轮播图管理',
-                        menuUrl: 'mslideshowManage',
+                        menuUrl: 'slideshowManage',
                         menuOrder: '1',
                     }]
                 },{
@@ -186,7 +196,7 @@
                         parentId: '06',
                         menuId: '6001',
                         menuName: '全景观测分析系统',
-                        menuUrl: 'mseaSystem',
+                        menuUrl: 'seaSystem',
                         menuOrder: '1',
                     }]
                 }];
@@ -239,14 +249,14 @@
 
         .content-box {
             display: flex;
-            padding-top: 62px;
+            padding-top: 82px;
             height: 100%;
 
             .left-panel {
                 width: 241px;
                 height: 100%;
                 border-right: 1px solid #dddee1;
-                background-color: #495060;
+                /*background-color: #495060;*/
 
                 .menu-title {
                     color: #FFF;
@@ -265,8 +275,51 @@
             }
             .right-panel {
                 flex: 1;
-                padding: 0 52px 0 22px;
             }
         }
     }
+</style>
+
+<style lang="scss">
+    .manage-container {
+        .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
+            color: #FFF;
+            border-right: 2px solid #2d8cf0;
+            background-color: #2d8cf0;
+        }
+
+        .ivu-menu {
+
+            .ivu-menu-submenu {
+                position: relative;
+
+                &:after {
+                    content: ' ';
+                    position: absolute;
+                    display: block;
+                    height: 1px;
+                    top: 49px;
+                    left: 24px;
+                    right: 0;
+                    background-color: #e4e6eb;
+                }
+            }
+
+            .ivu-menu-item {
+                position: relative;
+
+                &:after {
+                    content: ' ';
+                    position: absolute;
+                    display: block;
+                    height: 1px;
+                    top: 49px;
+                    left: 43px;
+                    right: 0;
+                    background-color: #e4e6eb;
+                }
+            }
+        }
+    }
+
 </style>

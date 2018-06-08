@@ -1,6 +1,6 @@
 <template>
     <div class="invoiceApplyManage-container">
-        <vMenuTitle :menuName="menuName"></vMenuTitle>
+        <!--<vMenuTitle :menuName="menuName"></vMenuTitle>-->
     </div>
 </template>
 

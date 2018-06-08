@@ -1,25 +1,17 @@
 <template>
     <div class="cloudServeManage-container">
-        <vMenuTitle :menuName="menuName"></vMenuTitle>
+        <!--<vMenuTitle :menuName="menuName"></vMenuTitle>-->
     </div>
 </template>
 
 <script>
-    import vMenuTitle from './menuTitle/menuTitle';
+    // import vMenuTitle from './menuTitle/menuTitle';
     export default {
         name: "cloudServeManage",
         data() {
             return {};
         },
-        props: {
-            menuName: {
-               type: String,
-               default() {
-                   return '';
-               }
-           }
-        },
-        components: {vMenuTitle}
+        components: {}
     }
 </script>
 

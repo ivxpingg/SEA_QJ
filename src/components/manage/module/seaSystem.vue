@@ -1,6 +1,6 @@
 <template>
     <div class="seaSystem-container">
-        <vMenuTitle :menuName="menuName"></vMenuTitle>
+        <!--<vMenuTitle :menuName="menuName"></vMenuTitle>-->
     </div>
 </template>
 

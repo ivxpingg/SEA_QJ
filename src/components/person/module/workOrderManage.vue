@@ -31,7 +31,7 @@
         <Modal v-model="modal_add_workOrder"
                title="添加工单" >
             <div>
-                <Form v-model="workOrderInfo" label-width="80">
+                <Form v-model="workOrderInfo" :label-width="80">
                     <FormItem label="选择产品" prop="orderId">
                         <Select v-model="workOrderInfo.orderId" placeholder="请选择产品">
                             <Option value="beijing">New York</Option>
@@ -225,7 +225,7 @@
                     that.tableLoading = false;
                     if (response.status === 1) {
                         that.tableData = response.result.page.list;
-                        that.searchParams.count = response.result.count;
+                        that.searchParams.count = response.result.page.count;
                     }
                     else {
                         this.$Modal.error({
