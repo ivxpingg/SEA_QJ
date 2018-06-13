@@ -237,6 +237,7 @@
 
                 // modal 查看选择的开票详情信息
                 modal_table_invoiceInfo: false,
+                addOrUpdate: 'add',
                 tableInvoiceInfo: {
                     invoiceMoney: 0.00,            // 可开发票金额
 
@@ -315,6 +316,7 @@
                     }
                 }).then(function (response) {
                     if (response.status === 1) {
+                        that.addOrUpdate = 'update';
                         that.invoiceInfo.accountOpenBank = response.result.accountOpenBank || '';
                         that.invoiceInfo.addresseeName = response.result.addresseeName || '';
                         that.invoiceInfo.companyPhone = response.result.companyPhone || '';
@@ -327,6 +329,9 @@
                         that.invoiceInfo.taxpayerNumber = response.result.taxpayerNumber || '';
                         that.invoiceInfo.userId = response.result.userId || '';
                         that.invoiceInfo.zipCode = response.result.zipCode || '';
+                    }
+                    else if(response.status === 0) {
+                        that.addOrUpdate = 'add';
                     }
                     else {
                         this.$Modal.error({
@@ -377,13 +382,14 @@
             // 更新开票信息
             onClick_updateInvoice() {
                 var that = this;
+                var url = that.addOrUpdate === 'add' ? '/panoramic/invoice/addIssueInvoice' : '/panoramic/invoice/updateIssueInvoice';
 
                 this.$refs['formValidate_invoice'].validate((valid) => {
                     if (valid) {
 
                         this.$http({
                             method: 'post',
-                            url: '/panoramic/invoice/updateIssueInvoice',
+                            url: url,
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8'
                             },

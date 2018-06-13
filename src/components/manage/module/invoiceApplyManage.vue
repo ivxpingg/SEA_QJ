@@ -9,7 +9,7 @@
                     <div class="form-item">
                         <label class="label" for="userOrder_keyword">关键字</label>
                         <div class="value">
-                            <Input id="userOrder_keyword" v-model="searchParams.keyword" placeholder="工单、用户、电话"></Input>
+                            <Input id="userOrder_keyword" v-model="searchParams.keyword" placeholder="公司名称、订单号"></Input>
                         </div>
                     </div>
                 </div>
