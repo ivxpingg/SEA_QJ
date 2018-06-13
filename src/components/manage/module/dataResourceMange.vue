@@ -49,6 +49,46 @@
             </div>
 
         </div>
+
+        <Modal v-model="modal_add_dataResource"
+               title="添加服务器">
+            <div>
+                <Form ref="add_dataResource_form"
+                      :modal="add_dataResource_info"
+                      :rules="dataResourceInfo_rules"
+                      :label-width="80">
+                    <FormItem label="数据名称:">
+                        <Input type="text" placeholder="请输入数据名称" />
+                    </FormItem>
+                    <FormItem label="数据时效:">
+                        <DatePicker :value="datePicker_add_default"
+                                    :clearable="true"
+                                    format="yyyy-MM-dd"
+                                    type="daterange"
+                                    placeholder="日期选择"
+                                    @on-change="datePicker_onChange"
+                                    style="width: 220px"></DatePicker>
+                    </FormItem>
+                    <FormItem label="描述:">
+                        <Input type="textarea" placeholder="请输入数据描述" />
+                    </FormItem>
+                    <FormItem label="上传文件:">
+                        <Upload action="//jsonplaceholder.typicode.com/posts/">
+                            <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
+                        </Upload>
+                    </FormItem>
+                    <FormItem label="位置选择">
+                        <Select style="width: 180px" placeholder="">
+                            <Option :value="11" label="行业服务中心"></Option>
+                        </Select>
+                    </FormItem>
+                </Form>
+            </div>
+            <div slot="footer">
+                <Button type="primary" size="large" @click="onClick_add_dataResource">保存</Button>
+            </div>
+        </Modal>
+
     </div>
 </template>
 
@@ -146,6 +186,7 @@
 
                 // 发布数据
                 modal_add_dataResource: false,
+                datePicker_add_default: [],
                 add_dataResource_info: {},
                 dataResourceInfo_rules: {}
             };
@@ -247,5 +288,47 @@
 
 <style lang="scss" scoped>
     .dataResourceMange-container {
+        .content-panel {
+            .handle-bar {
+                padding: 17px 11px 20px 11px;
+                border: {
+                    width: 0 0 1px 0;
+                    style: solid;
+                    color: #e1e1e1;
+                };
+                overflow: hidden;
+
+                .hd {
+                    margin-right: 12px;
+                    float: left;
+
+                    .form-item {
+
+                        .label {
+                            text-align: right;
+                            vertical-align: middle;
+                            float: left;
+                            font-size: 12px;
+                            color: #495060;
+                            line-height: 1;
+                            padding: 10px 12px 10px 0;
+                            box-sizing: border-box;
+                        }
+                        .value {
+                            float: right;
+                        }
+                    }
+                }
+            }
+
+            .table-panel {
+                margin: 13px ;
+            }
+
+            .list-page-panel {
+                text-align: center;
+            }
+
+        }
     }
 </style>

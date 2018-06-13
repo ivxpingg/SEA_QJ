@@ -64,6 +64,26 @@
             </div>
         </Modal>
 
+        <Modal v-model="modal_detail_invoiceApply" title="发票详情信息">
+            <div class="add-invoice">
+                <Form v-model="detail_invoiceApply" class="detail-form"  :label-width="100">
+                    <FormItem label="开票金额:"> {{detail_invoiceApply.invoiceMoney}}</FormItem>
+                    <FormItem label="发票抬头:">{{detail_invoiceApply.invoiceTitle}}</FormItem>
+                    <FormItem label="纳税人识别号:">{{detail_invoiceApply.taxpayerNumber}}</FormItem>
+                    <FormItem label="开户银行:">{{detail_invoiceApply.accountOpenBank}}</FormItem>
+                    <FormItem label="开户账号:">{{detail_invoiceApply.openAccount}} </FormItem>
+                    <FormItem label="注册地址:">{{detail_invoiceApply.registerAddress}}</FormItem>
+                    <FormItem label="公司电话:">{{detail_invoiceApply.companyPhone}}</FormItem>
+                    <FormItem label="发票邮寄地址:">{{detail_invoiceApply.mailAddress}}</FormItem>
+                    <FormItem label="收件人姓名:">{{detail_invoiceApply.addresseeName}}</FormItem>
+                    <FormItem label="邮编:">{{detail_invoiceApply.zipCode}}</FormItem>
+                    <FormItem label="手机号码:">{{detail_invoiceApply.phone}}</FormItem>
+                </Form>
+            </div>
+
+        </Modal>
+
+
     </div>
 </template>
 
@@ -92,7 +112,7 @@
                         align: 'center'
                     },{
                         title: '订单编号',
-                        key: 'invoiceApplyId',
+                        key: 'orderNumber',
                         align: 'center'
                     },{
                         title: '发票抬头',
@@ -149,7 +169,9 @@
                                         textDecoration: 'underline'
                                     },
                                     on: {
-                                        click() {}
+                                        click() {
+                                            that.onClick_orderDetail(params.row);
+                                        }
                                     }
                                 }, '发票详情')
                             ]);
@@ -166,6 +188,22 @@
                     invoiceApplyId: '',
                     expressCompany: '',    // 快递公司
                     expressNum: ''         // 快递单号
+                },
+
+                // 查看发票申请详情
+                modal_detail_invoiceApply: false,
+                detail_invoiceApply: {
+                    invoiceMoney: '',
+                    invoiceTitle: '',
+                    taxpayerNumber: '',
+                    accountOpenBank: '',
+                    openAccount: '',
+                    registerAddress: '',
+                    companyPhone: '',
+                    mailAddress: '',
+                    addresseeName: '',
+                    zipCode: '',
+                    phone: ''
                 }
             };
         },
@@ -317,6 +355,41 @@
                  else {
                      that.modal_express = false;
                  }
+            },
+
+            /**
+             * 查看订单详情
+             * @param row [Object]
+             */
+            onClick_orderDetail(row) {
+                var that = this;
+                
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/invoice/getInvoiceApply',
+                    params: {
+                        invoiceApplyId: row.invoiceApplyId
+                    }
+                }).then(function (response) {
+                    if(response.status === 1) {
+                        that.detail_invoiceApply.invoiceMoney = response.result.invoiceMoney;
+                        that.detail_invoiceApply.invoiceTitle = response.result.invoiceTitle;
+                        that.detail_invoiceApply.taxpayerNumber = response.result.taxpayerNumber;
+                        that.detail_invoiceApply.accountOpenBank = response.result.accountOpenBank;
+                        that.detail_invoiceApply.openAccount = response.result.openAccount;
+                        that.detail_invoiceApply.registerAddress = response.result.registerAddress;
+                        that.detail_invoiceApply.companyPhone = response.result.companyPhone;
+                        that.detail_invoiceApply.mailAddress = response.result.mailAddress;
+                        that.detail_invoiceApply.addresseeName = response.result.addresseeName;
+                        that.detail_invoiceApply.zipCode = response.result.zipCode;
+                        that.detail_invoiceApply.phone = response.result.phone;
+
+                        that.modal_detail_invoiceApply = true;
+                    }
+                    
+                }).catch(function (e) {
+                    console.dir(e);
+                });
             }
         }
     }
@@ -365,6 +438,12 @@
                 text-align: center;
             }
 
+        }
+    }
+
+    .detail-form {
+        .ivu-form-item {
+            margin-bottom: 8px;
         }
     }
 </style>

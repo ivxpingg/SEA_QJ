@@ -77,7 +77,7 @@
 
         <Modal v-model="modal_add_invoice" title="核对发票信息">
             <div class="add-invoice">
-                <Form v-model="invoiceInfo" :label-width="100">
+                <Form  class="detail-form" v-model="invoiceInfo" :label-width="100">
                     <FormItem label="开票金额:"> {{invoiceInfo.invoiceMoney}}</FormItem>
                     <FormItem label="发票抬头:">{{invoiceInfo.invoiceTitle}}</FormItem>
                     <FormItem label="纳税人识别号:">{{invoiceInfo.taxpayerNumber}}</FormItem>
@@ -98,7 +98,7 @@
 
         <Modal v-model="modal_table_invoiceInfo" title="发票详情信息">
             <div class="add-invoice">
-                <Form v-model="tableInvoiceInfo" :label-width="100">
+                <Form v-model="tableInvoiceInfo" class="detail-form"  :label-width="100">
                     <FormItem label="开票金额:"> {{tableInvoiceInfo.invoiceMoney}}</FormItem>
                     <FormItem label="发票抬头:">{{tableInvoiceInfo.invoiceTitle}}</FormItem>
                     <FormItem label="纳税人识别号:">{{tableInvoiceInfo.taxpayerNumber}}</FormItem>
@@ -186,19 +186,19 @@
                 invoiceInfo: {
                     invoiceMoney: 0.00,            // 可开发票金额
 
-                    issueInvoiceId: "1",     //    开票信息的标识ID
+                    issueInvoiceId: "",     //    开票信息的标识ID
 
-                    accountOpenBank: "1",    // 开户银行
-                    addresseeName: "1",      // 收件人姓名
-                    companyPhone: "1",       // 公司电话
-                    invoiceTitle: "1",       // 发票抬头
-                    mailAddress: "1",        // 发票邮寄地址
-                    openAccount: "1",        // 开户账号
-                    phone: "1",              // 手机号码
-                    registerAddress: "1",    // 注册地址
-                    taxpayerNumber: "1",     // 纳税人识别号
-                    userId: "1",             // 用户ID
-                    zipCode: "1"             // 邮编
+                    accountOpenBank: "",    // 开户银行
+                    addresseeName: "",      // 收件人姓名
+                    companyPhone: "",       // 公司电话
+                    invoiceTitle: "",       // 发票抬头
+                    mailAddress: "",        // 发票邮寄地址
+                    openAccount: "",        // 开户账号
+                    phone: "",              // 手机号码
+                    registerAddress: "",    // 注册地址
+                    taxpayerNumber: "",     // 纳税人识别号
+                    userId: that.$store.state.uid,             // 用户ID
+                    zipCode: ""             // 邮编
                 },
                 ruleInvoiceInfo: {
                     invoiceTitle: [
@@ -264,9 +264,10 @@
         mounted() {
             this.getTableData();
             this.getInvoiceData();
+            this.getMoney();
         },
         methods: {
-            datePicker_onChange() {
+            datePicker_onChange(val) {
                 this.searchParams.startTime = val[0];
                 this.searchParams.endTime = val[1];
                 this.getTableData();
@@ -283,13 +284,13 @@
                 var that = this;
                 this.$http({
                     method: 'get',
-                    url: '/panoramic/invoice/getIssueInvoice',
+                    url: '/panoramic/invoice/getMoneyOfInvoice',
                     params: {
-                        userId: '1'
+                        userId: that.$store.state.uid
                     }
                 }).then(function (response) {
                     if (response.status === 1) {
-                        that.invoiceInfo.invoiceMoney = response.result.invoiceMoney || 0;
+                        that.invoiceInfo.invoiceMoney = response.result.totalPrice || 0;
                     }
                     else {
                         this.$Modal.error({
@@ -310,7 +311,7 @@
                     method: 'get',
                     url: '/panoramic/invoice/getIssueInvoice',
                     params: {
-                        userId: '1'
+                        userId: that.$store.state.uid
                     }
                 }).then(function (response) {
                     if (response.status === 1) {
@@ -350,7 +351,7 @@
                         'Content-Type': 'application/json;charset=utf-8'
                     },
                     data: JSON.stringify({
-                        userId: '1',
+                        userId: that.$store.state.uid,
                         keyword: this.searchParams.keyword,
                         beginDate: this.searchParams.startTime,
                         endDate: this.searchParams.endTime
@@ -420,7 +421,7 @@
                     url: '/panoramic/invoice/applyInvoice',
                     data: {
                         issueInvoiceId: this.invoiceInfo.issueInvoiceId,
-                        userId: '1'
+                        userId: that.$store.state.uid
                     }
                 }).then(function (response) {
                     debugger
@@ -532,6 +533,12 @@
                 text-align: center;
                 padding: 20px 16px 100px;
             }
+        }
+    }
+
+    .detail-form {
+        .ivu-form-item {
+            margin-bottom: 8px;
         }
     }
 </style>
