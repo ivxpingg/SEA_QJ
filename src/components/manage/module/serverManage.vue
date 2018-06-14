@@ -9,7 +9,7 @@
                     <div class="form-item">
                         <label class="label" for="userOrder_keyword">关键字</label>
                         <div class="value">
-                            <Input id="userOrder_keyword" v-model="searchParams.keyword" placeholder="工单、用户、电话"></Input>
+                            <Input id="userOrder_keyword" v-model="searchParams.keyword" placeholder="服务器名称"></Input>
                         </div>
                     </div>
                 </div>
@@ -54,48 +54,68 @@
         <Modal v-model="modal_add_serve"
                title="添加服务器">
             <div>
-                <Form ref="add_serve_form"
-                      :modal="add_serve_info"
+                <Form ref="addServeForm"
+                      :model="add_serve_info"
                       :rules="serveInfo_rules"
                       :label-width="80">
-                    <FormItem label="机型名称:">
-                        <Input type="text" placeholder="请输入机型名称" />
+                    <FormItem label="机型名称:" prop="serverName">
+                        <Input v-model="add_serve_info.serverName" placeholder="请输入机型名称" ></Input>
                     </FormItem>
-                    <FormItem label="机型配置:">
-                        <Select style="width: 180px; margin-right: 12px;">
-                            <Option :value="11" label="1"></Option>
-                        </Select>
-
-                        <Select style="width: 180px">
-                            <Option :value="11" label="1" ></Option>
-                        </Select>
-                    </FormItem>
-                    <FormItem label="镜像:">
-                        <Select style="width: 180px" placeholder="">
-                            <Option :value="11" label="1" ></Option>
+                    <FormItem label="CPU:" prop="cpu">
+                        <Select v-model="add_serve_info.cpu"
+                                placeholder="CPU">
+                            <Option value="2核" label="2核"></Option>
+                            <Option value="4核" label="4核"></Option>
+                            <Option value="8核" label="8核"></Option>
+                            <Option value="16核" label="16核"></Option>
                         </Select>
                     </FormItem>
-                    <FormItem label="宽带:">
-                        <Select style="width: 180px" placeholder="">
-                            <Option :value="11" label="1" ></Option>
+                    <FormItem label="内存:" prop="memory">
+                        <Select v-model="add_serve_info.memory"
+                                placeholder="内存">
+                            <Option value="4G" label="4G" ></Option>
+                            <Option value="8G" label="8G" ></Option>
+                            <Option value="16G" label="16G" ></Option>
+                            <Option value="32G" label="32G" ></Option>
                         </Select>
                     </FormItem>
-                    <FormItem label="系统盘:">
-                        <Select style="width: 180px" placeholder="">
-                            <Option :value="11" label="1" ></Option>
+                    <FormItem label="镜像:" prop="mirror">
+                        <Select v-model="add_serve_info.mirror" placeholder="镜像">
+                            <Option value="Windows 2012 R2 标准版 64位中文版" label="Windows 2012 R2 标准版 64位中文版" ></Option>
+                            <Option value="Windows 2008 R2 SP1 64位" label="Windows 2008 R2 SP1 64位" ></Option>
+                            <Option value="Ubuntu Server 16.04.1 LTS 64位" label="Ubuntu Server 16.04.1 LTS 64位" ></Option>
+                            <Option value="CentOS 7.2 64位" label="CentOS 7.2 64位" ></Option>
                         </Select>
                     </FormItem>
-                    <FormItem label="存储硬盘:">
-                        <Input type="text" placeholder="请输入存储硬盘大小,如：100G" />
+                    <FormItem label="宽带:" prop="bandWidth">
+                        <Input type="text"
+                               v-model="add_serve_info.bandWidth"
+                               placeholder="请输入宽带大小，如：10Mbps" />
                     </FormItem>
-                    <FormItem label="收费标准:">
-                        <Input type="textarea" placeholder="请输入金额，单位（元）" />
+                    <FormItem label="系统盘:" prop="systemDisk">
+                        <Input type="text"
+                               v-model="add_serve_info.systemDisk"
+                               placeholder="请输入系统盘大小，如：500G" />
                     </FormItem>
-                    <FormItem label="描述:">
-                        <Input type="textarea" placeholder="描述" />
+                    <FormItem label="存储硬盘:" prop="hardDisk">
+                        <Input type="text"
+                               v-model="add_serve_info.hardDisk"
+                               placeholder="请输入存储硬盘大小,如：100G" />
                     </FormItem>
-                    <FormItem label="免费申请:">
-                        <i-switch true-value="1" false-value="0">
+                    <FormItem label="收费标准:" prop="chargeStandard">
+                        <Input type="textarea"
+                               v-model="add_serve_info.chargeStandard"
+                               placeholder="请输入金额，单位(元/月)" />
+                    </FormItem>
+                    <FormItem label="描述:" prop="description">
+                        <Input type="textarea"
+                               v-model="add_serve_info.description"
+                               placeholder="描述" />
+                    </FormItem>
+                    <FormItem label="免费申请:" prop="freeApply">
+                        <i-switch
+                                v-model="add_serve_info.freeApply"
+                                true-value="1" false-value="0">
                             <span slot="open">开</span>
                             <span slot="close">关</span>
                         </i-switch>
@@ -107,10 +127,117 @@
             </div>
         </Modal>
 
+        <Modal v-model="modal_update_serve"
+               title="修改服务器">
+            <div>
+                <Form ref="updateServeForm"
+                      :model="update_serve_info"
+                      :rules="serveInfo_rules"
+                      :label-width="80">
+                    <FormItem label="机型名称:" prop="serverName">
+                        <Input v-model="update_serve_info.serverName" placeholder="请输入机型名称" ></Input>
+                    </FormItem>
+                    <FormItem label="CPU:" prop="cpu">
+                        <Select v-model="update_serve_info.cpu"
+                                placeholder="CPU">
+                            <Option value="2核" label="2核"></Option>
+                            <Option value="4核" label="4核"></Option>
+                            <Option value="8核" label="8核"></Option>
+                            <Option value="16核" label="16核"></Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="内存:" prop="memory">
+                        <Select v-model="update_serve_info.memory"
+                                placeholder="内存">
+                            <Option value="4G" label="4G" ></Option>
+                            <Option value="8G" label="8G" ></Option>
+                            <Option value="16G" label="16G" ></Option>
+                            <Option value="32G" label="32G" ></Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="镜像:" prop="mirror">
+                        <Select v-model="update_serve_info.mirror" placeholder="镜像">
+                            <Option value="Windows 2012 R2 标准版 64位中文版" label="Windows 2012 R2 标准版 64位中文版" ></Option>
+                            <Option value="Windows 2008 R2 SP1 64位" label="Windows 2008 R2 SP1 64位" ></Option>
+                            <Option value="Ubuntu Server 16.04.1 LTS 64位" label="Ubuntu Server 16.04.1 LTS 64位" ></Option>
+                            <Option value="CentOS 7.2 64位" label="CentOS 7.2 64位" ></Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="宽带:" prop="bandWidth">
+                        <Input type="text"
+                               v-model="update_serve_info.bandWidth"
+                               placeholder="请输入宽带大小，如：10Mbps" />
+                    </FormItem>
+                    <FormItem label="系统盘:" prop="systemDisk">
+                        <Input type="text"
+                               v-model="update_serve_info.systemDisk"
+                               placeholder="请输入系统盘大小，如：500G" />
+                    </FormItem>
+                    <FormItem label="存储硬盘:" prop="hardDisk">
+                        <Input type="text"
+                               v-model="update_serve_info.hardDisk"
+                               placeholder="请输入存储硬盘大小,如：100G" />
+                    </FormItem>
+                    <FormItem label="收费标准:" prop="chargeStandard">
+                        <Input type="textarea"
+                               v-model="update_serve_info.chargeStandard"
+                               placeholder="请输入金额，单位(元/月)" />
+                    </FormItem>
+                    <FormItem label="描述:" prop="description">
+                        <Input type="textarea"
+                               v-model="update_serve_info.description"
+                               placeholder="描述" />
+                    </FormItem>
+                    <FormItem label="免费申请:" prop="freeApply">
+                        <i-switch
+                                v-model="update_serve_info.freeApply"
+                                true-value="1" false-value="0">
+                            <span slot="open">开</span>
+                            <span slot="close">关</span>
+                        </i-switch>
+                    </FormItem>
+                </Form>
+            </div>
+            <div slot="footer">
+                <Button type="primary" size="large" @click="onClick_update_serve">保存</Button>
+            </div>
+        </Modal>
+
+        <Modal v-model="modal_upload"
+               title="导入服务器账号">
+            <div>
+                <Upload :action="uploadFileUrl"
+                        :headers="headers"
+                        :on-error="uploadHandleError"
+                        :on-success="uploadHandleSuccess" >
+                    <Button type="ghost" icon="ios-cloud-upload-outline">上传服务器账号</Button>
+                </Upload>
+            </div>
+            <div slot="footer">
+                <Button type="primary" size="large" @click="onClick_upload_ok">确定</Button>
+            </div>
+        </Modal>
+
+        <Modal v-model="modal_table_detail"
+               :width="1200"
+               title="服务器销售详情">
+            <div>
+                <div>服务器剩余数据量</div>
+                <Table border :loading="tableLoading_detail" :columns="tableColumns_detail" :data="tableData_detail"></Table>
+            </div>
+            <div slot="footer">
+                <Button type="primary" size="large" @click="onClick_sell_detail_ok">确定</Button>
+                <Button type="primary" size="large" @click="onClick_sell_detail_upload">导入服务器信息</Button>
+            </div>
+        </Modal>
+
+
     </div>
 </template>
 
 <script>
+    import Config from '../../../libs/appConfig/config';
+    import Cookie from '../../../libs/helpers/cookies';
     export default {
         name: "serverManage",
         data() {
@@ -135,31 +262,34 @@
                         align: 'center'
                     },{
                         title: '服务器名称',
-                        key: 'name',
+                        key: 'serverName',
                         align: 'center'
                     },{
                         title: '已卖出',
-                        key: 'name',
+                        key: 'soldNumber',
                         align: 'center'
                     },{
                         title: '配置信息',
-                        key: 'name',
-                        align: 'center'
+                        align: 'center',
+                        render(h, params) {
+                            var text = params.row.cpu + ',' + params.row.memory + ',' + params.row.bandWidth + ',' + params.row.handDisk;
+                            return h('div', text);
+                        }
                     },{
                         title: '价格/月',
-                        key: 'name',
+                        key: 'chargeStandard',
                         align: 'center'
                     },{
                         title: '发布日期',
-                        key: 'name',
+                        key: 'publishTime',
                         align: 'center'
                     },{
                         title: '状态',
-                        key: 'name',
+                        key: 'serverStatus',
                         align: 'center'
                     },{
                         title: '位置',
-                        key: 'name',
+                        key: 'showPosition',
                         align: 'center'
                     },{
                         title: '操作',
@@ -168,13 +298,81 @@
                         render(h, params) {
 
                             var text = '';
+                            var buttom1, buttom2;
 
-                            switch (params.row.applyStatus){
-                                case '已发布': text = '下架'; break;
-                                case '未发布': text = '上架'; break;
+                            switch (params.row.serverStatus){
+                                case '已发布':
+                                    text = '下架';
+
+                                    buttom1 = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_updateServeStatus(params.row);
+                                            }
+                                        }
+                                    }, '下架');
+
+                                    buttom2 = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.upload_data.cloudServerId = params.row.cloudServerId;
+                                                that.modal_upload = true;
+                                            }
+                                        }
+                                    }, '导入');
+
+                                    break;
+                                case '未发布':
+                                    text = '上架';
+
+                                    buttom1 = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_updateServeStatus(params.row);
+                                            }
+                                        }
+                                    }, '上架');
+
+                                    buttom2 = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_updateServe(params.row);
+                                            }
+                                        }
+                                    }, '修改');
+
+                                break;
                             }
 
+
+
                             return h('div', [
+                                buttom1,
+                                buttom2,
                                 h('Button', {
                                     props: {
                                         type: 'text'
@@ -184,35 +382,8 @@
                                     },
                                     on: {
                                         click() {
-                                            if(text === '下架') {
-
-                                            }
-                                            else {
-
-                                            }
+                                            that.onClick_sell_detail(params.row);
                                         }
-                                    }
-                                }, text),
-                                h('Button', {
-                                    props: {
-                                        type: 'text'
-                                    },
-                                    style: {
-                                        textDecoration: 'underline'
-                                    },
-                                    on: {
-                                        click() {}
-                                    }
-                                }, '导入'),
-                                h('Button', {
-                                    props: {
-                                        type: 'text'
-                                    },
-                                    style: {
-                                        textDecoration: 'underline'
-                                    },
-                                    on: {
-                                        click() {}
                                     }
                                 }, '详情')
                             ]);
@@ -220,12 +391,116 @@
                     }
 
                 ],
-                tableData: [{name: 'test'}],
+                tableData: [],
+
+                // 详情表格
+                modal_table_detail: false,
+                tableLoading_detail: false,
+                tableColumns_detail: [
+                    {
+                        type: 'index',
+                        width: 80,
+                        title: '序号',
+                        align: 'center'
+                    },{
+                        title: 'IP',
+                        key: 'name',
+                        align: 'center'
+                    },{
+                        title: '账号',
+                        key: 'name',
+                        align: 'center'
+                    },{
+                        title: '密码',
+                        key: 'name',
+                        align: 'center'
+                    },{
+                        title: '购买人',
+                        key: 'name',
+                        align: 'center'
+                    },{
+                        title: '联系方式',
+                        key: 'name',
+                        align: 'center'
+                    },{
+                        title: '购买时间',
+                        key: 'name',
+                        align: 'center'
+                    },{
+                        title: '备注',
+                        key: 'name',
+                        align: 'center'
+                    }
+                ],
+                tableData_detail: [],
 
                 // 新增服务器
                 modal_add_serve: false,
-                add_serve_info: {},
-                serveInfo_rules: {}
+                add_serve_info: {
+                    serverName: '',
+                    cpu: '',
+                    memory: '',
+                    mirror: '',
+                    bandWidth: '',
+                    systemDisk: '',
+                    hardDisk: '',
+                    chargeStandard: '',
+                    description: '',
+                    freeApply: '0',
+                    showPosition: 'ListPage'   // 位置固定是放在列表
+                },
+                serveInfo_rules: {
+                    serverName: [
+                        { required: true, message: '机型名称不能为空！', trigger: 'blur' }
+                    ],
+                    cpu: [
+                        { required: true, message: 'CPU不能为空！', trigger: 'blur' }
+                    ],
+                    memory: [
+                        { required: true, message: '内存不能为空！', trigger: 'blur' }
+                    ],
+                    mirror: [
+                        { required: true, message: '镜像不能为空！', trigger: 'blur' }
+                    ],
+                    bandWidth: [
+                        { required: true, message: '宽带不能为空！', trigger: 'blur' }
+                    ],
+                    systemDisk: [
+                        { required: true, message: '系统盘不能为空！', trigger: 'blur' }
+                    ],
+                    hardDisk: [
+                        { required: true, message: '存储硬盘不能为空！', trigger: 'blur' }
+                    ],
+                    chargeStandard: [
+                        { required: true, message: '收费标准不能为空！', trigger: 'blur' }
+                    ]
+                },
+
+                // 修改服务器
+                modal_update_serve: false,
+                update_serve_info: {
+                    cloudServerId: '',
+                    serverName: '',
+                    cpu: '',
+                    memory: '',
+                    mirror: '',
+                    bandWidth: '',
+                    systemDisk: '',
+                    hardDisk: '',
+                    chargeStandard: '',
+                    description: '',
+                    freeApply: '0'
+                },
+
+                // 上传服务器信息
+                modal_upload: false,
+                uploadFileUrl: '',
+                headers: {
+                    Authorization: Cookie.read('token') || ''
+                },
+                upload_data: {
+                    cloudServerId: ''
+                }
             };
         },
         components: {},
@@ -237,7 +512,9 @@
             }
         },
         mounted() {
-            // this.getTableData();
+            this.uploadFileUrl = window.location.origin + Config[Config.env].imgUrl  + '';
+
+            this.getTableData();
         },
         methods: {
             datePicker_onChange(val) {
@@ -258,11 +535,12 @@
              * 获取表格数据
              */
             getTableData() {
+
                 var that = this;
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '',
+                    url: '/panoramic/cloudServer/list',
                     headers: {
                         'Content-Type': 'application/json;charset=utf-8'
                     },
@@ -305,18 +583,18 @@
             onClick_add_serve() {
                 var that = this;
 
-                that.$refs['add_serve_form'].validate(function (valid) {
+                that.$refs['addServeForm'].validate(function (valid) {
+
                     if (valid) {
 
-                        this.$http({
+                        that.$http({
                             method: 'post',
-                            url: '',
+                            url: '/panoramic/cloudServer/add',
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8'
                             },
-                            data: JSON.stringify(this.add_serve_info)
+                            data: JSON.stringify(that.add_serve_info)
                         }).then(function (response) {
-                            that.tableLoading = false;
                             if (response.status === 1) {
                                 that.$Message.success({
                                     content: '新增成功！'
@@ -331,7 +609,6 @@
                                 });
                             }
                         }).catch(function (e) {
-                            that.tableLoading = false;
                             that.$Modal.error({
                                 content: JSON.stringify(e)
                             });
@@ -340,6 +617,187 @@
                     }
                     else {}
                 })
+            },
+
+            /**
+             * 修改服务器
+             */
+            onClick_update_serve() {
+                var that = this;
+
+                that.$refs['updateServeForm'].validate(function (valid) {
+
+                    if (valid) {
+
+                        that.$http({
+                            method: 'post',
+                            url: '/panoramic/cloudServer/update',
+                            headers: {
+                                'Content-Type': 'application/json;charset=utf-8'
+                            },
+                            data: JSON.stringify(that.update_serve_info)
+                        }).then(function (response) {
+                            if (response.status === 1) {
+                                that.$Message.success({
+                                    content: '更新成功！'
+                                });
+                                that.modal_add_serve = false;
+
+                                that.getTableData();
+                            }
+                            else {
+                                that.$Modal.error({
+                                    content: response.errMsg
+                                });
+                            }
+                        }).catch(function (e) {
+                            // that.$Modal.error({
+                            //     content: JSON.stringify(e)
+                            // });
+                        })
+
+                    }
+                    else {}
+                })
+            },
+
+            /**
+             *  上传服务器信息窗口
+             */
+            onClick_upload_ok() {
+                this.modal_upload = false;
+            },
+            /**
+             * 上传服务器成功返回
+             */
+            uploadHandleSuccess() {
+                this.$Message.success({
+                    content: '上传成功！'
+                });
+            },
+            /**
+             * 上传服务器失败返回
+             */
+            uploadHandleError(res) {
+                this.$Message.error({
+                    content: '上传失败！'
+                });
+                console.dir(res);
+            },
+
+            /**
+             * 更改服务器状态 上架/下架
+             */
+            onClick_updateServeStatus(row) {
+                var that = this;
+
+                var serverStatus = row.serverStatus === '已发布'? 'Unpublish' : 'Publish';
+
+                that.$Modal.confirm({
+                    title: '提示',
+                    content: '确定要' + (row.serverStatus === '已发布'? '下架' : '上架' ) + '<'+ row.serverName +'>?',
+                    onOk() {
+                        that.$http({
+                            method: 'get',
+                            url: '/panoramic/cloudServer/updateServerStatus',
+                            params: {
+                                cloudServerIds: row.cloudServerId,
+                                serverStatus: serverStatus
+                            }
+                        }).then(function (response) {
+                            if (response.status === 1) {
+                                that.$Message.success({
+                                    content: '更新成功！'
+                                });
+                                that.getTableData();
+                            }
+                            else {
+                                that.$Modal.error({
+                                    content: response.errMsg
+                                });
+                            }
+                        }).catch(function (e) {
+                            // that.$Modal.error({
+                            //     content: JSON.stringify(e)
+                            // });
+                        })
+                    }
+                });
+            },
+
+            /**
+             * 修改服务器信息
+             * @param row
+             */
+            onClick_updateServe(row) {
+                var that = this;
+
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/cloudServer/detail',
+                    params: {
+                        cloudServerId: row.cloudServerId
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.update_serve_info.cloudServerId = response.result.cloudServerId;
+                        that.update_serve_info.serverName = response.result.serverName;
+                        that.update_serve_info.cpu = response.result.cpu;
+                        that.update_serve_info.memory = response.result.memory;
+                        that.update_serve_info.mirror = response.result.mirror;
+                        that.update_serve_info.bandWidth = response.result.bandWidth;
+                        that.update_serve_info.systemDisk = response.result.systemDisk;
+                        that.update_serve_info.hardDisk = response.result.hardDisk;
+                        that.update_serve_info.chargeStandard = response.result.chargeStandard + '';
+                        that.update_serve_info.description = response.result.description;
+                        that.update_serve_info.freeApply = response.result.freeApply || '0';
+
+                        that.modal_update_serve = true;
+                        that.getTableData();
+                    }
+                    else {
+                        that.$Modal.error({
+                            content: response.errMsg
+                        });
+                    }
+                }).catch(function (e) {
+                    // that.$Modal.error({
+                    //     content: JSON.stringify(e)
+                    // });
+                })
+
+            },
+
+            /**
+             * 服务器销售详情
+             * @param row
+             */
+            onClick_sell_detail(row) {
+                var that = this;
+                this.upload_data.cloudServerId = row.cloudServerId;
+                this.modal_table_detail = true;
+                this.tableLoading_detail = true;
+                this.$http({
+                   method: 'get',
+                   url: '',
+                   params: {
+                       cloudServerId: row.cloudServerId
+                   }
+                }).then(function (response) {
+                    that.tableLoading_detail = false;
+                    if(response.status === 1 ) {
+                        that.tableData_detail = response.result;
+                    }
+                }).catch(function (e) {
+                    that.tableLoading_detail = false;
+                })
+            },
+            onClick_sell_detail_ok() {
+                this.modal_table_detail = false;
+            },
+            onClick_sell_detail_upload() {
+                this.modal_table_detail = false;
+                this.modal_upload = true;
             }
         }
     }

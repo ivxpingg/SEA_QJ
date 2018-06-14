@@ -177,7 +177,7 @@
                     }
 
                 ],
-                tableData: [{name: 'test'}],
+                tableData: [],
             };
         },
         components: {},
@@ -189,7 +189,7 @@
             }
         },
         mounted() {
-            // this.getTableData();
+            this.getTableData();
         },
         methods: {
             datePicker_onChange(val) {
@@ -214,7 +214,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '',
+                    url: '/panoramic/cloudServer/list',
                     headers: {
                         'Content-Type': 'application/json;charset=utf-8'
                     },
