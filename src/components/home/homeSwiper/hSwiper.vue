@@ -37,7 +37,20 @@
 
                     </div>
                 </div>
+
+                <div v-for="item in sliderListData" class="swiper-slide"
+                     :style="{
+                                backgroundImage: 'url(' + imgUrl_domain + item.pictureUrl +')',
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: 'center'
+                             }">
+                    <div class="slide-panel"></div>
+
+                </div>
+
             </div>
+
+
             <!-- 如果需要分页器 -->
             <div class="swiper-pagination"></div>
 
@@ -48,15 +61,22 @@
 <script>
     import Swiper from 'swiper';
     import 'swiper/dist/css/swiper.min.css';
+    import Config from '../../../libs/appConfig/config';
     export default {
         name: "hSwiper",
         data() {
             return {
                 mySwiper: null,
+                sliderListData: [],
+                imgUrl_domain:
+                // window.location.origin +
+                'http://110.86.21.246:8088' + Config[Config.env].imgUrl
             };
         },
         mounted() {
-            this.initSwiper();
+            this.getData_slideshow();
+
+
         },
         methods: {
             initSwiper() {
@@ -68,6 +88,24 @@
                     pagination: {
                         el: '.swiper-pagination',
                     }
+                })
+            },
+
+            getData_slideshow() {
+                var that = this;
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/banner/queryListForHomePage'
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.sliderListData = response.result;
+
+                        setTimeout(function () {
+                            that.initSwiper();
+                        }, 200)
+                    }
+
+                }).catch(function (e) {
                 })
             }
         }

@@ -15,33 +15,17 @@
                 <div class="title">机型</div>
                 <div class="type-list">
 
-                    <div class="item">
+                    <div class="item"
+                         :class="{'active': item.cloudServerId === query.cloudServerId}"
+                         v-for="item in serverDataList"
+                         :key="item.cloudServerId"
+                         @click="onClick_select(item)">
                         <div class="type-name">
-                            <div>云服务器普及型</div>
-                            <div>(2核4GB)</div>
+                            <div>{{item.serverName}}</div>
+                            <div>({{item.cpu +item.memory}})</div>
                         </div>
                         <div class="type-desc">
-                            并发适中的APP或普通数据处理
-                        </div>
-                    </div>
-
-                    <div class="item">
-                        <div class="type-name">
-                            <div>云服务器专业型</div>
-                            <div>(4核8GB)</div>
-                        </div>
-                        <div class="type-desc">
-                            使用于并发要求较高的APP
-                        </div>
-                    </div>
-
-                    <div class="item">
-                        <div class="type-name">
-                            <div>云服务器高计算型</div>
-                            <div>(8核16GB)</div>
-                        </div>
-                        <div class="type-desc">
-                            适用于机器学习，基因工程等
+                            {{item.description}}
                         </div>
                     </div>
 
@@ -53,31 +37,31 @@
                 <div class="config-list">
                     <div class="attr">
                         <span class="label">主机名称 : </span>
-                        <span class="value">云服务器专业型</span>
+                        <span class="value">{{select_serve_info.serverName}}</span>
                     </div>
                     <div class="attr">
                         <span class="label">镜像 : </span>
-                        <span class="value">windows 2008 R2 企业版</span>
+                        <span class="value">{{select_serve_info.mirror}}</span>
                     </div>
                     <div class="attr">
                         <span class="label">CPU : </span>
-                        <span class="value">4核</span>
+                        <span class="value">{{select_serve_info.cpu}}</span>
                     </div>
                     <div class="attr">
                         <span class="label">内存 : </span>
-                        <span class="value">8G</span>
+                        <span class="value">{{select_serve_info.memory}}</span>
                     </div>
                     <div class="attr">
                         <span class="label">系统盘 : </span>
-                        <span class="value">100G</span>
+                        <span class="value">{{select_serve_info.systemDisk}}</span>
                     </div>
                     <div class="attr">
                         <span class="label">存储盘 : </span>
-                        <span class="value">200G</span>
+                        <span class="value">{{select_serve_info.hardDisk}}</span>
                     </div>
                     <div class="attr">
                         <span class="label">宽带 : </span>
-                        <span class="value">5Mbps</span>
+                        <span class="value">{{select_serve_info.bandWidth}}</span>
                     </div>
                 </div>
                 <div class="remark">注：如果列表中没有您想要的服务器配置，您可以通过电话0592-987462联系管理员。  或是购买菜单配置服务器后在个人中心>工单管理>向管理员申请升级 </div>
@@ -89,7 +73,7 @@
                     <div class="attr">
                         <span class="label">购买数量</span>
                         <span class="value">
-                            <Input v-model="num" number readonly style="width:150px; text-align: center">
+                            <Input v-model="select_serve_info.num" number readonly style="width:150px; text-align: center">
                                 <span class="btn" slot="prepend" @click="onClick_subtract_num"> - </span>
                                 <span class="btn" slot="append" @click="onClick_add_num"> + </span>
                             </Input>
@@ -99,7 +83,7 @@
                     <div class="attr">
                         <span class="label">购买时长</span>
                         <span class="value">
-                            <Select v-model="duration" style="width:200px">
+                            <Select v-model="select_serve_info.duration" style="width:200px">
                                 <Option v-for="item in timeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                             </Select>
                         </span>
@@ -115,70 +99,373 @@
 
                 <div class="cost-b">
                     <span class="label">费用</span>
-                    <span class="value">377元</span>
+                    <span class="value">{{price}}元</span>
                 </div>
 
                 <div class="btn-box">
-                    <Button class="btn-1" size="large">立即购买</Button>
-                    <Button class="btn-2" size="large">向管理员申请</Button>
+                    <Button class="btn-1" size="large" :disabled="!single || select_serve_info.cloudServerId === ''" @click="onClick_pay">立即购买</Button>
+                    <Button class="btn-2" size="large" :disabled="!single || select_serve_info.cloudServerId === ''" @click="onClick_freeApply_modal">向管理员申请</Button>
                 </div>
 
             </div>
 
         </div>
 
-        <Modal v-model="modal2"
-               title="服务申请表"
-               width="360">
-            <!--<p slot="header" style="color:#f60;text-align:center">-->
-            <!--<Icon type="information-circled"></Icon>-->
-            <!--<span>Delete confirmation</span>-->
-            <!--</p>-->
-            <div style="text-align:center">
+        <Modal v-model="modal_freeApply"
+               title="服务申请表">
+            <div>
+                <Form ref="freeApplyServeForm"
+                      :model="userInfo"
+                      :rules="rules_userInfo"
+                      :label-width="80">
+                    <FormItem  label="申请单位" prop="applyUnit">
+                        <Input v-model="userInfo.applyUnit" placeholder="" ></Input>
+                    </FormItem>
 
+                    <FormItem label="申请人" prop="applyPerson">
+                        <Input v-model="userInfo.applyPerson"  placeholder="" ></Input>
+                    </FormItem>
+                    <FormItem label="证件信息" prop="">
+                        <Upload :action="uploadUrl"
+                                :headers="headers"
+                                :on-error="uploadHandleError"
+                                :on-success="uploadHandleSuccess">
+                            <Button type="ghost" icon="ios-cloud-upload-outline">上传证件信息</Button>
+                        </Upload>
+                    </FormItem>
+                    <FormItem label="联系电话" prop="phone">
+                        <Input v-model="userInfo.phone" placeholder="" ></Input>
+                    </FormItem>
+                    <FormItem label="联系邮箱" prop="mail">
+                        <Input v-model="userInfo.mail"  placeholder="" ></Input>
+                    </FormItem>
+                    <FormItem label="申请内容" prop="">
+                        <Input type="textarea"
+                               readonly
+                               :value="free_apply_content"
+                               :rows="4"
+                               placeholder="" ></Input>
+                    </FormItem>
+                    <FormItem label="用户说明与特殊需求" prop="">
+                        <Input v-model="userInfo.useDescription" type="textarea"  placeholder="" ></Input>
+                    </FormItem>
+                </Form>
             </div>
             <div slot="footer">
-                <Button type="info" size="large" >提交</Button>
+                <Button type="info" size="large" @click="onClick_freeApply_ok" >提交</Button>
             </div>
         </Modal>
+
     </div>
 </template>
 
 <script>
+    import Config from '../../../libs/appConfig/config';
     export default {
         name: "cloudService",
         data() {
+            var that = this;
             return {
-                num: 1,
-                duration: '1',
-                single: false,
+                query: {
+                    cloudServerId: ''  // 服务器ID
+                },
+                single: false,  // 用户服务器使用协议
 
-                modal2: false,
+                // 免费申请服务器器
+                modal_freeApply: false,
 
+                // 字典
                 timeList: [{
                     label: '一个月',
-                    value: '1'
+                    value: 1
                 },{
                     label: '两个月',
-                    value: '2'
+                    value: 2
                 },{
                     label: '三个月',
-                    value: '3'
-                }]
+                    value: 3
+                },{
+                    label: '半年',
+                    value: 6
+                },{
+                    label: '一年',
+                    value: 12
+                }],
+
+                // 服务器列表数据
+                serverDataList: [],
+                select_serve_info: {
+                    cloudServerId: '',
+                    serverName: '',
+                    mirror: '',
+                    cpu: '',
+                    memory : '',
+                    systemDisk: '',
+                    hardDisk: '',
+                    bandWidth: '',
+                    chageStandard: '',
+
+                    num: 1,        // 购买个数
+                    duration: 1    // 购买时间长度（月）
+                },
+
+                // 用户基础信息
+                userInfo: {
+                    applyUnit: '',
+                    applyPerson: '',
+                    certificate: '',
+                    phone: '',
+                    mail: '',
+                    useDescription: ''
+                },
+                rules_userInfo: {
+                    applyUnit: [
+                        { required: true, message: '申请单位不能为空！', trigger: 'blur' }
+                    ],
+                    applyPerson: [
+                        { required: true, message: '申请人不能为空！', trigger: 'blur' }
+                    ],
+                    phone: [
+                        { required: true, message: '联系电话不能为空！', trigger: 'blur' }
+                    ],
+                    mail: [
+                        { required: true, message: '联系邮箱不能为空！', trigger: 'blur' }
+                    ]
+                },
+
+                // 上传证件
+                uploadUrl: window.location.origin + Config[Config.env].ajaxUrl  + '/sys/upload/file',
+                headers: {
+                    Authorization: that.$store.state.token || ''
+                },
+                upload_data: {
+
+                }
+
             };
         },
-
+        created() {
+             this.query.cloudServerId = this.$route.query.cid || '';
+        },
+        computed: {
+            price() {
+                return this.select_serve_info.num * this.select_serve_info.duration * this.select_serve_info.chageStandard;
+            },
+            free_apply_content() {
+                return  this.select_serve_info.serverName
+                    + '\n'
+                    + '规格：' + this.select_serve_info.cpu + 'CPU;'
+                    + this.select_serve_info.memory + '内存;'
+                    + this.select_serve_info.systemDisk + '系统盘;'
+                    + this.select_serve_info.hardDisk + '硬盘;'
+                    + this.select_serve_info.bandWidth + '宽带;'
+                    + '\n'
+                    + '数量：' + this.select_serve_info.num
+                    + '\n'
+                    + '时间：' + this.select_serve_info.duration + '个月';
+            }
+        },
+        mounted() {
+            this.getServeData();
+        },
         methods: {
             onClick_subtract_num() {
-                if (this.num <= 1) {
-                    this.num = 1;
+                if (this.select_serve_info.num <= 1) {
+                    this.select_serve_info.num = 1;
                 }
                 else {
-                    this.num -= 1;
+                    this.select_serve_info.num -= 1;
                 }
             },
             onClick_add_num() {
-                this.num += 1;
+                this.select_serve_info.num += 1;
+            },
+
+            /**
+             * 获取首页服务器列表
+             */
+            getServeData() {
+                var that = this;
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/cloudServer/getServerList'
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.serverDataList =  response.result;
+
+                        that.serverDataList.forEach(function (val) {
+                            if (val.cloudServerId === that.query.cloudServerId) {
+                                that.onClick_select(val);
+                            }
+                        })
+                    }
+
+                }).catch(function (e) {
+                })
+            },
+
+            /**
+             * 选中服务器
+             * @param item
+             */
+            onClick_select(item) {
+                this.query.cloudServerId =  item.cloudServerId;
+
+                this.select_serve_info.cloudServerId = item.cloudServerId;
+                this.select_serve_info.serverName = item.serverName;
+                this.select_serve_info.mirror = item.mirror;
+                this.select_serve_info.cpu = item.cpu;
+                this.select_serve_info.memory = item.memory;
+                this.select_serve_info.systemDisk = item.systemDisk;
+                this.select_serve_info.hardDisk = item.hardDisk;
+                this.select_serve_info.bandWidth = item.bandWidth;
+                this.select_serve_info.chageStandard = item.chageStandard || 0;
+            },
+            /**
+             * 购买
+             */
+            onClick_pay() {
+                var that = this;
+
+                if (!!this.$store.state.uid) {
+                    that.$http({
+                        method: 'get',
+                        url: '/panoramic/serverOrder/buyCloudServer',
+                        params: {
+                            cloudServerId: that.select_serve_info.cloudServerId,
+                            serverNumber: that.select_serve_info.num,
+                            months: that.select_serve_info.duration,
+                            userId: that.$store.state.uid
+                        }
+                    }).then(function (response) {
+                        if (response.status === 1) {
+                            that.$Message.success({
+                                content: '购买成功！'
+                            });
+                        }
+                        else {
+                            that.$Message.error({
+                                content: response.errMsg
+                            });
+                        }
+                    }).catch(function (e) {
+                        
+                    });
+                }
+                else {
+                    this.$Modal.confirm({
+                        title: '提示',
+                        content: '请先登陆！',
+                        onOk() {
+
+                            var pUrl = window.location.origin+ '/\%23' + Config[Config.env].baseUrl + that.$route.path.replace('/', '');
+                            var url = "http://218.5.80.6:8070/OCEAN/api/login?url=" + pUrl;
+                            window.location.href = url;
+                        }
+                    })
+                }
+            },
+
+            /**
+             * 免费申请弹出窗口
+             */
+            onClick_freeApply_modal() {
+                var that = this;
+
+                if (!!this.$store.state.uid) {
+
+                    that.$http({
+                        method: 'get',
+                        url: '/auth/getUserInfoById',
+                        params: {
+                            token: that.$store.state.token,
+                            uid: that.$store.state.uid,
+                            type: that.$store.state.usertype
+                        }
+                    }).then(function (response) {
+
+                        that.modal_freeApply = true;
+                        if (response.status === 1) {
+                            that.userInfo.applyUnit = response.result.enterName || '';
+                            that.userInfo.applyPerson = response.result.name || '';
+                            that.userInfo.phone = response.result.mobile || '';
+                            that.userInfo.mail = response.result.email || '';
+                        }
+                        else {}
+                    }).catch(function (e) {
+
+                    });
+                }
+                else {
+                    this.$Modal.confirm({
+                        title: '提示',
+                        content: '请先登陆！',
+                        onOk() {
+
+                            var pUrl = window.location.origin+ '/\%23' + Config[Config.env].baseUrl + that.$route.path.replace('/', '');
+                            var url = "http://218.5.80.6:8070/OCEAN/api/login?url=" + pUrl;
+                            window.location.href = url;
+                        }
+                    })
+                }
+
+            },
+
+            /**
+             * 上传服务器成功返回
+             */
+            uploadHandleSuccess(res) {
+                this.userInfo.certificate = res.result.pictureId;
+                this.$Message.success({
+                    content: '上传成功！'
+                });
+            },
+            /**
+             * 上传服务器失败返回
+             */
+            uploadHandleError(res) {
+                this.$Message.error({
+                    content: '上传失败！'
+                });
+                console.dir(res);
+            },
+
+            onClick_freeApply_ok() {
+                var that = this;
+                that.$http({
+                    method: 'post',
+                    url: '/panoramic/serverOrder/applyCloudServer',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    data: JSON.stringify({
+                        cloudServerId: that.select_serve_info.cloudServerId,
+                        serverNumber: that.select_serve_info.num,
+                        months: that.select_serve_info.duration,
+                        userId: that.$store.state.uid,
+
+                        applyUnit: that.userInfo.applyUnit,
+                        applyPerson: that.userInfo.applyPerson,
+                        certificate: that.userInfo.certificate,
+                        phone: that.userInfo.phone,
+                        mail: that.userInfo.mail,
+                        useDescription: that.userInfo.useDescription
+
+                    })
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.$Message.success({
+                            content: '申请成功！'
+                        });
+                    }
+                    else {
+                        that.$Message.error({
+                            content: response.errMsg
+                        });
+                    }
+                }).catch(function (e) {
+
+                });
             }
         }
     }
@@ -217,10 +504,11 @@
                         margin: 0 8px;
                         display: inline-block;
                         padding: 6px 19px;
-                        color: #666666;
+                        color: #FFF;
                         font-size: 18px;
                         line-height: 20px;
                         border: 1px solid #f7f7f7;
+                        background-color: #00c0dd;
                     }
                 }
 

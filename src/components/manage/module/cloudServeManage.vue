@@ -189,7 +189,46 @@
             }
         },
         mounted() {
-            this.getTableData();
+            this.$http({
+                method: 'post',
+                url: '/panoramic/serverOrder/distributionServerAccount',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                    orderId: '1254'
+                },
+                data: JSON.stringify([
+                        {
+                            cloudServerId: '11',
+                            remoteAddress: '192.168.1.1',
+                            account: 'admin',
+                            password: '123456'
+                        },
+                        {
+                            cloudServerId: '12',
+                            remoteAddress: '192.168.1.1',
+                            account: 'admin1',
+                            password: '1234561'
+                        }
+                    ])
+            }).then(function (response) {
+                that.tableLoading = false;
+                if (response.status === 1) {
+                    that.tableData = response.result.page.list;
+                    that.searchParams.count = response.result.page.count;
+                }
+                else {
+                    this.$Modal.error({
+                        content: response.errMsg
+                    });
+                }
+            }).catch(function (e) {
+                that.tableLoading = false;
+                that.$Modal.error({
+                    content: JSON.stringify(e)
+                });
+            })
+
+            //this.getTableData();
         },
         methods: {
             datePicker_onChange(val) {

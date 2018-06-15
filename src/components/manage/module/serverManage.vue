@@ -237,7 +237,6 @@
 
 <script>
     import Config from '../../../libs/appConfig/config';
-    import Cookie from '../../../libs/helpers/cookies';
     export default {
         name: "serverManage",
         data() {
@@ -496,7 +495,7 @@
                 modal_upload: false,
                 uploadFileUrl: '',
                 headers: {
-                    Authorization: Cookie.read('token') || ''
+                    Authorization: that.$store.state.token || ''
                 },
                 upload_data: {
                     cloudServerId: ''
@@ -512,7 +511,7 @@
             }
         },
         mounted() {
-            this.uploadFileUrl = window.location.origin + Config[Config.env].imgUrl  + '';
+            this.uploadFileUrl = window.location.origin + Config[Config.env].ajaxUrl  + '';
 
             this.getTableData();
         },

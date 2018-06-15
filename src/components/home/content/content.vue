@@ -13,7 +13,7 @@
                                 <div class="mbtn-title">自定义配置</div>
                                 <div class="mbtn-desc">稳定、安全、弹性、高性能的云端计算服务， 实时满足您的多样性业务需求</div>
                                 <div class="mbtn-btn">
-                                    <Button>直接购买</Button>
+                                    <Button  @click="onClick_Buy()">直接购买</Button>
                                 </div>
                             </div>
                         </div>
@@ -22,28 +22,28 @@
                         <div class="mbtn-box">
                             <div class="mbtn-icon mbtn-icon-2"></div>
                             <div class="mbtn-info">
-                                <div class="mbtn-title">通用性</div>
+                                <div class="mbtn-title">{{serverDataList[0].serverName}}</div>
                                 <div class="mbtn-config">
                                     <div class="attr">
                                         <span class="label">CPU : </span>
-                                        <span class="value">2核</span>
+                                        <span class="value">{{serverDataList[0].cpu}}</span>
                                     </div>
                                     <div class="attr">
                                         <span class="label">内存 : </span>
-                                        <span class="value">4G</span>
+                                        <span class="value">{{serverDataList[0].memory}}</span>
                                     </div>
                                 </div>
                                 <div class="mbtn-config">
                                     <div class="attr">
                                         <span class="label">宽带 : </span>
-                                        <span class="value">1Mbps</span>
+                                        <span class="value">{{serverDataList[0].bandWidth}}</span>
                                     </div>
                                     <div class="attr">
                                         <span class="label">硬盘 : </span>
-                                        <span class="value">50G云硬盘</span>
+                                        <span class="value">{{serverDataList[0].hardDisk}}</span>
                                     </div>
                                 </div>
-                                <div class="mbtn-btn"><Button>直接购买</Button></div>
+                                <div class="mbtn-btn"><Button @click="onClick_Buy(serverDataList[0].cloudServerId)">直接购买</Button></div>
                             </div>
                         </div>
                     </div>
@@ -53,28 +53,28 @@
                         <div class="mbtn-box">
                             <div class="mbtn-icon mbtn-icon-3"></div>
                             <div class="mbtn-info">
-                                <div class="mbtn-title">专业型</div>
+                                <div class="mbtn-title">{{serverDataList[1].serverName}}</div>
                                 <div class="mbtn-config">
                                     <div class="attr">
                                         <span class="label">CPU : </span>
-                                        <span class="value">4核</span>
+                                        <span class="value">{{serverDataList[1].cpu}}</span>
                                     </div>
                                     <div class="attr">
                                         <span class="label">内存 : </span>
-                                        <span class="value">8G</span>
+                                        <span class="value">{{serverDataList[1].memory}}</span>
                                     </div>
                                 </div>
                                 <div class="mbtn-config">
                                     <div class="attr">
                                         <span class="label">宽带 : </span>
-                                        <span class="value">5Mbps</span>
+                                        <span class="value">{{serverDataList[1].bandWidth}}</span>
                                     </div>
                                     <div class="attr">
                                         <span class="label">硬盘 : </span>
-                                        <span class="value">50G云硬盘</span>
+                                        <span class="value">{{serverDataList[1].hardDisk}}</span>
                                     </div>
                                 </div>
-                                <div class="mbtn-btn"><Button>直接购买</Button></div>
+                                <div class="mbtn-btn"><Button @click="onClick_Buy(serverDataList[1].cloudServerId)">直接购买</Button></div>
                             </div>
                         </div>
                     </div>
@@ -82,28 +82,28 @@
                         <div class="mbtn-box">
                             <div class="mbtn-icon mbtn-icon-4"></div>
                             <div class="mbtn-info">
-                                <div class="mbtn-title">高计算场景</div>
+                                <div class="mbtn-title">{{serverDataList[2].serverName}}</div>
                                 <div class="mbtn-config">
                                     <div class="attr">
                                         <span class="label">CPU : </span>
-                                        <span class="value">8核</span>
+                                        <span class="value">{{serverDataList[2].cpu}}</span>
                                     </div>
                                     <div class="attr">
                                         <span class="label">内存 : </span>
-                                        <span class="value">16G</span>
+                                        <span class="value">{{serverDataList[2].memory}}</span>
                                     </div>
                                 </div>
                                 <div class="mbtn-config">
                                     <div class="attr">
                                         <span class="label">宽带 : </span>
-                                        <span class="value">10Mbps</span>
+                                        <span class="value">{{serverDataList[2].bandWidth}}</span>
                                     </div>
                                     <div class="attr">
                                         <span class="label">硬盘 : </span>
-                                        <span class="value">100G云硬盘</span>
+                                        <span class="value">{{serverDataList[2].hardDisk}}</span>
                                     </div>
                                 </div>
-                                <div class="mbtn-btn"><Button>直接购买</Button></div>
+                                <div class="mbtn-btn"><Button @click="onClick_Buy(serverDataList[2].cloudServerId)">直接购买</Button></div>
                             </div>
                         </div>
                     </div>
@@ -196,7 +196,75 @@
     export default {
         name: "h-content",
         data() {
-            return {};
+            return {
+                serverDataList: [
+                    {
+                        cloudServerId: '',
+                        bandWidth: '',
+                        cpu: '',
+                        hardDisk: '',
+                        memory: '',
+                        serverName: ''
+                    },
+                    {
+                        cloudServerId: '',
+                        bandWidth: '',
+                        cpu: '',
+                        hardDisk: '',
+                        memory: '',
+                        serverName: ''
+                    },
+                    {
+                        cloudServerId: '',
+                        bandWidth: '',
+                        cpu: '',
+                        hardDisk: '',
+                        memory: '',
+                        serverName: ''
+                    }
+                ]
+            };
+        },
+        mounted() {
+            this.getServeData();
+        },
+        methods: {
+            /**
+             * 获取首页服务器列表
+             */
+            getServeData() {
+                var that = this;
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/cloudServer/homePageServerList'
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        response.result.forEach(function (val, idx) {
+                            that.serverDataList[idx].cloudServerId = val.cloudServerId;
+                            that.serverDataList[idx].bandWidth = val.bandWidth;
+                            that.serverDataList[idx].cpu = val.cpu;
+                            that.serverDataList[idx].hardDisk = val.hardDisk;
+                            that.serverDataList[idx].memory = val.memory;
+                            that.serverDataList[idx].serverName = val.serverName;
+                        });
+                    }
+
+                }).catch(function (e) {
+                })
+            },
+
+            /**
+             * 购买服务器跳转
+             * @param cloudServerId
+             */
+            onClick_Buy(cloudServerId) {
+                this.$router.push({
+                    name: 'cloudService',
+                    query: {
+                        cid: cloudServerId || ''
+                    }
+                })
+            }
         }
     }
 </script>
