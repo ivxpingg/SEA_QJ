@@ -149,7 +149,7 @@
                     memory: '4G',
                     systemDisk: '500G',
                     bandWidth: '10Mbps'
-                }]
+                }],
 
                 // 详情
                 modal_detail: false
