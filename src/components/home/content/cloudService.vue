@@ -523,7 +523,8 @@
                         border: 1px solid #f7f7f7;
                         cursor: pointer;
 
-                        &:last-child {
+
+                        &:nth-child(2n) {
                             margin-right: 0;
                         }
 
