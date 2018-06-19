@@ -2,7 +2,7 @@
     <div class="orderManage-container">
         <vMenuTitle name="订单管理"></vMenuTitle>
         <div class="content-panel">
-            <Tabs type="card">
+            <Tabs type="card" :animated="false">
                 <TabPane label="购买订单">
                         <div class="handle-bar">
                             <div class="hd my-btn"
@@ -67,9 +67,8 @@
                         </div>
                         <div class="table-panel">
                             <Table border
-                                   :loading="tableLoading_apply"
-                                   :columns="tableColumns_apply"
-                                   :data="tableData_apply"></Table>
+                                   :columns="table_pay_columns_detail"
+                                   :data="table_pay_data_detail"></Table>
                         </div>
                         <div class="list-page-panel">
                             <Page :total="searchParams_apply.count" @on-change="onPageNo_change_apply"></Page>
@@ -77,6 +76,39 @@
                 </TabPane>
             </Tabs>
         </div>
+
+        <Modal v-model="modal_pay_detail"
+               :width="900"
+               title="详情">
+            <div>
+                <div>
+                    <span>购买人：</span> <span></span>
+                    <span>订单时间：</span> <span></span>
+                    <span>订单状态：</span> <span></span>
+                    <span>付款时间：</span> <span></span>
+                </div>
+
+                <Table border
+                       :loading="tableLoading_apply"
+                       :columns="tableColumns_apply"
+                       :data="tableData_apply"></Table>
+
+                <div>
+                    <div>
+                        <span>剩余时间</span>
+                        <span>2250天</span>
+                    </div>
+
+                    <div>
+                        <span>总计费用</span>
+                        <span>600</span>
+                    </div>
+                </div>
+
+                <div class="other-title">其它信息</div>
+            </div>
+        </Modal>
+
     </div>
 </template>
 
@@ -85,7 +117,9 @@
     export default {
         name: "orderManage",
         data() {
+            var that = this;
             return {
+                // ******* 付费申请 ******
                 datePicker_default_paid: [],
                 tableLoading_paid: false,
                 searchParams_paid: {
@@ -97,18 +131,6 @@
                     timeInterval: '',
                     orderType: 'ServerOrder'
                 },
-                datePicker_default_apply: [],
-                tableLoading_apply: false,
-                searchParams_apply: {
-                    pageNo: 1, // 当前页
-                    pageSize: 10, // 每页几行
-                    count: 0,     // 总页数
-                    startDate: '',
-                    endDate: '',
-                    timeInterval: '',
-                    orderType: 'FreeServerOrder'
-                },
-
                 tableColumns_paid: [
                     {
                         type: 'index',
@@ -126,10 +148,21 @@
                     },{
                         title: '商品内容',
                         key: 'name',
-                        align: 'center'
+                        align: 'center',
+                        render(h, params){
+                            var text = '';
+
+                            text = '规格：' + params.row.cpu + 'CPU; '
+                                + params.row.memory +'内存; '
+                                + params.row.systemDisk + '; '
+                                + params.row.hardDisk+ '; '
+                                + params.row.bandWidth+ ';'
+
+                            return h('div', text);
+                        }
                     },{
                         title: '数量',
-                        key: 'name',
+                        key: 'serverNumber',
                         align: 'center'
                     },{
                         title: '购买时间',
@@ -137,7 +170,7 @@
                         align: 'center'
                     },{
                         title: '费用',
-                        key: 'name',
+                        key: 'totalPrice',
                         align: 'center'
                     },{
                         title: '状态',
@@ -147,11 +180,182 @@
                         title: '操作',
                         align: 'center',
                         render(h, params) {
-                            return '222';
+
+                            var button1, button2, button3, btnList = [];
+
+                            button1 = h('Button', {
+                                props: {
+                                    type: 'text'
+                                },
+                                style: {
+                                    textDecoration: 'underline'
+                                },
+                                on: {
+                                    click() {
+                                        that.onClick_pay_detail(params.row);
+                                    }
+                                }
+                            }, '详情');
+
+                            btnList.push(button1);
+
+                            // 待支付
+                            if (params.orderStatus === 'WaitPay') {
+                                button2 = h('Button', {
+                                    props: {
+                                        type: 'text'
+                                    },
+                                    style: {
+                                        textDecoration: 'underline'
+                                    },
+                                    on: {
+                                        click() {
+                                            that.onclick_pay_payOrder(params.row);
+                                        }
+                                    }
+                                }, '付款');
+
+                                button3 = h('Button', {
+                                    props: {
+                                        type: 'text'
+                                    },
+                                    style: {
+                                        textDecoration: 'underline'
+                                    },
+                                    on: {
+                                        click() {
+                                            that.onclick_pay_cancelOrder(params.row);
+                                        }
+                                    }
+                                }, '取消订单');
+
+                                btnList.push(button2);
+                                btnList.push(button3);
+                            }
+                            // 已支付
+                            if (params.orderStatus === 'Pay') {
+
+                                button2 = h('Button', {
+                                    props: {
+                                        type: 'text'
+                                    },
+                                    style: {
+                                        textDecoration: 'underline'
+                                    },
+                                    on: {
+                                        click() {
+                                            that.onclick_pay_getInfo(params.row);
+                                        }
+                                    }
+                                }, '获取');
+
+                                button3 = h('Button', {
+                                    props: {
+                                        type: 'text'
+                                    },
+                                    style: {
+                                        textDecoration: 'underline'
+                                    },
+                                    on: {
+                                        click() {
+                                            that.onclick_pay_refund(params.row);
+                                        }
+                                    }
+                                }, '退款');
+
+                                btnList.push(button2);
+                                btnList.push(button3);
+
+                            }
+                            // 退款中
+                            if (params.orderStatus === 'Refund') {
+                                button2 = h('Button', {
+                                    props: {
+                                        type: 'text'
+                                    },
+                                    style: {
+                                        textDecoration: 'underline'
+                                    },
+                                    on: {
+                                        click() {
+                                            that.onclick_pay_cancelRefund(params.row);
+                                        }
+                                    }
+                                }, '取消退款');
+
+                                btnList.push(button2);
+                            }
+                            // 已退款
+                            if (params.orderStatus === 'Refunded') {
+                            }
+                            // 已取消
+                            if (params.orderStatus === 'Cancel') {
+
+                            }
+
+                            return h('div', btnList);
                         }
                     }
                 ],
+                tableData_paid: [],
 
+                // 付费详情
+                modal_pay_detail: true,
+                table_pay_columns_detail: [
+                    {
+                        title: '订单号',
+                        key: 'orderNum',
+                        align: 'center'
+                    },{
+                        title: '商品名称',
+                        key: 'serverName',
+                        align: 'center'
+                    },{
+                        title: '商品内容',
+                        key: 'name',
+                        align: 'center',
+                        render(h, params){
+                            var text = '';
+
+                            text = '规格：' + params.row.cpu + 'CPU; '
+                                + params.row.memory +'内存; '
+                                + params.row.systemDisk + '; '
+                                + params.row.hardDisk+ '; '
+                                + params.row.bandWidth+ ';'
+
+                            return h('div', text);
+                        }
+                    },{
+                        title: '数量',
+                        key: 'serverNumber',
+                        align: 'center'
+                    },{
+                        title: '单价',
+                        key: 'totalPrice',
+                        align: 'center'
+                    },{
+                        title: '账号信息',
+                        key: 'totalPrice',
+                        align: 'center',
+                        render(h, params) {
+                            return '';
+                        }
+                    }
+                ],
+                table_pay_data_detail: [],
+
+                // ******* 免费申请 ******
+                datePicker_default_apply: [],
+                tableLoading_apply: false,
+                searchParams_apply: {
+                    pageNo: 1, // 当前页
+                    pageSize: 10, // 每页几行
+                    count: 0,     // 总页数
+                    startDate: '',
+                    endDate: '',
+                    timeInterval: '',
+                    orderType: 'FreeServerOrder'
+                },
                 tableColumns_apply: [
                     {
                         type: 'index',
@@ -190,13 +394,7 @@
                         }
                     }
                 ],
-
-                tableData_paid: [{
-                    name: '33'
-                }],
-                tableData_apply: [{
-                    name: '33'
-                }]
+                tableData_apply: [],
 
             };
         },
@@ -304,6 +502,38 @@
                 })
             },
 
+            // 购买订单表格接口 - 详情
+            onClick_pay_detail(row) {
+
+                var that = this;
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/serverOrder/detail',
+                    params: {
+                        orderId: row.orderId
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+
+                    }
+                    else {
+                    }
+                }).catch(function (e) {})
+
+            },
+            // 购买订单表格接口 - 付款
+            onclick_pay_payOrder(row) {},
+            // 购买订单表格接口 - 取消订单
+            onclick_pay_cancelOrder(row) {},
+            // 购买订单表格接口 - 退款
+            onclick_pay_refund(row) {},
+            // 购买订单表格接口 - 获取账号信息
+            onclick_pay_getInfo(row) {},
+            // 购买订单表格接口 - 取消退款
+            onclick_pay_cancelRefund(row) {},
+
+            // ****** 付费弹窗事件 ******
+
 
         }
     }
@@ -314,6 +544,7 @@
 
         .content-panel {
             margin-top: 23px;
+            width: 100%;
 
             .handle-bar {
                 padding: 0;
