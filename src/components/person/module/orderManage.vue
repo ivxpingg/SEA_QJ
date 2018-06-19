@@ -67,8 +67,9 @@
                         </div>
                         <div class="table-panel">
                             <Table border
-                                   :columns="table_pay_columns_detail"
-                                   :data="table_pay_data_detail"></Table>
+                                   :loading="tableLoading_apply"
+                                   :columns="tableColumns_apply"
+                                   :data="tableData_apply"></Table>
                         </div>
                         <div class="list-page-panel">
                             <Page :total="searchParams_apply.count" @on-change="onPageNo_change_apply"></Page>
@@ -90,8 +91,8 @@
 
                 <Table border
                        :loading="tableLoading_apply"
-                       :columns="tableColumns_apply"
-                       :data="tableData_apply"></Table>
+                       :columns="table_pay_columns_detail"
+                       :data="table_pay_data_detail"></Table>
 
                 <div>
                     <div>
