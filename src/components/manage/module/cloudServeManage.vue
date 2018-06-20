@@ -2,63 +2,92 @@
     <div class="cloudServeManage-container">
 
         <div class="content-panel">
-
-            <div class="handle-bar">
-
-                <div class="hd">
-                    <div class="form-item">
-                        <label class="label" for="userOrder_keyword">支付购买订单(2)</label>
-                        <div class="value"> </div>
-                    </div>
-                </div>
-
-                <div class="hd">
-                    <div class="form-item">
-                        <label class="label" for="userOrder_keyword">免费申请订单(27)</label>
-                        <div class="value"></div>
-                    </div>
-                </div>
-
-                <div class="hd">
-                    <div class="form-item">
-                        <label class="label" for="userOrder_keyword">关键字</label>
-                        <div class="value">
-                            <Input id="userOrder_keyword" v-model="searchParams.keyword" placeholder="工单、用户、电话"></Input>
+            <Tabs type="card" :animated="false">
+                <TabPane label="购买订单">
+                    <div class="handle-bar">
+                        <div class="hd">
+                            <div class="form-item">
+                                <label class="label" for="userOrder_keyword1">关键字</label>
+                                <div class="value">
+                                    <Input id="userOrder_keyword1" v-model="searchParams_paid.keyword" placeholder="工单、用户、电话"></Input>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="hd">
-                    <div class="form-item">
-                        <label class="label">时间</label>
-                        <div class="value">
-                            <DatePicker :value="datePicker_default"
-                                        :clearable="true"
-                                        format="yyyy-MM-dd"
-                                        type="daterange"
-                                        placeholder="日期选择"
-                                        @on-change="datePicker_onChange"
-                                        style="width: 220px"></DatePicker>
+                        <div class="hd">
+                            <div class="form-item">
+                                <label class="label">时间</label>
+                                <div class="value">
+                                    <DatePicker :value="datePicker_default"
+                                                :clearable="true"
+                                                format="yyyy-MM-dd"
+                                                type="daterange"
+                                                placeholder="日期选择"
+                                                @on-change="datePicker_onChange"
+                                                style="width: 220px"></DatePicker>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="hd">
+                            <Button type="primary" @click="onClick_search">查询</Button>
+                        </div>
+
                     </div>
-                </div>
+                    <div class="table-panel">
+                        <Table border
+                               :loading="tableLoading_paid"
+                               :columns="tableColumns_paid"
+                               :data="tableData_paid"></Table>
+                    </div>
+                    <div class="list-page-panel">
+                        <Page :total="searchParams_paid.count" @on-change="onPageNo_change_paid"></Page>
+                    </div>
+                </TabPane>
+                <TabPane label="申请订单">
+                    <div class="handle-bar">
+                        <div class="hd">
+                            <div class="form-item">
+                                <label class="label" for="userOrder_keyword2">关键字</label>
+                                <div class="value">
+                                    <Input id="userOrder_keyword2" v-model="searchParams_apply.keyword" placeholder="工单、用户、电话"></Input>
+                                </div>
+                            </div>
+                        </div>
 
-                <div class="hd">
-                    <Button type="primary" @click="onClick_search">查询</Button>
-                </div>
+                        <div class="hd">
+                            <div class="form-item">
+                                <label class="label">时间</label>
+                                <div class="value">
+                                    <DatePicker :value="datePicker_default"
+                                                :clearable="true"
+                                                format="yyyy-MM-dd"
+                                                type="daterange"
+                                                placeholder="日期选择"
+                                                @on-change="datePicker_onChange"
+                                                style="width: 220px"></DatePicker>
+                                </div>
+                            </div>
+                        </div>
 
-            </div>
+                        <div class="hd">
+                            <Button type="primary" @click="onClick_search">查询</Button>
+                        </div>
 
-            <div class="table-panel">
-                <Table border :loading="tableLoading" :columns="tableColumns" :data="tableData"></Table>
-            </div>
-            <div class="list-page-panel">
-                <Page :total="searchParams.count"
-                      show-total
-                      @on-change="onPageNo_change"></Page>
-            </div>
-
+                    </div>
+                    <div class="table-panel">
+                        <Table border
+                               :loading="tableLoading_apply"
+                               :columns="tableColumns_apply"
+                               :data="tableData_apply"></Table>
+                    </div>
+                    <div class="list-page-panel">
+                        <Page :total="searchParams_apply.count" @on-change="onPageNo_change_apply"></Page>
+                    </div>
+                </TabPane>
+            </Tabs>
         </div>
+
 
     </div>
 </template>
@@ -69,70 +98,90 @@
         data() {
             var that = this;
             return {
-                datePicker_default: [],
-                searchParams: {
+                // ******* 付费申请 ******
+                datePicker_default_paid: [],
+                tableLoading_paid: false,
+                searchParams_paid: {
                     pageNo: 1, // 当前页
                     pageSize: 10, // 每页几行
                     count: 0,     // 总页数
+                    startDate: '',
+                    endDate: '',
+                    timeInterval: '',
                     keyword: '',
-                    startTime: '',
-                    endTime: '',
+                    orderType: 'ServerOrder'
                 },
-
-                tableLoading: false,
-                tableColumns: [
+                tableColumns_paid: [
                     {
                         type: 'index',
                         width: 80,
                         title: '序号',
                         align: 'center'
                     },{
-                        title: '订单编号',
-                        key: 'name',
+                        title: '订单号',
+                        key: 'orderNum',
                         align: 'center'
                     },{
-                        title: '购买内容',
-                        key: 'name',
+                        title: '商品名称',
+                        key: 'serverName',
                         align: 'center'
                     },{
-                        title: '创建时间',
+                        title: '商品内容',
                         key: 'name',
+                        align: 'center',
+                        render(h, params){
+                            var text = '';
+
+                            text = '规格：' + params.row.cpu + 'CPU; '
+                                + params.row.memory +'内存; '
+                                + params.row.systemDisk + '; '
+                                + params.row.hardDisk+ '; '
+                                + params.row.bandWidth+ ';'
+
+                            return h('div', text);
+                        }
+                    },{
+                        title: '数量',
+                        key: 'serverNumber',
                         align: 'center'
                     },{
-                        title: '方式',
-                        key: 'name',
+                        title: '购买时间',
+                        key: 'insTime',
                         align: 'center'
                     },{
-                        title: '购买单位',
-                        key: 'name',
-                        align: 'center'
-                    },{
-                        title: '联系方式',
-                        key: 'name',
+                        title: '费用',
+                        key: 'totalPrice',
                         align: 'center'
                     },{
                         title: '状态',
-                        key: 'name',
-                        align: 'center'
-                    },{
-                        title: '实际支付价格',
-                        key: 'name',
+                        key: 'orderStatusStr',
                         align: 'center'
                     },{
                         title: '操作',
                         align: 'center',
-                        width: 220,
                         render(h, params) {
 
-                            var text = '';
+                            var button1, button2, button3, btnList = [];
 
-                            switch (params.row.applyStatus){
-                                case '已发布': text = '下架'; break;
-                                case '未发布': text = '上架'; break;
-                            }
+                            button1 = h('Button', {
+                                props: {
+                                    type: 'text'
+                                },
+                                style: {
+                                    textDecoration: 'underline'
+                                },
+                                on: {
+                                    click() {
+                                        that.onClick_pay_detail(params.row);
+                                    }
+                                }
+                            }, '详情');
 
-                            return h('div', [
-                                h('Button', {
+                            btnList.push(button1);
+
+                            // 待支付
+                            if (params.orderStatus === 'WaitPay') {
+                                button2 = h('Button', {
                                     props: {
                                         type: 'text'
                                     },
@@ -141,16 +190,12 @@
                                     },
                                     on: {
                                         click() {
-                                            if(text === '下架') {
-
-                                            }
-                                            else {
-
-                                            }
+                                            that.onclick_pay_payOrder(params.row);
                                         }
                                     }
-                                }, text),
-                                h('Button', {
+                                }, '付款');
+
+                                button3 = h('Button', {
                                     props: {
                                         type: 'text'
                                     },
@@ -158,10 +203,19 @@
                                         textDecoration: 'underline'
                                     },
                                     on: {
-                                        click() {}
+                                        click() {
+                                            that.onclick_pay_cancelOrder(params.row);
+                                        }
                                     }
-                                }, '导入'),
-                                h('Button', {
+                                }, '取消订单');
+
+                                btnList.push(button2);
+                                btnList.push(button3);
+                            }
+                            // 已支付
+                            if (params.orderStatus === 'Pay') {
+
+                                button2 = h('Button', {
                                     props: {
                                         type: 'text'
                                     },
@@ -169,15 +223,178 @@
                                         textDecoration: 'underline'
                                     },
                                     on: {
-                                        click() {}
+                                        click() {
+                                            that.onclick_pay_getInfo(params.row);
+                                        }
                                     }
-                                }, '详情')
-                            ]);
+                                }, '获取');
+
+                                button3 = h('Button', {
+                                    props: {
+                                        type: 'text'
+                                    },
+                                    style: {
+                                        textDecoration: 'underline'
+                                    },
+                                    on: {
+                                        click() {
+                                            that.onclick_pay_refund(params.row);
+                                        }
+                                    }
+                                }, '退款');
+
+                                btnList.push(button2);
+                                btnList.push(button3);
+
+                            }
+                            // 退款中
+                            if (params.orderStatus === 'Refund') {
+                                button2 = h('Button', {
+                                    props: {
+                                        type: 'text'
+                                    },
+                                    style: {
+                                        textDecoration: 'underline'
+                                    },
+                                    on: {
+                                        click() {
+                                            that.onclick_pay_cancelRefund(params.row);
+                                        }
+                                    }
+                                }, '取消退款');
+
+                                btnList.push(button2);
+                            }
+                            // 已退款
+                            if (params.orderStatus === 'Refunded') {
+                            }
+                            // 已取消
+                            if (params.orderStatus === 'Cancel') {
+
+                            }
+
+                            return h('div', btnList);
                         }
                     }
-
                 ],
-                tableData: [],
+                tableData_paid: [],
+
+                // ******* 免费申请 ******
+                datePicker_default_apply: [],
+                tableLoading_apply: false,
+                searchParams_apply: {
+                    pageNo: 1, // 当前页
+                    pageSize: 10, // 每页几行
+                    count: 0,     // 总页数
+                    startDate: '',
+                    endDate: '',
+                    timeInterval: '',
+                    keyword: '',
+                    orderType: 'FreeServerOrder'
+                },
+                tableColumns_apply: [
+                    {
+                        type: 'index',
+                        width: 80,
+                        title: '序号',
+                        align: 'center'
+                    },{
+                        title: '订单号',
+                        key: 'orderNum',
+                        align: 'center'
+                    },{
+                        title: '商品名称',
+                        key: 'serverName',
+                        align: 'center'
+                    },{
+                        title: '商品内容',
+                        key: 'name',
+                        align: 'center',
+                        render(h, params){
+                            var text = '';
+
+                            text = '规格：' + params.row.cpu + 'CPU; '
+                                + params.row.memory +'内存; '
+                                + params.row.systemDisk + '; '
+                                + params.row.hardDisk+ '; '
+                                + params.row.bandWidth+ ';'
+
+                            return h('div', text);
+                        }
+                    },{
+                        title: '数量',
+                        key: 'serverNumber',
+                        align: 'center'
+                    },{
+                        title: '申请时间',
+                        key: 'insTime',
+                        align: 'center'
+                    },{
+                        title: '状态',
+                        key: 'orderStatusStr',
+                        align: 'center'
+                    },{
+                        title: '操作',
+                        align: 'center',
+                        render(h, params) {
+                            var button;
+
+                            switch (params.row.orderStatus) {
+
+                                case 'WaitAudit':  // 待审核
+                                    button = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_freeApply_cancel(params.row);
+                                            }
+                                        }
+                                    }, '取消申请');
+                                    break;
+
+                                case 'AuditSucc':  // 审核成功
+                                    button = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_freeApply_getAccount(params.row);
+                                            }
+                                        }
+                                    }, '获取');
+                                    break;
+
+                                case 'TurnDown':  // 已驳回
+                                    button = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_freeApply_lookResult(params.row);
+                                            }
+                                        }
+                                    }, '查看原因');
+                                    break;
+                            }
+
+                            return h('div', [button]);
+                        }
+                    }
+                ],
+                tableData_apply: [],
             };
         },
         components: {},
@@ -289,17 +506,14 @@
 <style lang="scss" scoped>
     .cloudServeManage-container {
         .content-panel {
+            margin-top: 23px;
+            width: 100%;
             .handle-bar {
-                padding: 17px 11px 20px 11px;
-                border: {
-                    width: 0 0 1px 0;
-                    style: solid;
-                    color: #e1e1e1;
-                };
+                padding: 0;
                 overflow: hidden;
 
                 .hd {
-                    margin-right: 12px;
+                    margin-right: 4px;
                     float: left;
 
                     .form-item {
