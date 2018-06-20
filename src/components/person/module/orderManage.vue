@@ -79,35 +79,97 @@
         </div>
 
         <Modal v-model="modal_pay_detail"
-               :width="900"
+               :width="1000"
                title="详情">
-            <div>
-                <div>
-                    <span>购买人：</span> <span></span>
-                    <span>订单时间：</span> <span></span>
-                    <span>订单状态：</span> <span></span>
-                    <span>付款时间：</span> <span></span>
+            <div class="modal_pay_detail">
+                <div class="text-info">
+                    <span class="text-k">购买人：<span>{{table_pay_data_detail.account}}</span></span>
+                    <span class="text-k">订单时间：<span>{{table_pay_data_detail.insTime}}</span></span>
+                    <span class="text-k">订单状态：<span>{{table_pay_data_detail.orderStatus}}</span></span>
+                    <span class="text-k">付款时间：<span>{{table_pay_data_detail.payTime}}</span></span>
                 </div>
 
                 <Table border
-                       :loading="tableLoading_apply"
                        :columns="table_pay_columns_detail"
-                       :data="table_pay_data_detail"></Table>
+                       :data="[table_pay_data_detail]"></Table>
 
-                <div>
-                    <div>
-                        <span>剩余时间</span>
-                        <span>2250天</span>
+                <div class="ft-bottom">
+                    <div class="text-info-left">
+                        <span>剩余时间：</span>
+                        <span>{{table_pay_data_detail.remainDays}}天</span>
                     </div>
 
-                    <div>
-                        <span>总计费用</span>
-                        <span>600</span>
+                    <div class="text-info-right">
+                        <span>总计费用：</span>
+                        <span class="count">{{table_pay_data_detail.totalPrice}}元</span>
                     </div>
                 </div>
 
                 <div class="other-title">其它信息</div>
+                <div class="text-info">
+                    <span class="text-k">订单备注</span>
+                    <span class="text-k">备注时间：<span>{{table_pay_data_detail.remarkTime}}</span></span>
+
+                    <span class="text-k">备注人：<span>{{table_pay_data_detail.remarkPerson}}</span></span>
+
+                </div>
+
+                <div class="area-text"> {{table_pay_data_detail.remark}} </div>
+
             </div>
+        </Modal>
+
+
+        <Modal v-model="modal_pay_serve_account"
+               title="服务器信息">
+
+            <div>
+                <Table border
+                       :columns="table_pay_columns_account"
+                       :data="table_pay_data_detail.orderServerAccount">
+
+                </Table>
+            </div>
+
+        </Modal>
+
+        <Modal v-model="modal_pay_refund"
+               @onOk="onClick_refund"
+               title="退款" >
+            <div>
+                <Input type="textarea"
+                       :rows="5"
+                       :model="refund_result"
+                       placeholder="请输入退款原因！" />
+            </div>
+
+        </Modal>
+
+         <!--免费的服务器信息弹窗-->
+        <Modal v-model="modal_pay_serve_account"
+               title="服务器信息">
+
+            <div>
+                <Table border
+                       :columns="table_freeApply_columns_account"
+                       :data="table_freeApply_data_account.orderServerAccount">
+
+                </Table>
+            </div>
+
+        </Modal>
+
+
+        <Modal v-model="modal_freeApply_result"
+               title="查看原因" >
+            <div>
+                <Input type="textarea"
+                       readonly
+                       :rows="5"
+                       :model="freeApply_result"
+                       placeholder="" />
+            </div>
+
         </Modal>
 
     </div>
@@ -175,7 +237,7 @@
                         align: 'center'
                     },{
                         title: '状态',
-                        key: 'orderStatus',
+                        key: 'orderStatusStr',
                         align: 'center'
                     },{
                         title: '操作',
@@ -301,9 +363,147 @@
                 tableData_paid: [],
 
                 // 付费详情
-                modal_pay_detail: true,
+                modal_pay_detail: false,
                 table_pay_columns_detail: [
                     {
+                        title: '订单号',
+                        key: 'orderNum',
+                        width: '130',
+                        align: 'center'
+                    },{
+                        title: '商品名称',
+                        key: 'serverName',
+                        align: 'center'
+                    },{
+                        title: '商品内容',
+                        key: 'name',
+                        width: '220',
+                        align: 'center',
+                        render(h, params){
+                            var text = '';
+
+                            text = '规格：' + params.row.cpu + 'CPU; '
+                                + params.row.memory +'内存; '
+                                + params.row.systemDisk + '; '
+                                + params.row.hardDisk+ '; '
+                                + params.row.bandWidth+ ';'
+
+                            return h('div', text);
+                        }
+                    },{
+                        title: '数量',
+                        key: 'serverNumber',
+                        align: 'center'
+                    },{
+                        title: '单价',
+                        key: 'totalPrice',
+                        align: 'center'
+                    },{
+                        title: '账号信息',
+                        key: 'totalPrice',
+                        width: '340',
+                        align: 'center',
+                        render(h, params) {
+                            var array_list = [], text = '';
+
+                            params.row.orderServerAccount.forEach(function (val) {
+                                text = 'IP：' + val.remoteAddress + '; '
+                                    + '账号：' + val. account + '; '
+                                    + '密码：' + val. password + ';';
+
+                                array_list.push(h('div', text));
+                            });
+
+                            return h('div', array_list);
+                        }
+                    }
+                ],
+                table_pay_data_detail: {
+                    account: '',
+
+                    bandWidth: '',
+                    chargeStandard: '',
+                    cpu: '',
+                    hardDisk: '',
+                    insTime: '',
+                    memory: '',
+                    orderNum: '',
+                    serverName: '',
+                    serverNumber: '',
+                    systemDisk: '',
+                    remainDays: '',
+                    remark: '',
+                    remarkPerson: '',
+                    remarkTime: '',
+                    expiryTime: '',
+                    payTime: '',
+                    orderStatus: '',
+                    totalPrice: '',
+
+                    orderServerAccount: [
+                        {
+                            remoteAddress: '192.168.1.1', // IP
+                            account: 'admin',   // 账号
+                            password: '123456'    // 密码
+                        },
+                        {
+                            remoteAddress: '192.168.1.1', // IP
+                            account: 'admin',   // 账号
+                            password: '123456'    // 密码
+                        }
+                    ]
+                },
+
+                // 付费账号信息
+                modal_pay_serve_account: false,
+                table_pay_columns_account: [
+                    {
+                        type: 'index',
+                        title: '序号',
+                        width: '80',
+                        align: 'center'
+                    },
+                    {
+                        title: '登陆IP',
+                        key: 'remoteAddress',
+                        align: 'center'
+                    },
+                    {
+                        title: '账号',
+                        key: 'account',
+                        align: 'center'
+                    },
+                    {
+                        title: '密码',
+                        key: 'password',
+                        align: 'center'
+                    }
+                ],
+
+                //付费 退款
+                modal_pay_refund: false,
+                refund_orderNum: '',
+                refund_result: '',       // 退款原因
+
+                // ******* 免费申请 ******
+                datePicker_default_apply: [],
+                tableLoading_apply: false,
+                searchParams_apply: {
+                    pageNo: 1, // 当前页
+                    pageSize: 10, // 每页几行
+                    count: 0,     // 总页数
+                    startDate: '',
+                    endDate: '',
+                    timeInterval: '',
+                    orderType: 'FreeServerOrder'
+                },
+                tableColumns_apply: [
+                    {
+                        type: 'index',
+                        width: 80,
+                        title: '序号',
+                        align: 'center'
+                    },{
                         title: '订单号',
                         key: 'orderNum',
                         align: 'center'
@@ -331,71 +531,106 @@
                         key: 'serverNumber',
                         align: 'center'
                     },{
-                        title: '单价',
-                        key: 'totalPrice',
-                        align: 'center'
-                    },{
-                        title: '账号信息',
-                        key: 'totalPrice',
-                        align: 'center',
-                        render(h, params) {
-                            return '';
-                        }
-                    }
-                ],
-                table_pay_data_detail: [],
-
-                // ******* 免费申请 ******
-                datePicker_default_apply: [],
-                tableLoading_apply: false,
-                searchParams_apply: {
-                    pageNo: 1, // 当前页
-                    pageSize: 10, // 每页几行
-                    count: 0,     // 总页数
-                    startDate: '',
-                    endDate: '',
-                    timeInterval: '',
-                    orderType: 'FreeServerOrder'
-                },
-                tableColumns_apply: [
-                    {
-                        type: 'index',
-                        width: 80,
-                        title: '序号',
-                        align: 'center'
-                    },{
-                        title: '订单号',
-                        key: 'name',
-                        align: 'center'
-                    },{
-                        title: '商品名称',
-                        key: 'name',
-                        align: 'center'
-                    },{
-                        title: '商品内容',
-                        key: 'name',
-                        align: 'center'
-                    },{
-                        title: '数量',
-                        key: 'name',
-                        align: 'center'
-                    },{
                         title: '申请时间',
-                        key: 'name',
+                        key: 'insTime',
                         align: 'center'
                     },{
                         title: '状态',
-                        key: 'name',
+                        key: 'orderStatusStr',
                         align: 'center'
                     },{
                         title: '操作',
                         align: 'center',
                         render(h, params) {
-                            return '222';
+                            var button;
+                            
+                            switch (params.row.orderStatus) {
+
+                                case 'WaitAudit':  // 待审核
+                                    button = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_freeApply_cancel(params.row);
+                                            }
+                                        }
+                                    }, '取消申请');
+                                    break;
+
+                                case 'AuditSucc':  // 审核成功
+                                    button = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_freeApply_getAccount(params.row);
+                                            }
+                                        }
+                                    }, '获取');
+                                    break;
+
+                                case 'TurnDown':  // 已驳回
+                                    button = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_freeApply_lookResult(params.row);
+                                            }
+                                        }
+                                    }, '查看原因');
+                                    break;
+                            }
+
+                            return h('div', [button]);
                         }
                     }
                 ],
                 tableData_apply: [],
+
+                // 免费申请 - 查看账号信息
+                modal_freeApply_serve_account: false,
+                table_freeApply_columns_account: [
+                    {
+                        type: 'index',
+                        title: '序号',
+                        width: '80',
+                        align: 'center'
+                    },
+                    {
+                        title: '登陆IP',
+                        key: 'remoteAddress',
+                        align: 'center'
+                    },
+                    {
+                        title: '账号',
+                        key: 'account',
+                        align: 'center'
+                    },
+                    {
+                        title: '密码',
+                        key: 'password',
+                        align: 'center'
+                    }
+                ],
+                table_freeApply_data_account: [],
+
+                //免费申请- 查看原因
+                modal_freeApply_result: false,
+                freeApply_result: ''
 
             };
         },
@@ -403,6 +638,7 @@
         mounted() {
             this.getPayOrderData();
             this.getApplyOrderData();
+            this.getPersonInfo();
         },
         methods: {
             /**
@@ -483,11 +719,11 @@
                 this.tableLoading_apply = true;
                 this.$http({
                     method: 'post',
-                    url: '/panoramic/workOrder/list',
+                    url: '/panoramic/serverOrder/list',
                     headers: {
                         'Content-Type': 'application/json;charset=utf-8'
                     },
-                    data: JSON.stringify(this.searchParams_paid)
+                    data: JSON.stringify(this.searchParams_apply)
                 }).then(function (response) {
                     that.tableLoading_apply = false;
                     if (response.status === 1) {
@@ -503,10 +739,33 @@
                 })
             },
 
+            // 获取用户信息
+            getPersonInfo() {
+                var that = this;
+
+                that.$http({
+                    method: 'get',
+                    url: '/auth/getUserInfoById',
+                    params: {
+                        type: that.$store.state.usertype,
+                        uid: that.$store.state.uid,
+                        token: that.$store.state.token
+                    }
+                }).then(function(response) {
+                    if(response.status === 1) {
+                        that.table_pay_data_detail.account = response.result.account;
+                    }
+
+                }).catch(function (e) {
+
+                })
+            },
+
             // 购买订单表格接口 - 详情
             onClick_pay_detail(row) {
-
                 var that = this;
+                this.modal_pay_detail = true;
+
                 that.$http({
                     method: 'get',
                     url: '/panoramic/serverOrder/detail',
@@ -515,7 +774,25 @@
                     }
                 }).then(function (response) {
                     if (response.status === 1) {
+                        that.table_pay_data_detail.bandWidth = response.result.bandWidth || '';
+                        that.table_pay_data_detail.chargeStandard = response.result.chargeStandard || '';
+                        that.table_pay_data_detail.cpu = response.result.cpu || '';
+                        that.table_pay_data_detail.hardDisk = response.result.hardDisk || '';
+                        that.table_pay_data_detail.insTime = response.result.insTime || '';
+                        that.table_pay_data_detail.memory = response.result.memory || '';
+                        that.table_pay_data_detail.orderNum = response.result.orderNum || '';
+                        that.table_pay_data_detail.serverName = response.result.serverName || '';
+                        that.table_pay_data_detail.serverNumber = response.result.serverNumber || '';
+                        that.table_pay_data_detail.systemDisk = response.result.systemDisk || '';
+                        that.table_pay_data_detail.remark = response.result.remark || '';
+                        that.table_pay_data_detail.remarkPerson = response.result.remarkPerson || '';
+                        that.table_pay_data_detail.remarkTime = response.result.remarkTime || '';
+                        that.table_pay_data_detail.expiryTime = response.result.expiryTime || '';
+                        that.table_pay_data_detail.payTime = response.result.payTime || '';
+                        that.table_pay_data_detail.orderStatus = response.result.orderStatus || '';
+                        that.table_pay_data_detail.totalPrice = response.result.totalPrice || '';
 
+                        // that.table_pay_data_detail.orderServerAccount = response.result.orderServerAccount || [];
                     }
                     else {
                     }
@@ -525,17 +802,185 @@
             // 购买订单表格接口 - 付款
             onclick_pay_payOrder(row) {},
             // 购买订单表格接口 - 取消订单
-            onclick_pay_cancelOrder(row) {},
+            onclick_pay_cancelOrder(row) {
+                var that = this;
+
+                that.$Modal.confirm({
+                   title: '取消订单',
+                   content: '确定要取消<'+ row.orderNum +'>订单？',
+                    onOk() {
+                        that.$http({
+                            method: 'get',
+                            url: '/panoramic/serverOrder',
+                            params: {
+                                orderNum: row.orderNum,
+                            }
+                        }).then(function (response) {
+                            if (response.status === 1) {
+                                that.$Message.success({
+                                    content: '取消成功！'
+                                });
+                            }
+                            else {
+                                that.$Message.error({
+                                    content: '取消失败！'
+                                });
+                            }
+                        }).catch(function (e) {});
+                    }
+                });
+            },
             // 购买订单表格接口 - 退款
-            onclick_pay_refund(row) {},
+            onclick_pay_refund(row) {
+                this.modal_pay_refund = true;
+                this.refund_orderNum = row.orderNum;
+            },
             // 购买订单表格接口 - 获取账号信息
-            onclick_pay_getInfo(row) {},
+            onclick_pay_getInfo(row) {
+                var that = this;
+                this.modal_pay_serve_account = true;
+
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/serverOrder/detail',
+                    params: {
+                        orderId: row.orderId
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        // that.table_pay_data_detail.orderServerAccount = response.result.orderServerAccount || [];
+                    }
+                    else {
+                    }
+                }).catch(function (e) {})
+            },
             // 购买订单表格接口 - 取消退款
-            onclick_pay_cancelRefund(row) {},
+            onclick_pay_cancelRefund(row) {
+                var that = this;
+
+                that.$Modal.confirm({
+                    title: '取消退款',
+                    content: '确定要取消退款<'+ row.orderNum +'>订单？',
+                    onOk() {
+                        that.$http({
+                            method: 'get',
+                            url: '/panoramic/serverOrder',
+                            params: {
+                                orderNum: row.orderNum,
+                            }
+                        }).then(function (response) {
+                            if (response.status === 1) {
+                                that.$Message.success({
+                                    content: '取消退款成功！'
+                                });
+                            }
+                            else {
+                                that.$Message.error({
+                                    content: '取消退款失败！'
+                                });
+                            }
+                        }).catch(function (e) {
+
+                        });
+                    }
+                });
+            },
 
             // ****** 付费弹窗事件 ******
 
+            // 退款
+            onClick_refund() {
+                var that = this;
 
+
+                // 接口未实现
+
+                that.$http({
+                    method: 'post',
+                    url: '/panoramic/serverOrder',
+                    params: {
+                        orderNum: that.refund_orderNum,
+                        result: that.refund_result
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.$Message.success({
+                            content: '申请退款成功！'
+                        });
+                    }
+                    else {
+                    }
+                }).catch(function (e) {});
+            },
+
+
+            // 免费申请订单-表格-取消申请
+            onClick_freeApply_cancel(row) {
+                var that = this;
+
+                that.$Modal.confirm({
+                    title: '取消订单',
+                    content: '确定要取消<'+ row.orderNum +'>订单？',
+                    onOk() {
+                        that.$http({
+                            method: 'get',
+                            url: '/panoramic/serverOrder/',
+                            params: {
+                                orderId: row.orderId,
+                            }
+                        }).then(function (response) {
+                            if (response.status === 1) {
+                                that.$Message.success({
+                                    content: '取消成功！'
+                                });
+                            }
+                            else {
+                                that.$Message.error({
+                                    content: '取消失败！'
+                                });
+                            }
+                        }).catch(function (e) {});
+                    }
+                });
+            },
+            // 免费申请订单-表格-获取
+            onClick_freeApply_getAccount(row) {
+                var that = this;
+                this.modal_freeApply_serve_account = true;
+
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/serverOrder/viewSeverAccount',
+                    params: {
+                        orderId: row.orderId
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                         that.table_freeApply_data_account = response.result || [];
+                    }
+                    else {
+                    }
+                }).catch(function (e) {})
+            },
+            // 免费申请订单-表格-查看原因
+            onClick_freeApply_lookResult(row) {
+                var that = this;
+                this.modal_freeApply_result = true;
+
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/serverOrder/',
+                    params: {
+                        orderId: row.orderId
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.freeApply_result = response.result || [];
+                    }
+                    else {
+                    }
+                }).catch(function (e) {})
+            },
         }
     }
 </script>
@@ -583,6 +1028,56 @@
             .list-page-panel {
                 text-align: center;
                 padding: 20px 16px 100px;
+            }
+        }
+
+        @at-root .modal_pay_detail {
+            font-size: 13px;
+            line-height: 53px;
+            .text-info {
+                padding-bottom: 14px;
+                font-size: 13px;
+                line-height: 26px;
+
+                .text-k {
+                    padding-right: 36px;
+                }
+            }
+
+            .ft-bottom {
+                overflow: hidden;
+                line-height: 50px;
+
+                .text-info-left {
+                    float: left;
+                    padding-left: 10px;
+                }
+
+                .text-info-right {
+                    float: right;
+                    padding-right: 10px;
+
+                    .count {
+                        font-size: 16px;
+                    }
+                }
+
+            }
+
+            .other-title {
+                margin-bottom: 20px;
+                font-weight: 700;
+                line-height: 53px;
+                border-bottom: 1px solid #cecece;
+            }
+
+            .area-text {
+                padding: 10px;
+                line-height: 19px;
+                color: #6f6f6f;
+                background-color: #efefef;
+                min-height: 80px;
+                border: 1px solid #d6d6d6;
             }
         }
     }
