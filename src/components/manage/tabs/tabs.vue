@@ -96,9 +96,9 @@
 <style lang="scss">
     .mtabs-container {
 
-        .my-ivu-tabs {
+        >.my-ivu-tabs {
 
-            .ivu-tabs-bar {
+            >.ivu-tabs-bar {
                 padding-left: 1px;
                 margin-bottom: 0;
             }
