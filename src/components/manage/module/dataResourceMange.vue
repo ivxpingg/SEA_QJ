@@ -8,16 +8,16 @@
                     <div class="form-item">
                         <label class="label" for="userOrder_keyword">关键字</label>
                         <div class="value">
-                            <Input id="userOrder_keyword" v-model="searchParams.keyword" placeholder="工单、用户、电话"></Input>
+                            <Input id="userOrder_keyword" v-model="searchParams.keyword" placeholder="数据名称"></Input>
                         </div>
                     </div>
                 </div>
 
                 <div class="hd">
                     <div class="form-item">
-                        <label class="label" for="userOrder_date">时间</label>
+                        <label class="label">时间</label>
                         <div class="value">
-                            <DatePicker element-id="userOrder_date"
+                            <DatePicker
                                         :value="datePicker_default"
                                         :clearable="true"
                                         format="yyyy-MM-dd"
@@ -51,35 +51,43 @@
         </div>
 
         <Modal v-model="modal_add_dataResource"
-               title="添加服务器">
+               title="发布数据">
             <div>
                 <Form ref="add_dataResource_form"
-                      :modal="add_dataResource_info"
+                      :model="add_dataResource_info"
                       :rules="dataResourceInfo_rules"
                       :label-width="80">
-                    <FormItem label="数据名称:">
-                        <Input type="text" placeholder="请输入数据名称" />
+                    <FormItem label="数据名称:" prop="dataName">
+                        <Input type="text"
+                               v-model="add_dataResource_info.dataName"
+                               placeholder="请输入数据名称" />
                     </FormItem>
-                    <FormItem label="数据时效:">
-                        <DatePicker :value="datePicker_add_default"
-                                    :clearable="true"
+                    <FormItem label="数据时效:" prop="addTime">
+                        <DatePicker v-model="datePicker_default_add"
                                     format="yyyy-MM-dd"
                                     type="daterange"
                                     placeholder="日期选择"
-                                    @on-change="datePicker_onChange"
+                                    @on-change="datePicker_onChange_add_dataResource"
                                     style="width: 220px"></DatePicker>
                     </FormItem>
                     <FormItem label="描述:">
-                        <Input type="textarea" placeholder="请输入数据描述" />
+                        <Input type="textarea"
+                               v-model="add_dataResource_info.description"
+                               placeholder="请输入数据描述" />
                     </FormItem>
-                    <FormItem label="上传文件:">
-                        <Upload action="//jsonplaceholder.typicode.com/posts/">
-                            <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
+                    <FormItem label="上传数据资源文件:">
+                        <Upload action="">
+                            <Button type="ghost"
+                                    icon="ios-cloud-upload-outline">上传文件</Button>
                         </Upload>
                     </FormItem>
                     <FormItem label="位置选择">
-                        <Select style="width: 180px" placeholder="">
-                            <Option :value="11" label="行业服务中心"></Option>
+                        <Select v-model="add_dataResource_info.position"
+                                style="width: 180px" placeholder="">
+                            <Option v-for="item in dict_showPosition"
+                                    :key="item.id"
+                                    :value="item.value"
+                                    :label="item.label"></Option>
                         </Select>
                     </FormItem>
                 </Form>
@@ -89,10 +97,17 @@
             </div>
         </Modal>
 
+        <Modal v-model="modal_dataResource_detail"
+               title="数据内容">
+               <Table border :loading="tableLoading_detail" :columns="tableColumns_detail" :data="tableData_detail"></Table>
+        </Modal>
+
     </div>
 </template>
 
 <script>
+    import Moment from 'moment';
+    import Config from '../../../libs/appConfig/config';
     export default {
         name: "dataResourceMange",
         data() {
@@ -117,31 +132,34 @@
                         align: 'center'
                     },{
                         title: '数据名称',
-                        key: 'name',
+                        key: 'dataName',
                         align: 'center'
                     },{
                         title: '数据数量',
-                        key: 'name',
+                        key: 'dataNumber',
                         align: 'center'
                     },{
                         title: '数据时效',
-                        key: 'name',
-                        align: 'center'
+                        align: 'center',
+                        render(h, params) {
+                            var text = Moment(params.row.beginTime).format('YYYY-MM-DD') + ' 至 ' + Moment(params.row.endTime).format('YYYY-MM-DD');
+                            return h('div', text);
+                        }
                     },{
                         title: '价格',
-                        key: 'name',
+                        key: 'price',
                         align: 'center'
                     },{
                         title: '格式',
-                        key: 'name',
+                        key: 'format',
                         align: 'center'
                     },{
                         title: '发布日期',
-                        key: 'name',
+                        key: 'publishTime',
                         align: 'center'
                     },{
                         title: '申请次数',
-                        key: 'name',
+                        key: 'applyTimes',
                         align: 'center'
                     },{
                         title: '操作',
@@ -159,7 +177,7 @@
                                     },
                                     on: {
                                         click() {
-                                            that.onClick_detail_dataResource();
+                                            that.onClick_detail_dataResource(params.row);
                                         }
                                     }
                                 }, '详情'),
@@ -172,7 +190,7 @@
                                     },
                                     on: {
                                         click() {
-                                            that.onClick_del_dataResource();
+                                            that.onClick_del_dataResource(params.row);
                                         }
                                     }
                                 }, '删除'),
@@ -182,13 +200,47 @@
                     }
 
                 ],
-                tableData: [{name: 'test'}],
+                tableData: [
+                    {
+                        // applyTimes: 100,
+                        // beginTime:"2018-05-25 03:27:40",
+                        // dataName:"海洋水质数据",
+                        // dataNumber:1000,
+                        // endTime:"2018-05-25 03:27;45",
+                        // format: "execl",
+                        // industryDataId:"1",
+                        // price: 0,
+                        // publishTime:"2018-05-25 03:28:16"
+                    }
+                ],
 
                 // 发布数据
                 modal_add_dataResource: false,
                 datePicker_add_default: [],
-                add_dataResource_info: {},
-                dataResourceInfo_rules: {}
+                add_dataResource_info: {
+                    dataName: '',
+                    beginTime: '',
+                    endTime: '',
+                    description: '',
+                    position: 'ListPage',
+                    uploadId: '',
+                    fileUploadUrl: window.location.origin + Config[Config.env].ajaxUrl + '/sys/upload/file'
+                },
+                datePicker_default_add: [],
+                dataResourceInfo_rules: {
+                    dataName: [{ required: true, message: '数据名称不能为空', trigger: 'blur'}],
+                    addTime: [{ required: true, message: '数据时效不能为空', trigger: 'blur'}]
+                },
+
+                // 位置字典数据
+                dict_showPosition: [],
+
+                // 数据资源详情
+                modal_dataResource_detail: false,
+                tableLoading_detail: false,
+                tableColumns_detail: [],
+                tableData_detail: [],
+                ajaxData_detail: []
             };
         },
         components: {},
@@ -197,15 +249,45 @@
                 handler(val) {
                     this.getTableData();
                 }
+            },
+            ajaxData_detail(val) {
+                var that = this;
+                that.tableColumns_detail = [];
+
+                if (val.length > 0) {
+                    for(var key in val[0]) {
+                        if(key === '时间') {
+                            that.tableColumns_detail.splice(1,0, {
+                                title: key,
+                                key: key,
+                                align: 'center'
+                            })
+                        }
+                        else {
+                            that.tableColumns_detail.push({
+                                title: key,
+                                key: key,
+                                align: 'center'
+                            })
+                        }
+                    }
+                }
+
+                that.tableData_detail = val;
             }
         },
         mounted() {
-            // this.getTableData();
+            this.getTableData();
+            this.getDict();
         },
         methods: {
             datePicker_onChange(val) {
                 this.searchParams.startTime = val[0];
                 this.searchParams.endTime = val[1];
+            },
+            datePicker_onChange_add_dataResource(val) {
+                this.add_dataResource_info.beginTime = val[0];
+                this.add_dataResource_info.endTime = val[1];
             },
             onClick_search() {
                 this.getTableData();
@@ -225,7 +307,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '',
+                    url: '/panoramic/industryData/list',
                     headers: {
                         'Content-Type': 'application/json;charset=utf-8'
                     },
@@ -255,6 +337,23 @@
                 })
             },
 
+            getDict() {
+                var that = this;
+                this.$http({
+                    method: 'get',
+                    url: '/sys/dict/listData',
+                    params: {
+                        type: 'showPosition'
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.dict_showPosition = response.result;
+                    }
+                    else {
+                    }
+                }).catch(function (e) {})
+            },
+
             /**
              * 发布数据弹出窗
              */
@@ -266,21 +365,87 @@
              *  新增发布数据
              */
             onClick_add_dataResource() {
+                var that = this;
+                that.$refs['add_dataResource_form'].validate((valid) => {
+                    if(valid) {
+                        that.$http({
+                            method: 'post',
+                            url: '/panoramic/industryData/add',
+                            headers: {
+                                'Content-Type': 'application/json;charset=utf-8'
+                            },
+                            data: JSON.stringify(that.add_dataResource_info)
+                        }).then(function (response) {
+                            if(response.status === 1) {
+                                that.$Message.success({content: '添加成功！'});
+                                that.modal_add_dataResource = false;
+                                that.getTableData();
+                            }
+                            else {
+                                that.$Message.error({content: '添加失败！'});
+                            }
 
+                        }).catch(function (e) {
+                            that.$Message.error({content: '添加失败！'});
+                            console.log(e);
+                        });
+                    }
+                    else{}
+                })
             },
 
             /**
              *  删除发布数据
              */
             onClick_del_dataResource(row) {
+                var that = this;
+                this.$Modal.confirm({
+                    title: '删除',
+                    content: '确定要删除《'+ row.dataName +'》数据资源?',
+                    onOk() {
+                        that.$http({
+                            method: 'get',
+                            url: '/panoramic/industryData/delete',
+                            params: {
+                                industryDataIds: row.industryDataId
+                            }
+                        }).then(function (response) {
+                            if (response.status === 1) {
+                                that.$Message.success({content: '删除成功！'});
+                                that.getTableData();
+                            }
+                            else{
+                                that.$Message.error({content: '删除失败！'});
+                            }
+                        }).catch(function (e) {
+                        })
 
+
+                    }
+
+                })
             },
 
             /**
-             *  详情-发布数据
+             *  查看数据资源详情-发布数据
              */
             onClick_detail_dataResource(row) {
+                var that = this;
 
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/industryData/detail',
+                    params: {
+                        industryDataId: row.industryDataId
+                    }
+                }).then(function (response) {
+                    if(response.status === 1) {
+                    }
+                    else {
+                    }
+
+                }).catch(function (e) {
+                });
             }
         }
     }
