@@ -644,7 +644,7 @@
             /**
              * 已付订单时间选择
              */
-            datePicker_onChange_paid() {
+            datePicker_onChange_paid(val) {
                 this.searchParams_paid.startTime = val[0];
                 this.searchParams_paid.endTime = val[1];
                 this.searchParams_paid.timeInterval = '';
@@ -653,7 +653,7 @@
             /**
              * 申请订单时间选择
              */
-            datePicker_onChange_apply() {
+            datePicker_onChange_apply(val) {
                 this.searchParams_apply.startTime = val[0];
                 this.searchParams_apply.endTime = val[1];
                 this.searchParams_apply.timeInterval = '';
