@@ -1,6 +1,6 @@
 <template>
     <div class="orderManage-container">
-        <vMenuTitle name="订单管理"></vMenuTitle>
+        <vMenuTitle name="服务器订单管理"></vMenuTitle>
         <div class="content-panel">
             <Tabs type="card" :animated="false">
                 <TabPane label="购买订单">

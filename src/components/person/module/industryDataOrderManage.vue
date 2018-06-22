@@ -1,8 +1,20 @@
 <template>
-    <div class="industryDataManage-container">
-        <vMenuTitle name="行业数据"></vMenuTitle>
+    <div class="industryDataOrderManage-container">
+        <vMenuTitle name="行业数据订单管理"></vMenuTitle>
         <div class="content-panel">
             <div class="handle-bar">
+                <div class="hd my-btn"
+                     :class="{'active': searchParams.timeInterval === 'ThisMonth'}"
+                     @click="onClick_timeInterval($event,'ThisMonth')">本月</div>
+                <div class="hd my-btn"
+                     :class="{'active': searchParams.timeInterval === 'LastMonth'}"
+                     @click="onClick_timeInterval($event,'LastMonth')">上月</div>
+                <div class="hd my-btn"
+                     :class="{'active': searchParams.timeInterval === 'NearHalfYear'}"
+                     @click="onClick_timeInterval($event,'NearHalfYear')">近半年</div>
+                <div class="hd my-btn"
+                     :class="{'active': searchParams.timeInterval === 'NearAYear'}"
+                     @click="onClick_timeInterval($event,'NearAYear')">近一年</div>
                 <div class="hd">
                     <DatePicker :value="datePicker_default"
                                 :clearable="false"
@@ -29,10 +41,11 @@
     import vMenuTitle from './menuTitle/menuTitle';
     import Moment from 'moment';
     export default {
-        name: "industryDataManage",
+        name: "industryDataOrderManage",
         data() {
             return {
                 datePicker_default: [Moment().subtract(1, 'month'), Moment()],
+
                 searchParams: {
                     pageNo: 1, // 当前页
                     pageSize: 10, // 每页几行
@@ -40,8 +53,10 @@
                     keyword: '',
                     beginDate: '',
                     endDate: '',
-                    timeInterval: ''
+                    timeInterval: '',
+                    userId: this.$store.state.uid
                 },
+
                 tableLoading: false,
                 tableColumns: [
                     {
@@ -134,6 +149,15 @@
             onPageNo_change(pageNo) {
                 this.searchParams.pageNo = pageNo;
             },
+            // 本月、上月、近半年、近一年
+            onClick_timeInterval(e, value) {
+                this.searchParams.timeInterval = value;
+                this.searchParams.startTime = '';
+                this.searchParams.endTime = '';
+                this.datePicker_default = [];
+                this.getTableData();
+            },
+
             /**
              * 获取表格数据
              */
@@ -141,11 +165,12 @@
                 var that = this;
                 this.tableLoading = true;
                 this.$http({
-                    method: 'get',
-                    url: '/panoramic/dataOrder/getApplyDataList',
-                    params: {
-                        userId: that.$store.state.uid
-                    }
+                    method: 'post',
+                    url: '/panoramic/dataOrder/list',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    data: JSON.stringify(this.searchParams)
                 }).then(function (response) {
                     that.tableLoading = false;
                     if (response.status === 1) {
@@ -166,7 +191,7 @@
 </script>
 
 <style lang="scss" scoped>
-    .industryDataManage-container {
+    .industryDataOrderManage-container {
         .content-panel {
             margin-top: 23px;
             width: 100%;
@@ -209,5 +234,6 @@
                 padding: 20px 16px 100px;
             }
         }
+
     }
 </style>

@@ -15,9 +15,10 @@
                             <Icon type="ios-paper"></Icon>
                             费用管理
                         </template>
-                        <MenuItem name="1-1">订单管理</MenuItem>
-                        <MenuItem name="1-2">发票管理</MenuItem>
-                        <MenuItem name="1-3">工单管理</MenuItem>
+                        <MenuItem name="1-1">服务器订单</MenuItem>
+                        <MenuItem name="1-2">行业数据订单</MenuItem>
+                        <MenuItem name="1-3">发票管理</MenuItem>
+                        <MenuItem name="1-4">工单管理</MenuItem>
                     </Submenu>
                     <Submenu name="2">
                         <template slot="title">
@@ -58,8 +59,9 @@
             return {
                 menu: {
                     '1-1': { name: 'orderManage' },
-                    '1-2': { name: 'invoiceManage' },
-                    '1-3': { name: 'workOrderManage' },
+                    '1-2': { name: 'dataOrderManage' },
+                    '1-3': { name: 'invoiceManage' },
+                    '1-4': { name: 'workOrderManage' },
                     '2-1': { name: 'cloudServiceManage' },
                     '2-2': { name: 'industryDataManage' },
                     '3-1': { name: 'personInfoMange' },

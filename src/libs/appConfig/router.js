@@ -78,7 +78,7 @@ export default [
             name: 'invoiceManage',
             meta: {
                 requireAuth: true,
-                title: '个人中心'
+                title: '发票管理'
             },
             component: (resolve) => require(['../../components/person/module/invoiceManage.vue'], resolve)
         },{
@@ -86,7 +86,7 @@ export default [
             name: 'messageManage',
             meta: {
                 requireAuth: true,
-                title: '个人中心'
+                title: '消息管理'
             },
             component: (resolve) => require(['../../components/person/module/messageManage.vue'], resolve)
         },{
@@ -94,15 +94,23 @@ export default [
             name: 'orderManage',
             meta: {
                 requireAuth: true,
-                title: '个人中心'
+                title: '服务器订单管理'
             },
             component: (resolve) => require(['../../components/person/module/orderManage.vue'], resolve)
+        },{
+            path: 'dataOrderManage',
+            name: 'dataOrderManage',
+            meta: {
+                requireAuth: true,
+                title: '行业数据订单管理'
+            },
+            component: (resolve) => require(['../../components/person/module/industryDataOrderManage.vue'], resolve)
         },{
             path: 'personInfoMange',
             name: 'personInfoMange',
             meta: {
                 requireAuth: true,
-                title: '个人中心'
+                title: '个人信息管理'
             },
             component: (resolve) => require(['../../components/person/module/personInfoMange.vue'], resolve)
         },{
@@ -110,7 +118,7 @@ export default [
             name: 'workOrderManage',
             meta: {
                 requireAuth: true,
-                title: '个人中心'
+                title: '工单管理'
             },
             component: (resolve) => require(['../../components/person/module/workOrderManage.vue'], resolve)
         }]
