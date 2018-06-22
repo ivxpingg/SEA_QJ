@@ -89,7 +89,7 @@ module.exports = {
                 changeOrigin: true
             }
             // '/oceanobservation': {
-            //     target: 'http://192.168.0.122:8080',
+            //     target: 'http://192.168.0.135:8080',
             //
             //     ws: true,
             //     changeOrigin: true

@@ -34,6 +34,40 @@
                 <Page :total="searchParams.count" @on-change="onPageNo_change"></Page>
             </div>
         </div>
+
+
+        <!--免费的服务器信息弹窗-->
+        <Modal v-model="modal_freeApply_info"
+               title="数据获取">
+
+            <div>
+                <Form :label-width="100">
+                    <FormItem label="数据接口信息:">
+                        <Input type="text"
+                               v-model="table_freeApply_info.address"
+                               readonly />
+                    </FormItem>
+                    <FormItem label="数据文档下载:">
+                        <Button>下载</Button>
+                    </FormItem>
+                </Form>
+            </div>
+
+        </Modal>
+
+
+        <Modal v-model="modal_freeApply_result"
+               title="查看原因" >
+            <div>
+                <Input type="textarea"
+                       readonly
+                       :rows="5"
+                       :model="freeApply_result"
+                       placeholder="" />
+            </div>
+
+        </Modal>
+
     </div>
 </template>
 
@@ -43,6 +77,7 @@
     export default {
         name: "industryDataOrderManage",
         data() {
+            var that = this;
             return {
                 datePicker_default: [Moment().subtract(1, 'month'), Moment()],
 
@@ -54,7 +89,8 @@
                     beginDate: '',
                     endDate: '',
                     timeInterval: '',
-                    userId: this.$store.state.uid
+                    userId: this.$store.state.uid,
+                    orderType: 'FreeDataOrder'
                 },
 
                 tableLoading: false,
@@ -66,15 +102,15 @@
                         align: 'center'
                     },{
                         title: '订单号',
-                        key: 'industryDataId',
+                        key: 'orderNum',
                         align: 'center'
                     },{
                         title: '商品名称',
                         key: 'dataName',
                         align: 'center'
                     },{
-                        title: '商品内容',
-                        key: 'description',
+                        title: '数据内容',
+                        key: 'dataContent',
                         align: 'center'
                     },{
                         title: '申请时间',
@@ -82,41 +118,85 @@
                         align: 'center'
                     },{
                         title: '状态',
-                        key: 'workOrderStatus',
+                        key: 'orderStatusStr',
                         align: 'center'
                     },{
                         title: '操作',
                         align: 'center',
                         render(h, params) {
-                            var text = '';
-                            switch (params.row.workOrderStatus) {
-                                case '待处理': text = '取消工单'; break;
-                                case '处理中': text =  '取消工单'; break;
-                                case '已结单': text = '查看结果'; break;
-                                case '已取消': text = '重新开单'; break;
+                            var button;
+
+                            switch (params.row.orderStatus) {
+
+                                case 'WaitAudit':  // 待审核
+                                    button = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_freeApply_cancel(params.row);
+                                            }
+                                        }
+                                    }, '取消申请');
+                                    break;
+
+                                case 'AuditSucc':  // 审核成功
+                                    button = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_freeApply_getAccount(params.row);
+                                            }
+                                        }
+                                    }, '获取');
+                                    break;
+
+                                case 'TurnDown':  // 已驳回
+                                    button = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_freeApply_lookResult(params.row);
+                                            }
+                                        }
+                                    }, '查看原因');
+                                    break;
                             }
 
-                            return h('Button', {
-                                props: {
-                                    type: 'text'
-                                },
-                                style: {
-                                    textDecoration: 'underline'
-                                },
-                                on: {
-                                    click() {
-                                        switch (params.row.workOrderStatus) {
-                                            case '待处理': that.onClick_cancelWorkOrder(params.row); break;
-                                            case '处理中': that.onClick_cancelWorkOrder(params.row); break;
-                                            case '已结单': that.onClick_viewDetail(params.row); break;
-                                            case '已取消': that.onClick_reOrder(params.row); break;
-                                        }
-                                    }
-                                }
-                            }, text);
+                            if (button) {
+                                return h('div', [button]);
+                            }
+                            else {
+                                return '';
+                            }
+
                         }
                     }],
                 tableData: [],
+
+                // 免费申请 - 数据下载信息
+                modal_freeApply_info: false,
+                table_freeApply_info: {
+                    address: ''
+                },
+
+                //免费申请- 查看原因
+                modal_freeApply_result: false,
+                freeApply_result: ''
             };
         },
         components: {vMenuTitle},
@@ -185,6 +265,75 @@
                 }).catch(function (e) {
                     that.tableLoading = false;
                 })
+            },
+
+            // 免费申请订单-表格-取消申请
+            onClick_freeApply_cancel(row) {
+                var that = this;
+
+                that.$Modal.confirm({
+                    title: '取消订单',
+                    content: '确定要取消<'+ row.orderNum +'>订单？',
+                    onOk() {
+                        that.$http({
+                            method: 'get',
+                            url: '/panoramic/serverOrder/',
+                            params: {
+                                orderId: row.orderId,
+                            }
+                        }).then(function (response) {
+                            if (response.status === 1) {
+                                that.$Message.success({
+                                    content: '取消成功！'
+                                });
+                            }
+                            else {
+                                that.$Message.error({
+                                    content: '取消失败！'
+                                });
+                            }
+                        }).catch(function (e) {});
+                    }
+                });
+            },
+            // 免费申请订单-表格-获取
+            onClick_freeApply_getAccount(row) {
+                var that = this;
+                this.modal_freeApply_info = true;
+                alert('接口还没实现！');
+
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/dataOrder/getIndustryData',
+                    params: {
+                        orderId: row.orderId
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                       // that.table_freeApply_data_account = response.result || [];
+                    }
+                    else {
+                    }
+                }).catch(function (e) {})
+            },
+            // 免费申请订单-表格-查看原因
+            onClick_freeApply_lookResult(row) {
+                var that = this;
+                this.modal_freeApply_result = true;
+
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/serverOrder/',
+                    params: {
+                        orderId: row.orderId
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.freeApply_result = response.result || [];
+                    }
+                    else {
+                    }
+                }).catch(function (e) {})
             },
         }
     }

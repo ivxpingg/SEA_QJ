@@ -8,7 +8,7 @@
                     <div class="form-item">
                         <label class="label" for="userOrder_keyword">关键字</label>
                         <div class="value">
-                            <Input id="userOrder_keyword" v-model="searchParams.keyword" placeholder="工单、用户、电话"></Input>
+                            <Input id="userOrder_keyword" v-model="searchParams.keyword" placeholder="单位名称、订单编号"></Input>
                         </div>
                     </div>
                 </div>
@@ -33,10 +33,6 @@
                     <Button type="primary" @click="onClick_search">查询</Button>
                 </div>
 
-                <div class="hd">
-                    <Button type="primary" @click="onClick_add_modal">新增服务器</Button>
-                </div>
-
             </div>
 
             <div class="table-panel">
@@ -49,10 +45,52 @@
             </div>
 
         </div>
+
+        <!--免费申请订单详情-->
+        <Modal v-model="modal_freeApply_detail"
+               :width="1000"
+               title="详情">
+            <div class="modal_pay_detail">
+                <div class="text-info">
+                    <span class="text-k">申请时间：<span>{{table_freeApply_data_detail.insTime}}</span></span>
+                    <span class="text-k">订单状态：<span>{{table_freeApply_data_detail.orderStatus}}</span></span>
+                    <span class="text-k">通过时间：<span>{{table_freeApply_data_detail.payTime}}</span></span>
+                </div>
+
+                <Table border
+                       :columns="table_freeApply_columns_detail"
+                       :data="[table_freeApply_data_detail]"></Table>
+
+                <div class="ft-bottom">
+                    <Button @click="onClick_lookImage" >查看附件</Button>
+                </div>
+
+            </div>
+        </Modal>
+
+        <!--驳回原因-->
+        <Modal v-model="modal_freeApply_reject"
+               @onOk="onClick_reject"
+               ok-text="驳回"
+               title="驳回原因" >
+            <div>
+                <Input type="textarea"
+                       :rows="5"
+                       :model="rejectReason"
+                       placeholder="请输入驳回原因" />
+            </div>
+
+        </Modal>
+
+        <Modal v-model="modal_look_image" title="附件">
+            <img :src="fileimgUrl" alt="">
+        </Modal>
+
     </div>
 </template>
 
 <script>
+    import Config from '../../../libs/appConfig/config';
     export default {
         name: "industryDataManage",
         data() {
@@ -64,8 +102,9 @@
                     pageSize: 10, // 每页几行
                     count: 0,     // 总页数
                     keyword: '',
-                    startTime: '',
-                    endTime: '',
+                    beginDate: '',
+                    endDate: '',
+                    orderType: 'FreeDataOrder'
                 },
 
                 tableLoading: false,
@@ -77,84 +116,180 @@
                         align: 'center'
                     },{
                         title: '订单编号',
-                        key: 'name',
+                        key: 'orderNum',
                         align: 'center'
                     },{
-                        title: '申请服务申请',
-                        key: 'name',
+                        title: '申请服务名称',
+                        key: 'dataName',
                         align: 'center'
                     },{
                         title: '创建时间',
-                        key: 'name',
+                        key: 'insTime',
                         align: 'center'
                     },{
                         title: '申请单位',
-                        key: 'name',
+                        key: 'applyUnit',
                         align: 'center'
                     },{
                         title: '状态',
-                        key: 'name',
+                        key: 'orderStatusStr',
                         align: 'center'
                     },{
                         title: '操作',
                         align: 'center',
-                        width: 220,
+                        width: 260,
                         render(h, params) {
 
-                            var text = '';
+                            var button1, button2, button3, array_list = [];
 
-                            switch (params.row.applyStatus){
-                                case '已发布': text = '下架'; break;
-                                case '未发布': text = '上架'; break;
-                            }
+                            button3 = h('Button', {
+                                props: {
+                                    type: 'text'
+                                },
+                                style: {
+                                    textDecoration: 'underline'
+                                },
+                                on: {
+                                    click() {
+                                        that.onClick_freeApply_detail(params.row);
+                                    }
+                                }
+                            }, '详情');
 
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'text'
-                                    },
-                                    style: {
-                                        textDecoration: 'underline'
-                                    },
-                                    on: {
-                                        click() {
-                                            if(text === '下架') {
+                            switch (params.row.orderStatus) {
 
-                                            }
-                                            else {
+                                case 'WaitAudit':  // 待审核
+                                    button1 = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.$Modal.confirm({
+                                                    title: '审核确认',
+                                                    content: '确定要通过该用户的产品申请吗？ 《审核通过后用户可以直接下载数据文件》',
+                                                    onOk() {
+                                                        that.$http({
+                                                            method: 'get',
+                                                            url: '/panoramic/dataOrder/auditSuccess',
+                                                            params: {
+                                                                orderId: params.row.orderId
+                                                            }
+                                                        }).then(function (response) {
+                                                            if (response.status === 1) {
+                                                                that.$Message.success({
+                                                                    content: '审核通过成功！'
+                                                                });
 
+                                                                that.getApplyOrderData();
+                                                            }
+                                                            else {
+                                                                that.$Message.error({
+                                                                    content: '审核通过失败！'
+                                                                });
+                                                            }
+                                                        }).catch(function (e) {
+                                                        })
+                                                    }
+                                                });
                                             }
                                         }
-                                    }
-                                }, text),
-                                h('Button', {
-                                    props: {
-                                        type: 'text'
-                                    },
-                                    style: {
-                                        textDecoration: 'underline'
-                                    },
-                                    on: {
-                                        click() {}
-                                    }
-                                }, '导入'),
-                                h('Button', {
-                                    props: {
-                                        type: 'text'
-                                    },
-                                    style: {
-                                        textDecoration: 'underline'
-                                    },
-                                    on: {
-                                        click() {}
-                                    }
-                                }, '详情')
-                            ]);
+                                    }, '审核通过');
+
+                                    button2 = h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.modal_freeApply_reject = true;
+                                                that.rejectOrderId = params.row.orderId;
+                                            }
+                                        }
+                                    }, '驳回');
+
+                                    array_list.push(button1);
+                                    array_list.push(button2);
+                                    break;
+
+                                case 'AuditSucc':  // 审核成功
+                                    break;
+
+                                case 'TurnDown':  // 已驳回
+                                    break;
+                            }
+
+                            array_list.push(button3);
+
+                            return h('div', array_list);
                         }
                     }
 
                 ],
-                tableData: [{name: 'test'}],
+                tableData: [],
+
+                // 免费详情
+                modal_freeApply_detail: false,
+                table_freeApply_columns_detail: [
+                    {
+                        title: '订单号',
+                        key: 'orderNum',
+                        width: '130',
+                        align: 'center'
+                    },{
+                        title: '申请单位名称',
+                        key: 'applyUnit',
+                        align: 'center'
+                    },{
+                        title: '申请人',
+                        key: 'applyPerson',
+                        align: 'center'
+                    },{
+                        title: '联系电话',
+                        key: 'phone',
+                        align: 'center'
+                    },{
+                        title: '联系邮箱',
+                        key: 'mail',
+                        align: 'center'
+                    },{
+                        title: '商品内容',
+                        key: 'dataContent',
+                        align: 'center',
+                    },{
+                        title: '用途说明与特殊需求',
+                        key: 'useDescription',
+                        align: 'center'
+                    }
+                ],
+                table_freeApply_data_detail: {
+                    orderNum: '',
+                    applyUnit: '',
+                    applyPerson: '',
+                    phone: '',
+                    mail: '',
+                    dataContent: '',
+                    useDescription: '',
+                    insTime:'',
+                    orderStatus: '',
+                    payTime: '',
+                    pictureUrl: ''
+                },
+
+                // 驳回
+                modal_freeApply_reject: false,
+                rejectOrderId: '',
+                rejectReason: '',
+
+                // 查看附件窗口
+                modal_look_image: false
+
             };
         },
         components: {},
@@ -165,13 +300,18 @@
                 }
             }
         },
+        computed: {
+            fileimgUrl() {
+                return window.location.origin + Config[Config.env].imgUrl + this.table_freeApply_data_detail.pictureUrl;
+            }
+        },
         mounted() {
-            // this.getTableData();
+            this.getTableData();
         },
         methods: {
             datePicker_onChange(val) {
-                this.searchParams.startTime = val[0];
-                this.searchParams.endTime = val[1];
+                this.searchParams.beginDate = val[0];
+                this.searchParams.endDate = val[1];
             },
             onClick_search() {
                 this.getTableData();
@@ -191,17 +331,11 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '',
+                    url: '/panoramic/dataOrder/list',
                     headers: {
                         'Content-Type': 'application/json;charset=utf-8'
                     },
-                    data: JSON.stringify({
-                        pageNo: this.searchParams.pageNo,
-                        pageSize: this.searchParams.pageSize,
-                        keyword: this.searchParams.keyword,
-                        beginDate: this.searchParams.startTime,
-                        endDate: this.searchParams.endTime
-                    })
+                    data: JSON.stringify(this.searchParams)
                 }).then(function (response) {
                     that.tableLoading = false;
                     if (response.status === 1) {
@@ -219,6 +353,70 @@
                         content: JSON.stringify(e)
                     });
                 })
+            },
+
+            // 打开详情窗口
+            onClick_freeApply_detail(row) {
+                var that = this;
+                this.modal_freeApply_detail = true;
+
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/dataOrder/detail',
+                    params: {
+                        orderId: row.orderId
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.table_freeApply_data_detail.orderNum = response.result.orderNum || '';
+                        that.table_freeApply_data_detail.applyUnit = response.result.applyUnit || '';
+                        that.table_freeApply_data_detail.applyPerson = response.result.applyPerson || '';
+                        that.table_freeApply_data_detail.phone = response.result.phone || '';
+                        that.table_freeApply_data_detail.mail = response.result.mail || '';
+                        that.table_freeApply_data_detail.dataContent = response.result.dataContent || '';
+                        that.table_freeApply_data_detail.useDescription = response.result.useDescription || '';
+                        that.table_freeApply_data_detail.insTime = response.result.insTime || '';
+                        that.table_freeApply_data_detail.orderStatus = response.result.orderStatus || '';
+                        that.table_freeApply_data_detail.payTime = response.result.payTime || '';
+
+                        that.table_freeApply_data_detail.pictureUrl = response.result.pictureUrl || '';
+
+                    }
+                    else {
+                    }
+                }).catch(function (e) {})
+            },
+
+            // 驳回
+            onClick_reject() {
+                var that = this;
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/dataOrder/reject',
+                    params: {
+                        orderId: that.rejectOrderId,
+                        rejectReason: that.rejectReason
+                    }
+                }).then(function (response) {
+                    that.modal_freeApply_reject = false;
+                    if (response.status === 1) {
+                        that.$Message.success({
+                            content: '驳回成功！'
+                        });
+                    }
+                    else {
+                        that.$Message.error({
+                            content: '驳回失败！'
+                        });
+                    }
+                }).catch(function (e) {
+                    that.modal_freeApply_reject = false;
+                })
+            },
+
+            // 查看附件图片
+            onClick_lookImage() {
+                this.modal_look_image = true;
             }
         }
     }
@@ -267,6 +465,56 @@
                 text-align: center;
             }
 
+        }
+
+        @at-root .modal_pay_detail {
+            font-size: 13px;
+            line-height: 53px;
+            .text-info {
+                padding-bottom: 14px;
+                font-size: 13px;
+                line-height: 26px;
+
+                .text-k {
+                    padding-right: 36px;
+                }
+            }
+
+            .ft-bottom {
+                overflow: hidden;
+                line-height: 50px;
+
+                .text-info-left {
+                    float: left;
+                    padding-left: 10px;
+                }
+
+                .text-info-right {
+                    float: right;
+                    padding-right: 10px;
+
+                    .count {
+                        font-size: 16px;
+                    }
+                }
+
+            }
+
+            .other-title {
+                margin-bottom: 20px;
+                font-weight: 700;
+                line-height: 53px;
+                border-bottom: 1px solid #cecece;
+            }
+
+            .area-text {
+                padding: 10px;
+                line-height: 19px;
+                color: #6f6f6f;
+                background-color: #efefef;
+                min-height: 80px;
+                border: 1px solid #d6d6d6;
+            }
         }
     }
 </style>

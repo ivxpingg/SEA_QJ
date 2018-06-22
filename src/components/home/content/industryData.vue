@@ -100,7 +100,7 @@
                 dataResourceList: [],
 
                 // 免费申请弹窗
-                modal_freeApply: true,
+                modal_freeApply: false,
                 freeApplyInfo: {
                     industryDataId: '',
                     userId: '',

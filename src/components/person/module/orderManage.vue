@@ -192,7 +192,8 @@
                     startDate: '',
                     endDate: '',
                     timeInterval: '',
-                    orderType: 'ServerOrder'
+                    orderType: 'ServerOrder',
+                    userId: this.$store.state.uid
                 },
                 tableColumns_paid: [
                     {
@@ -495,7 +496,8 @@
                     startDate: '',
                     endDate: '',
                     timeInterval: '',
-                    orderType: 'FreeServerOrder'
+                    orderType: 'FreeServerOrder',
+                    userId: this.$store.state.uid
                 },
                 tableColumns_apply: [
                     {
