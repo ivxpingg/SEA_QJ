@@ -117,74 +117,98 @@
 
                 <div class="item-panel">
 
-                    <div class="item">
-                        <div class="img img-1"></div>
-                        <div class="title">数据定制分析</div>
-                        <div class="desc">基于平台强大的云计算能力、 海量数据资源、为用户提供 数据分析服务，支持多种数 据上传分析对比，人工录入 对比分析</div>
-                        <div class="btn-panel">
-                            <Button size="large">数据分析</Button>
-                        </div>
-                    </div>
+                    <!--<div class="item">-->
+                        <!--<div class="img img-1"></div>-->
+                        <!--<div class="title">数据定制分析</div>-->
+                        <!--<div class="desc">基于平台强大的云计算能力、 海量数据资源、为用户提供 数据分析服务，支持多种数 据上传分析对比，人工录入 对比分析</div>-->
+                        <!--<div class="btn-panel">-->
+                            <!--<Button size="large">数据分析</Button>-->
+                        <!--</div>-->
+                    <!--</div>-->
 
-                    <div class="item">
+                    <div v-for="item in dataResourceList" class="item">
                         <div class="img img-2"></div>
-                        <div class="title">海洋水质数据</div>
+                        <div class="title">{{item.dataName}}</div>
                         <div class="attr">
                             <span class="label">数据数量</span>
-                            <span class="value">1000条</span>
+                            <span class="value">{{item.dataNumber}}条</span>
                         </div>
                         <div class="attr">
                             <span class="label">数据时效</span>
-                            <span class="value">近2年</span>
+                            <span class="value">
+                                {{transformFormat(item)}}
+                            </span>
                         </div>
                         <div class="attr">
                             <span class="label">数据格式</span>
-                            <span class="value">EXCEL</span>
+                            <span class="value">{{item.format}}</span>
                         </div>
                         <div class="btn-panel">
-                            <Button size="large">前往申请</Button>
+                            <Button size="large" @click="onClick_jump">前往申请</Button>
                         </div>
                     </div>
 
-                    <div class="item">
-                        <div class="img img-3"></div>
-                        <div class="title">海洋水质数据</div>
-                        <div class="attr">
-                            <span class="label">数据数量</span>
-                            <span class="value">1000条</span>
-                        </div>
-                        <div class="attr">
-                            <span class="label">数据时效</span>
-                            <span class="value">近2年</span>
-                        </div>
-                        <div class="attr">
-                            <span class="label">数据格式</span>
-                            <span class="value">EXCEL</span>
-                        </div>
-                        <div class="btn-panel">
-                            <Button size="large">前往申请</Button>
-                        </div>
-                    </div>
+                    <!--<div class="item">-->
+                        <!--<div class="img img-3"></div>-->
+                        <!--<div class="title">海洋水质数据</div>-->
+                        <!--<div class="attr">-->
+                            <!--<span class="label">数据数量</span>-->
+                            <!--<span class="value">1000条</span>-->
+                        <!--</div>-->
+                        <!--<div class="attr">-->
+                            <!--<span class="label">数据时效</span>-->
+                            <!--<span class="value">近2年</span>-->
+                        <!--</div>-->
+                        <!--<div class="attr">-->
+                            <!--<span class="label">数据格式</span>-->
+                            <!--<span class="value">EXCEL</span>-->
+                        <!--</div>-->
+                        <!--<div class="btn-panel">-->
+                            <!--<Button size="large">前往申请</Button>-->
+                        <!--</div>-->
+                    <!--</div>-->
 
-                    <div class="item">
-                        <div class="img img-4"></div>
-                        <div class="title">海洋水质数据</div>
-                        <div class="attr">
-                            <span class="label">数据数量</span>
-                            <span class="value">1000条</span>
-                        </div>
-                        <div class="attr">
-                            <span class="label">数据时效</span>
-                            <span class="value">近2年</span>
-                        </div>
-                        <div class="attr">
-                            <span class="label">数据格式</span>
-                            <span class="value">EXCEL</span>
-                        </div>
-                        <div class="btn-panel">
-                            <Button size="large">前往申请</Button>
-                        </div>
-                    </div>
+
+
+                    <!--<div class="item">-->
+                        <!--<div class="img img-4"></div>-->
+                        <!--<div class="title">海洋水质数据</div>-->
+                        <!--<div class="attr">-->
+                            <!--<span class="label">数据数量</span>-->
+                            <!--<span class="value">1000条</span>-->
+                        <!--</div>-->
+                        <!--<div class="attr">-->
+                            <!--<span class="label">数据时效</span>-->
+                            <!--<span class="value">近2年</span>-->
+                        <!--</div>-->
+                        <!--<div class="attr">-->
+                            <!--<span class="label">数据格式</span>-->
+                            <!--<span class="value">EXCEL</span>-->
+                        <!--</div>-->
+                        <!--<div class="btn-panel">-->
+                            <!--<Button size="large">前往申请</Button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <!--<div class="item">-->
+                        <!--<div class="img img-4"></div>-->
+                        <!--<div class="title">海洋水质数据</div>-->
+                        <!--<div class="attr">-->
+                            <!--<span class="label">数据数量</span>-->
+                            <!--<span class="value">1000条</span>-->
+                        <!--</div>-->
+                        <!--<div class="attr">-->
+                            <!--<span class="label">数据时效</span>-->
+                            <!--<span class="value">近2年</span>-->
+                        <!--</div>-->
+                        <!--<div class="attr">-->
+                            <!--<span class="label">数据格式</span>-->
+                            <!--<span class="value">EXCEL</span>-->
+                        <!--</div>-->
+                        <!--<div class="btn-panel">-->
+                            <!--<Button size="large">前往申请</Button>-->
+                        <!--</div>-->
+                    <!--</div>-->
 
                 </div>
             </div>
@@ -193,6 +217,7 @@
 </template>
 
 <script>
+    import Moment from 'moment';
     export default {
         name: "h-content",
         data() {
@@ -222,11 +247,19 @@
                         memory: '',
                         serverName: ''
                     }
-                ]
+                ],
+
+                dataResourceList: []
             };
+        },
+        updated() {
+            if (this.$store.state.homeScroll) {
+                this.$store.state.homeScroll.refresh();
+            }
         },
         mounted() {
             this.getServeData();
+            this.getDataResourceData();
         },
         methods: {
             /**
@@ -252,6 +285,26 @@
                 }).catch(function (e) {
                 })
             },
+            /**
+             * 获取首页数据资源列表
+             */
+            getDataResourceData() {
+                var that = this;
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/industryData/homePageIndustryDataList'
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.dataResourceList = response.result;
+                    }
+
+                }).catch(function (e) {
+                })
+            },
+
+            transformFormat(item) {
+                return Moment(item.beginTime).format('YYYY.MM.DD') + ' - ' + Moment(item.endTime).format('YYYY.MM.DD');
+            },
 
             /**
              * 购买服务器跳转
@@ -263,6 +316,15 @@
                     query: {
                         cid: cloudServerId || ''
                     }
+                })
+            },
+
+            /**
+             * 跳转到数据资源申请列表
+             */
+            onClick_jump() {
+                this.$router.push({
+                    name: 'industryData'
                 })
             }
         }
@@ -374,7 +436,8 @@
             }
 
             &.content-panel-2 {
-                height: 735px;
+                padding-bottom: 20px;
+                /*height: 735px;*/
                 background-color: #f5f5f6;
 
                 .content-inner {
@@ -399,17 +462,22 @@
                     }
 
                     .item-panel {
-                        display: flex;
-                        height: 390px;
+                        /*display: flex;*/
+                        /*height: 390px;*/
+                        overflow: hidden;
 
                         .item {
                             position: relative;
-                            flex: 1;
+                            float: left;
+                            /*flex: 1;*/
+                            margin-top: 20px;
                             margin-left: 20px;
                             padding:  24px 44px 42px;
+                            width: 285px;
+                            height: 390px;
                             border: 2px solid #ececec;
 
-                            &:first-child {
+                            &:nth-child(3n + 4) {
                                 margin-left: auto;
                             }
 

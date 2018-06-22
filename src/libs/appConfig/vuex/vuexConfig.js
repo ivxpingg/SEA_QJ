@@ -7,7 +7,8 @@ const store = function () {
             uid: null,       // 前台和后台共用
             usertype: null,  // 前台参数
             type: null,      // 后台参数
-            syscode: null    // 后台参数
+            syscode: null,    // 后台参数
+            homeScroll: null   // 首页滚动条对象
 
         },
         getters: {},
@@ -26,6 +27,9 @@ const store = function () {
             },
             setSyscode(state, syscode) {
                 state.syscode = syscode;
+            },
+            setHomeScroll(state, scroll) {
+                state.homeScroll = scroll;
             }
         },
         actions: {

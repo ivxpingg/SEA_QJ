@@ -73,6 +73,8 @@
                     }
                 });
 
+                this.$store.commit('setHomeScroll', this.myScroll);
+
             },
             refreshIScroll(name) {
                 var that = this;
