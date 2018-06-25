@@ -53,7 +53,7 @@
                 active_name: '',
                 menu_nameInName: {},
 
-                active_tab: 'industryDataManage'
+                active_tab: 'seaSystem'
             };
         },
         watch: {

@@ -50,6 +50,9 @@
 
         </div>
 
+
+
+
     </div>
 </template>
 
@@ -58,89 +61,126 @@
         name: "seaSystem",
         data() {
             var that = this;
-            return {};
+            return {
+                datePicker_default: [],
+                searchParams: {
+                    pageNo: 1, // 当前页
+                    pageSize: 10, // 每页几行
+                    count: 0,     // 总页数
+                    keyword: '',
+                    beginDate: '',
+                    endDate: '',
+                },
+
+                tableLoading: false,
+                tableColumns: [
+                    {
+                        type: 'index',
+                        width: 80,
+                        title: '序号',
+                        align: 'center'
+                    },{
+                        title: '日期',
+                        key: 'insTime',
+                        align: 'center'
+                    },{
+                        title: '设备名称',
+                        key: 'equipmentName',
+                        align: 'center'
+                    },{
+                        title: '设备编号',
+                        key: 'equipmentNo',
+                        align: 'center',
+                    },{
+                        title: '地点',
+                        key: 'position',
+                        align: 'center'
+                    },{
+                        title: '设备状态',
+                        key: 'equipmentStatusStr',
+                        align: 'center'
+                    },{
+                        title: '设备测评分析状态',
+                        key: 'analysisStatusStr',
+                        align: 'center'
+                    },{
+                        title: '操作',
+                        align: 'center',
+                        width: 220,
+                        render(h, params) {
+
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'text'
+                                    },
+                                    style: {
+                                        textDecoration: 'underline'
+                                    },
+                                    on: {
+                                        click() {
+                                            that.onClick_table_edit(params.row);
+                                        }
+                                    }
+                                }, '编辑'),
+
+                                h('Button', {
+                                    props: {
+                                        type: 'text'
+                                    },
+                                    style: {
+                                        textDecoration: 'underline'
+                                    },
+                                    on: {
+                                        click() {
+                                            if (param.row.analysisStatus === '0') {
+                                                that.onClick_table_add_analyze(params.row);
+                                            }
+                                            else {
+                                                that.onClick_table_look_analyze(params.row);
+                                            }
+                                        }
+                                    }
+                                }, param.row.analysisStatus === '0' ? '开始分析' : '查看分析'),
+
+                                h('Button', {
+                                    props: {
+                                        type: 'text'
+                                    },
+                                    style: {
+                                        textDecoration: 'underline'
+                                    },
+                                    on: {
+                                        click() {
+                                            that.onClick_table_look_detail(params.row);
+                                        }
+                                    }
+                                }, '详情'),
+
+                                h('Button', {
+                                    props: {
+                                        type: 'text'
+                                    },
+                                    style: {
+                                        textDecoration: 'underline'
+                                    },
+                                    on: {
+                                        click() {
+                                            that.onClick_table_del(params.row);
+                                        }
+                                    }
+                                }, '删除')
+
+                            ]);
+                        }
+                    }
+
+                ],
+                tableData: [],
+            };
         },
         components: {
-            datePicker_default: [],
-            searchParams: {
-                pageNo: 1, // 当前页
-                pageSize: 10, // 每页几行
-                count: 0,     // 总页数
-                keyword: '',
-                beginDate: '',
-                endDate: '',
-            },
 
-            tableLoading: false,
-            tableColumns: [
-                {
-                    type: 'index',
-                    width: 80,
-                    title: '序号',
-                    align: 'center'
-                },{
-                    title: '日期',
-                    key: 'dataName',
-                    align: 'center'
-                },{
-                    title: '设备名称',
-                    key: 'dataNumber',
-                    align: 'center'
-                },{
-                    title: '设备编号',
-                    align: 'center',
-                },{
-                    title: '地点',
-                    key: 'price',
-                    align: 'center'
-                },{
-                    title: '设备状态',
-                    key: 'format',
-                    align: 'center'
-                },{
-                    title: '设备测评分析状态',
-                    key: 'publishTime',
-                    align: 'center'
-                },{
-                    title: '操作',
-                    align: 'center',
-                    width: 220,
-                    render(h, params) {
-
-                        return h('div', [
-                            h('Button', {
-                                props: {
-                                    type: 'text'
-                                },
-                                style: {
-                                    textDecoration: 'underline'
-                                },
-                                on: {
-                                    click() {
-                                        that.onClick_detail_dataResource(params.row);
-                                    }
-                                }
-                            }, '详情'),
-                            h('Button', {
-                                props: {
-                                    type: 'text'
-                                },
-                                style: {
-                                    textDecoration: 'underline'
-                                },
-                                on: {
-                                    click() {
-                                        that.onClick_del_dataResource(params.row);
-                                    }
-                                }
-                            }, '删除'),
-
-                        ]);
-                    }
-                }
-
-            ],
-            tableData: [],
         },
         watch: {
             'searchParams.pageNo': {
@@ -151,7 +191,6 @@
         },
         mounted() {
             this.getTableData();
-            this.getDict();
         },
         methods: {
             datePicker_onChange(val) {
@@ -176,7 +215,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '/panoramic/industryData/list',
+                    url: '/panoramic/equipment/list',
                     headers: {
                         'Content-Type': 'application/json;charset=utf-8'
                     },
@@ -200,9 +239,34 @@
             // 进入试验分析GIS系统
             onClick_goto() {
                 this.$router.push({
-                    name: ''
+                    name: 'gisMap'
                 });
-            }
+            },
+
+            /**
+             * 编辑
+             */
+            onClick_table_edit(row) {},
+
+            /**
+             * 开始分析
+             */
+            onClick_table_add_analyze(row) {},
+
+            /**
+             * 查看分析
+             */
+            onClick_table_look_analyze(row) {},
+
+            /**
+             * 查看详情
+             */
+            onClick_table_look_detail(row) {},
+
+            /**
+             * 删除分析
+             */
+            onClick_table_del(row) {},
         }
     }
 </script>

@@ -216,6 +216,17 @@ export default [
 
         ]
     },
+
+    {
+        path: '/gisMap',
+        name: 'gisMap',
+        meta: {
+            requireAuth: true,
+            title: 'gis地图编辑'
+        },
+        component: (resolve) => require(['../../components/manage/module/gisMap.vue'], resolve),
+    },
+
     {
         path: '/login',
         name: 'login',
