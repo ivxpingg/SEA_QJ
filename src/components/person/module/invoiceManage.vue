@@ -426,7 +426,6 @@
                     method: 'post',
                     url: '/panoramic/invoice/applyInvoice',
                     data: {
-                        issueInvoiceId: this.invoiceInfo.issueInvoiceId,
                         userId: that.$store.state.uid
                     }
                 }).then(function (response) {

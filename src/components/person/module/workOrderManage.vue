@@ -314,7 +314,7 @@
                     onOk() {
                         that.$http({
                             method: 'get',
-                            url: '',
+                            url: '/panoramic/workOrder/cancelWorkOrder',
                             params: {
                                 workOrderId: row.workOrderId
                             }
@@ -337,10 +337,28 @@
             },
             // 查看详情
             onClick_viewDetail(row) {
-                this.$Modal.info({
-                    title: '服务结果',
-                    content: row.handleResult
-                })
+                var that = this;
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/workOrder/detail',
+                    params: {
+                        workOrderId: row.workOrderId
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+
+                        that.$Modal.info({
+                            title: '服务结果',
+                            content: response.result.handleResult
+                        });
+
+                    }
+                    else {}
+                }).catch(function (e) {
+
+                });
+
+
             },
             // 重新下单
             onClick_reOrder(row) {
