@@ -21,5 +21,6 @@
 <style lang="scss" scoped>
     .gisMap-container {
         position: relative;
+        height: 100%;
     }
 </style>

@@ -41,7 +41,6 @@
                 var that = this;
 
                 this.myScroll = new IScroll('#wrapper', {
-                    mouseWheel: true,
                     probeType: 2,
                     keyBindings: {
                         pageUp: 33,
@@ -52,7 +51,8 @@
                         up: 38,
                         right: 39,
                         down: 40
-                    }
+                    },
+                    mouseWheel: true
                     // snap: '.iscrollP'
                 });
 
@@ -86,10 +86,10 @@
                     this.myScroll.scrollTo(0, 0, 300);
                     this.headerBg = false;
                 }
-                else if(name === '/home/mapShow') {
-                    this.myScroll.scrollTo(0, 0, 300);
-                    this.headerBg = false;
-                }
+                // else if(name === '/home/mapShow') {
+                //     this.myScroll.scrollTo(0, -556, 300);
+                //     this.headerBg = false;
+                // }
                 else {
                     this.myScroll.scrollTo(0, -556,300);
                     this.headerBg = true;
