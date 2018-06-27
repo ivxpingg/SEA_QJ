@@ -1,6 +1,8 @@
 <template>
     <div class="home-container">
-        <vHeader class="home-header" :class="{headerBg: headerBg}" @parentIScroll="refreshIScroll"></vHeader>
+        <vHeader class="home-header"
+                 :class="{headerBg: headerBg}"
+                 @parentIScroll="refreshIScroll"></vHeader>
         <div class="wrapper" id="wrapper">
             <div class="home-scroll">
                 <vHSwiper class="home-swiper iscrollP"></vHSwiper>

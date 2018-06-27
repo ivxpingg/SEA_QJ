@@ -16,7 +16,7 @@ export default [
             name: 'mapShow',
             meta: {
                 requireAuth: false,
-                title: '厦门观测装备全景分析'
+                title: '装备全景分析展示'
             },
             component: (resolve) => require(['../../components/home/content/mapShow.vue'], resolve)
         },{
@@ -25,7 +25,7 @@ export default [
             // alias: '/ThemeApp',
             meta: {
                 requireAuth: false,
-                title: '厦门观测装备全景分析'
+                title: '行业服务中心'
             },
             component: (resolve) => require(['../../components/home/content/content.vue'], resolve)
         },{
@@ -33,7 +33,7 @@ export default [
             name: 'cloudService',
             meta: {
                 requireAuth: false,
-                title: '厦门观测装备全景分析'
+                title: '云服务器'
             },
             component: (resolve) => require(['../../components/home/content/cloudService.vue'], resolve)
         },{
@@ -42,10 +42,20 @@ export default [
             // alias: '/ThemeApp',
             meta: {
                 requireAuth: false,
-                title: '厦门观测装备全景分析'
+                title: '行业数据'
             },
             component: (resolve) => require(['../../components/home/content/industryData.vue'], resolve)
         }]
+    },
+
+    {
+        path: '/mapShow',
+        name: 'mapShow',
+        meta: {
+            requireAuth: false,
+            title: '装备全景分析展示'
+        },
+        component: (resolve) => require(['../../views/Home/homeMap.vue'], resolve)
     },
 
     {

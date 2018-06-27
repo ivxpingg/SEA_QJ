@@ -22,7 +22,7 @@
                     <span>{{equipmentInfo.position}}</span>
                 </div>
                 <div class="item">
-                    <span>设备健侧内容：{{equipmentInfo.observationContent}}</span>
+                    <span>设备监测内容：{{equipmentInfo.observationContent}}</span>
                 </div>
                 <div class="item">
                     <span>设备评级：</span>
@@ -48,8 +48,14 @@
                  class="chart"></div>
 
             <div class="my-btn-panel">
-                <Button class="my-btn" type="info" >添加人工数据对比</Button>
+                <Button class="my-btn" type="info" v-if="edit">添加人工数据对比</Button>
             </div>
+        </div>
+
+        <div class="goback"
+             @click="onClick_goback"
+             :class="{'show': showPanel}">
+            <Icon type="chevron-left"></Icon>返回
         </div>
 
         <div class="search-bar">
@@ -63,7 +69,7 @@
             <!--<div class="my-btn ivu-btn">大型科研仪器</div>-->
         </div>
 
-        <div class="toolbox" v-if="edit">
+        <div class="toolbox" v-if="edit"  :class="{'show': showPanel}">
 
 
             <Poptip title="提示" content="请在地图点击选择添加的位置">
@@ -343,6 +349,12 @@
                     }
                 }
             },
+            dataList: {
+                deep: true,
+                handler(val) {
+                    this.onClick_switch_equipmentType(this.filterType);
+                }
+            },
             filterDataList: {
                 deep: true,
                 handler(val) {
@@ -389,7 +401,7 @@
             setChart() {
                 this.chart1 = Echarts.init(this.$refs.chart1);
                 var option1 = {
-                    color: ['#ff931e', '#00c0dd'],
+                    color: ['#00c0dd','#ff931e'],
                     legend: {
                         align: 'left',
                         right: 20,
@@ -437,15 +449,15 @@
                         type: 'line',
                         smooth: true,
                         areaStyle: {
-                            // normal: {
-                            //     color: new Echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                            //         offset: 0,
-                            //         color: 'rgba(0, 192, 221, 0.8)'
-                            //     }, {
-                            //         offset: 1,
-                            //         color: 'rgba(255,255,255,0)'
-                            //     }])
-                            // }
+                            normal: {
+                                color: new Echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 0,
+                                    color: 'rgba(0, 192, 221, 0.8)'
+                                }, {
+                                    offset: 1,
+                                    color: 'rgba(0, 192, 221,0)'
+                                }])
+                            }
                         }
                     },{
                         name: '图二',
@@ -453,15 +465,15 @@
                         type: 'line',
                         smooth: true,
                         areaStyle: {
-                            // normal: {
-                            //     color: new Echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                            //         offset: 0,
-                            //         color: 'rgba(0, 192, 221, 0.8)'
-                            //     }, {
-                            //         offset: 1,
-                            //         color: 'rgba(255,255,255,0)'
-                            //     }])
-                            // }
+                            normal: {
+                                color: new Echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 0,
+                                    color: 'rgba(255,147,30, 0.8)'
+                                }, {
+                                    offset: 1,
+                                    color: 'rgba(255,147,30,0)'
+                                }])
+                            }
                         }
                     }]
                 };
@@ -470,6 +482,7 @@
 
                 this.chart2 = Echarts.init(this.$refs.chart2);
                 var option2 = {
+                    color: ['#00c0dd','#ff931e'],
                     title: {
                         show: false,
                         text: '基础雷达图'
@@ -512,7 +525,11 @@
                     series: [{
                         name: '预算',
                         type: 'radar',
-                        areaStyle: {},
+                        areaStyle: {
+                            normal: {
+                                color: 'rgba(0, 192, 221, 0.5)'
+                            }
+                        },
 
                         data : [
                             {
@@ -582,7 +599,7 @@
                             if(response.status === 1) {
                                 that.$Message.success({content: '添加成功！'});
                                 that.modal_equipment_add = false;
-                                // that.getData();
+                                that.getTableData();
                             }
                             else {
                                 that.$Message.error({content: '添加失败！'});
@@ -616,7 +633,7 @@
                             if(response.status === 1) {
                                 that.$Message.success({content: '更新成功！'});
                                 that.modal_equipment_add = false;
-                                // that.getData();
+                                that.getTableData();
                             }
                             else {
                                 that.$Message.error({content: '更新失败！'});
@@ -625,6 +642,16 @@
                         }).catch(function (e) {});
                     } else {
                         return false;
+                    }
+                });
+            },
+
+            // 返回
+            onClick_goback() {
+                this.$router.push({
+                   name: 'manage',
+                    query: {
+                        active_tab: 'seaSystem'
                     }
                 });
             },
@@ -694,19 +721,20 @@
                         onOk() {
                             that.$http({
                                 method: 'get',
-                                url: '/sys/dict/listData',
+                                url: '/panoramic/equipment/delete',
                                 params: {
-                                    type: 'equipmentType'
+                                    equipmentIds: that.marker_info_active.equipmentId
                                 }
                             }).then(function (response) {
                                 if (response.status === 1) {
                                     that.$Message.success({
-                                        conent: '删除成功!'
+                                        content: '删除成功!'
                                     });
+                                    that.getTableData();
                                 }
                                 else {
                                     that.$Message.error({
-                                        conent: '删除失败!'
+                                        content: '删除失败!'
                                     });
                                 }
                             }).catch(function (e) {})
@@ -715,7 +743,6 @@
 
                 }
             },
-
 
             /**
              * 获取表格数据
@@ -732,7 +759,6 @@
                 }).then(function (response) {
                     if (response.status === 1) {
                         that.dataList = response.result.page.list;
-                        that.onClick_switch_equipmentType(that.filterType);
                     }
                     else {}
                 }).catch(function (e) {
@@ -1029,19 +1055,67 @@
             }
         }
 
+        .goback{
+            position: absolute;
+            padding: 6px 12px;
+            top: 20px;
+            left: 20px;
+            z-index: 1;
+            color: rgba(51,51,51, 0.8);
+            font-size: 14px;
+            background-color: rgba(255,255,255,0.4);
+            box-shadow: 1px 2px 1px rgba(0,0,0,.15);
+            transition: all 0.5s;
+            transform: translate(0px, 0px);
+            cursor: pointer;
+
+            &:hover {
+                background-color: rgba(255,255,255,0.9);
+                color: rgba(51,51,51, 1);
+                .ivu-icon {
+                    color: rgba(51,51,51, 1);
+                }
+            }
+
+            &.show {
+                transform:translate(314px, 0px);
+            }
+
+            .ivu-icon {
+                padding-right: 5px;
+                color: rgba(51,51,51, 0.9);
+                font-size: 14px;
+            }
+        }
+
         .toolbox {
             position: absolute;
             padding: 6px 12px;
             top: 20px;
-            right: 334px;
+            right: 20px;
             background-color: #FFF;
             z-index: 1;
             box-shadow: 1px 2px 1px rgba(0,0,0,.15);
+            transition: all 0.5s;
+            transform: translate(0px, 0px);
+
+            &.show {
+                transform:translate(-314px, 0px);
+            }
 
             .my-btn {
                 margin: 0 5px;
             }
         }
 
+    }
+</style>
+
+<style lang="scss" rel="stylesheet/scss">
+    .gis-container {
+        // 去掉百度地图Logo
+        .anchorBL {
+            display: none;
+        }
     }
 </style>

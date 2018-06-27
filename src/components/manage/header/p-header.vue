@@ -89,7 +89,7 @@
         transition: all 1s;
         background: url('./images/header-bg.png') no-repeat center center;
         background-size: 100% auto;
-        border-bottom: 1px solid #bbc1ce;
+        border-bottom: 0px solid #bbc1ce;
 
         .header-inner {
             margin: 0 20px;

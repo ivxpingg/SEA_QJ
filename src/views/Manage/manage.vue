@@ -53,7 +53,7 @@
                 active_name: '',
                 menu_nameInName: {},
 
-                active_tab: 'seaSystem'
+                active_tab: 'userManage'
             };
         },
         watch: {
@@ -76,11 +76,9 @@
         computed: {},
         components: {vHeader, vTabs},
         created() {
-            // if (this.$route.name === 'manage') {
-            //     this.$router.replace({
-            //         name: 'muserManage'
-            //     });
-            // }
+            if (this.$route.query && this.$route.query.active_tab) {
+                this.active_tab = this.$route.query.active_tab;
+            }
         },
         mounted() {
             this.getMenuData();

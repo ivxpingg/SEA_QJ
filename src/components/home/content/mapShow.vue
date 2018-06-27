@@ -17,6 +17,6 @@
 
 <style lang="scss" scoped>
     .mapShow-container {
-        height: 700px;
+        height: 100%;
     }
 </style>

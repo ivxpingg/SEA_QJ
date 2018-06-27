@@ -4,7 +4,7 @@
              <h2 class="logo-title">海洋装备全景分析</h2>
              <div class="header-menu-panel">
                  <ul class="menu-ul">
-                     <li class="menu-li" ref="menu1" @click="goto($event, '/home/mapShow')">装备全景分析展示</li>
+                     <li class="menu-li" ref="menu1" @click="goto($event, '/mapShow')">装备全景分析展示</li>
                      <li class="menu-li" ref="menu2" @click="goto($event, '/home/index')">行业服务中心
                          <div class="pull-down-box">
                              <ul class="pull-down-list-menu">
@@ -86,7 +86,7 @@
 
         },
         mounted() {
-            if (this.$route.path === '/home/mapShow') {
+            if (this.$route.path === '/mapShow') {
                 this.$refs.menu1.className += ' active';
             }
             else {

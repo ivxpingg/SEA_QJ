@@ -97,16 +97,22 @@
                         align: 'center'
                     },{
                         title: '设备状态',
-                        key: 'equipmentStatusStr',
-                        align: 'center'
+                        key: 'equipmentStatus',
+                        align: 'center',
+                        render(h, params) {
+                            return h('div', params.row.equipmentStatus === '0'? '已关闭': '运行中');
+                        }
                     },{
                         title: '设备测评分析状态',
-                        key: 'analysisStatusStr',
-                        align: 'center'
+                        key: 'analysisStatus',
+                        align: 'center',
+                        render(h, params) {
+                            return h('div', params.row.analysisStatus === '0'? '未分析': '已分析');
+                        }
                     },{
                         title: '操作',
                         align: 'center',
-                        width: 220,
+                        width: 300,
                         render(h, params) {
 
                             return h('div', [
@@ -133,7 +139,7 @@
                                     },
                                     on: {
                                         click() {
-                                            if (param.row.analysisStatus === '0') {
+                                            if (params.row.analysisStatus === '0') {
                                                 that.onClick_table_add_analyze(params.row);
                                             }
                                             else {
@@ -141,7 +147,7 @@
                                             }
                                         }
                                     }
-                                }, param.row.analysisStatus === '0' ? '开始分析' : '查看分析'),
+                                }, params.row.analysisStatus === '0' ? '开始分析' : '查看分析'),
 
                                 h('Button', {
                                     props: {
@@ -177,6 +183,8 @@
 
                 ],
                 tableData: [],
+
+
             };
         },
         components: {
@@ -266,7 +274,34 @@
             /**
              * 删除分析
              */
-            onClick_table_del(row) {},
+            onClick_table_del(row) {
+                var that = this;
+                that.$Modal.confirm({
+                    title: '提示',
+                    content: '确定要删除<'+ row.equipmentName +'>设备？',
+                    onOk() {
+                        that.$http({
+                            method: 'get',
+                            url: '/panoramic/equipment/delete',
+                            params: {
+                                equipmentIds: row.equipmentId
+                            }
+                        }).then(function (response) {
+                            if (response.status === 1) {
+                                that.$Message.success({
+                                    content: '删除成功!'
+                                });
+                                that.getTableData();
+                            }
+                            else {
+                                that.$Message.error({
+                                    content: '删除失败!'
+                                });
+                            }
+                        }).catch(function (e) {})
+                    }
+                })
+            },
         }
     }
 </script>
