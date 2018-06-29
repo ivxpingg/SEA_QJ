@@ -59,6 +59,16 @@ export default [
     },
 
     {
+        path: '/cashierDesk',
+        name: 'cashierDesk',
+        meta: {
+            requireAuth: false,
+            title: '收银台'
+        },
+        component: (resolve) => require(['../../views/cash/cashierDesk.vue'], resolve)
+    },
+
+    {
         path: '/person',
         name: 'person',
         // alias: '/ThemeApp',

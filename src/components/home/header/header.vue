@@ -93,8 +93,30 @@
                 this.$refs.menu2.className += ' active';
             }
             // this.getUnReadMessage();
+            this.getUserInfo();
         },
         methods: {
+            getUserInfo() {
+                var that = this;
+                if (this.isLogin) {
+                    that.$http({
+                        method: 'get',
+                        url: '/auth/getUserInfoById',
+                        params: {
+                            token: that.$store.state.token,
+                            uid: that.$store.state.uid,
+                            type: that.$store.state.usertype
+                        }
+                    }).then(function (response) {
+                        if (response.status === 1) {
+                            that.userName = response.result.name || '';
+                        }
+                        else {}
+                    }).catch(function (e) {
+
+                    });
+                }
+            },
             goto(event, name) {
                 var dom = event.target.parentNode.querySelector('.active');
                 dom.className = dom.className.replace(' active', '');
@@ -154,7 +176,7 @@
 
             onclick_login() {
 
-                var pUrl = window.location.origin+ '/\%23' + Config[Config.env].baseUrl + this.$route.path.split('/')[1];
+                var pUrl = window.location.origin+ '/\%23' + Config[Config.env].baseUrl + this.$route.path.substring(1);
                 var url = "http://218.5.80.6:8070/OCEAN/api/login?url=" + pUrl;
                 window.location.href = url;
             }

@@ -242,6 +242,7 @@
                         align: 'center'
                     },{
                         title: '操作',
+                        width: 260,
                         align: 'center',
                         render(h, params) {
 
@@ -264,7 +265,7 @@
                             btnList.push(button1);
 
                             // 待支付
-                            if (params.orderStatus === 'WaitPay') {
+                            if (params.row.orderStatus === 'WaitPay') {
                                 button2 = h('Button', {
                                     props: {
                                         type: 'text'
@@ -297,7 +298,7 @@
                                 btnList.push(button3);
                             }
                             // 已支付
-                            if (params.orderStatus === 'Pay') {
+                            if (params.row.orderStatus === 'Pay') {
 
                                 button2 = h('Button', {
                                     props: {
@@ -332,7 +333,7 @@
 
                             }
                             // 退款中
-                            if (params.orderStatus === 'Refund') {
+                            if (params.row.orderStatus === 'Refund') {
                                 button2 = h('Button', {
                                     props: {
                                         type: 'text'
@@ -350,10 +351,10 @@
                                 btnList.push(button2);
                             }
                             // 已退款
-                            if (params.orderStatus === 'Refunded') {
+                            if (params.row.orderStatus === 'Refunded') {
                             }
                             // 已取消
-                            if (params.orderStatus === 'Cancel') {
+                            if (params.row.orderStatus === 'Cancel') {
 
                             }
 
@@ -802,7 +803,14 @@
 
             },
             // 购买订单表格接口 - 付款
-            onclick_pay_payOrder(row) {},
+            onclick_pay_payOrder(row) {
+                this.$router.push({
+                    name: 'cashierDesk',
+                    query: {
+                        orderId: row.orderId
+                    }
+                });
+            },
             // 购买订单表格接口 - 取消订单
             onclick_pay_cancelOrder(row) {
                 var that = this;
@@ -813,15 +821,16 @@
                     onOk() {
                         that.$http({
                             method: 'get',
-                            url: '/panoramic/serverOrder',
+                            url: '/panoramic/serverOrder/cancel',
                             params: {
-                                orderNum: row.orderNum,
+                                orderId: row.orderId,
                             }
                         }).then(function (response) {
                             if (response.status === 1) {
                                 that.$Message.success({
                                     content: '取消成功！'
                                 });
+                                that.getPayOrderData();
                             }
                             else {
                                 that.$Message.error({
@@ -926,7 +935,7 @@
                     onOk() {
                         that.$http({
                             method: 'get',
-                            url: '/panoramic/serverOrder/',
+                            url: '/panoramic/serverOrder/cancel',
                             params: {
                                 orderId: row.orderId,
                             }
@@ -935,6 +944,7 @@
                                 that.$Message.success({
                                     content: '取消成功！'
                                 });
+                                that.getApplyOrderData();
                             }
                             else {
                                 that.$Message.error({

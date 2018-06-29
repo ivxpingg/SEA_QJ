@@ -9,7 +9,7 @@
                     <div class="form-item">
                         <label class="label" for="userOrder_keyword">关键字</label>
                         <div class="value">
-                            <Input id="userOrder_keyword" v-model="searchParams.keyword" placeholder="工单、用户、电话"></Input>
+                            <Input id="userOrder_keyword" v-model="searchParams.keyword" placeholder=""></Input>
                         </div>
                     </div>
                 </div>
@@ -18,9 +18,9 @@
                     <Button type="primary" @click="onClick_search">查询</Button>
                 </div>
 
-                <div class="hd">
-                    <Button type="primary" @click="onClick_modal_add">添加用户</Button>
-                </div>
+                <!--<div class="hd">-->
+                    <!--<Button type="primary" @click="onClick_modal_add">添加用户</Button>-->
+                <!--</div>-->
 
             </div>
 
@@ -236,6 +236,9 @@
                 }
             }
         },
+        mounted() {
+            this.getTableData();
+        },
         methods: {
             onClick_search() {
                 this.getTableData();
@@ -255,7 +258,7 @@
                 this.tableLoading = true;
                 this.$http({
                     method: 'post',
-                    url: '',
+                    url: '/panoramic/user/list',
                     headers: {
                         'Content-Type': 'application/json;charset=utf-8'
                     },

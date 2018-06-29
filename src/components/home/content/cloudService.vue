@@ -22,7 +22,7 @@
                          @click="onClick_select(item)">
                         <div class="type-name">
                             <div>{{item.serverName}}</div>
-                            <div>({{item.cpu +item.memory}})</div>
+                            <div>({{item.cpu + item.memory}})</div>
                         </div>
                         <div class="type-desc">
                             {{item.description}}
@@ -166,6 +166,8 @@
         data() {
             var that = this;
             return {
+                redirectUrl: window.location.origin+ '/\%23' + Config[Config.env].baseUrl + 'person/orderManage',
+
                 query: {
                     cloudServerId: ''  // 服务器ID
                 },
@@ -328,6 +330,9 @@
                 var that = this;
 
                 if (!!this.$store.state.uid) {
+
+                    that.$Spin.show();
+
                     that.$http({
                         method: 'get',
                         url: '/panoramic/serverOrder/buyCloudServer',
@@ -335,21 +340,26 @@
                             cloudServerId: that.select_serve_info.cloudServerId,
                             serverNumber: that.select_serve_info.num,
                             months: that.select_serve_info.duration,
-                            userId: that.$store.state.uid
+                            userId: that.$store.state.uid,
+                            redirectUrl: that.redirectUrl
                         }
                     }).then(function (response) {
                         if (response.status === 1) {
-                            that.$Message.success({
-                                content: '购买成功！'
-                            });
+                            that.$router.push({
+                                name: 'cashierDesk',
+                                query: {
+                                    orderId: response.result.order.orderId
+                                }
+                            })
                         }
                         else {
+                            that.$Spin.hide();
                             that.$Message.error({
                                 content: response.errMsg
                             });
                         }
                     }).catch(function (e) {
-                        
+                        that.$Spin.hide();
                     });
                 }
                 else {
@@ -524,7 +534,7 @@
                         cursor: pointer;
 
 
-                        &:nth-child(2n) {
+                        &:nth-child(3n) {
                             margin-right: 0;
                         }
 

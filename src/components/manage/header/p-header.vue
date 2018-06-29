@@ -5,10 +5,10 @@
 
             <div class="user-menu-panel">
                 <ul class="user-ul">
-                    <li>
-                        <i class="icon iconfont icon-bianji"></i>
-                        <div class="name">修改密码</div>
-                    </li>
+                    <!--<li>-->
+                        <!--<i class="icon iconfont icon-bianji"></i>-->
+                        <!--<div class="name">修改密码</div>-->
+                    <!--</li>-->
                     <li @clikc="onClick_logout">
                         <i class="icon iconfont icon-tuichu"></i>
                         <div class="name">退出系统</div>

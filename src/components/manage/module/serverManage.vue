@@ -205,13 +205,23 @@
 
         <Modal v-model="modal_upload"
                title="导入服务器账号">
-            <div>
+            <div style="position: relative">
+
                 <Upload :action="uploadFileUrl"
                         :headers="headers"
+                        :data="upload_data"
                         :on-error="uploadHandleError"
                         :on-success="uploadHandleSuccess" >
                     <Button type="ghost" icon="ios-cloud-upload-outline">上传服务器账号</Button>
                 </Upload>
+
+                <a :href="downloadUrl"
+                   class="ivu-btn ivu-btn-ghost"
+                   target="_blank"
+                   style="width: 134px; position: absolute; right: 0; top: 0;"><!---->
+                    <i class="ivu-icon ivu-icon-ios-cloud-download-outline"></i>
+                    <span>下载模板</span>
+                </a>
             </div>
             <div slot="footer">
                 <Button type="primary" size="large" @click="onClick_upload_ok">确定</Button>
@@ -499,7 +509,10 @@
                 },
                 upload_data: {
                     cloudServerId: ''
-                }
+                },
+
+                // 账号模板下载地址
+                downloadUrl: ''
             };
         },
         components: {},
@@ -511,7 +524,9 @@
             }
         },
         mounted() {
-            this.uploadFileUrl = window.location.origin + Config[Config.env].ajaxUrl  + '';
+            this.uploadFileUrl = window.location.origin + Config[Config.env].ajaxUrl  + '/panoramic/cloudServer/serverAccountImport';
+
+            this.downloadUrl = window.location.origin + Config[Config.env].imgUrl + '/static/download/xlsx/服务器账号导入模板.xlsx';
 
             this.getTableData();
         },
@@ -640,7 +655,7 @@
                                 that.$Message.success({
                                     content: '更新成功！'
                                 });
-                                that.modal_add_serve = false;
+                                that.modal_update_serve = false;
 
                                 that.getTableData();
                             }
@@ -778,7 +793,7 @@
                 this.tableLoading_detail = true;
                 this.$http({
                    method: 'get',
-                   url: '',
+                   url: '/panoramic/cloudServer/detail',
                    params: {
                        cloudServerId: row.cloudServerId
                    }

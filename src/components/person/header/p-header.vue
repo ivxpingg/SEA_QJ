@@ -5,15 +5,15 @@
 
             <div class="user-menu-panel">
                 <ul class="user-ul">
-                    <li class="user-li">
+                    <!--<li class="user-li">-->
 
-                        <Button type="text">
-                            <Badge class="my-badge" :count="unReadMessage">
-                                <Avatar icon="ios-bell" size="small" />
-                            </Badge>
-                            站内信
-                        </Button>
-                    </li>
+                        <!--<Button type="text">-->
+                            <!--<Badge class="my-badge" :count="unReadMessage">-->
+                                <!--<Avatar icon="ios-bell" size="small" />-->
+                            <!--</Badge>-->
+                            <!--站内信-->
+                        <!--</Button>-->
+                    <!--</li>-->
                     <li class="user-li" :class="{'active_person': active_person}" @mouseover="onmousemove_person" @mouseleave="onmouseleave_person">
                         <!--<div class="ivu-btn ivu-btn-text">-->
                         <!--<i class="ivu-icon ivu-icon-android-person"></i>-->
