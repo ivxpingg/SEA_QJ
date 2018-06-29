@@ -14,20 +14,23 @@
                             <!--站内信-->
                         <!--</Button>-->
                     <!--</li>-->
-                    <li class="user-li" :class="{'active_person': active_person}" @mouseover="onmousemove_person" @mouseleave="onmouseleave_person">
+                    <li class="user-li"
+                        :class="{'active_person': active_person}"
+                        @mouseover="onmousemove_person"
+                        @mouseleave="onmouseleave_person">
                         <!--<div class="ivu-btn ivu-btn-text">-->
                         <!--<i class="ivu-icon ivu-icon-android-person"></i>-->
                         <!--<span>个人中心</span>-->
                         <!--</div>-->
 
-                        <div class="person-box">
-                            <ul class="person-list-menu">
-                                <li @click="onClick_gotoPerson">个人中心</li>
-                                <li @click="onClick_gotoManage">后台管理</li>
-                            </ul>
-                        </div>
+                        <!--<div class="person-box">-->
+                            <!--<ul class="person-list-menu">-->
+                                <!--<li @click="onClick_gotoPerson">个人中心</li>-->
+                                <!--<li @click="onClick_gotoManage">后台管理</li>-->
+                            <!--</ul>-->
+                        <!--</div>-->
 
-                        <Button class="m-btn" type="text" icon="android-person">个人中心</Button>
+                        <Button class="m-btn" type="text" icon="android-person">{{userName}}</Button>
 
                     </li>
                     <li class="user-li user-li-logout">
@@ -47,10 +50,54 @@
         data() {
             return {
                 active_person: false,
-                unReadMessage: 0
+                unReadMessage: 0,
+
+                userName: '',
+                isLogin: false
             };
         },
+        created() {
+
+            if(!!Cookie.read('uid') && !!Cookie.read('token') && !!Cookie.read('usertype')) {
+                this.userId = Cookie.read('uid');
+                this.isLogin = true;
+            }
+            else {
+                this.userId = '';
+                this.isLogin = false;
+            }
+
+        },
+        mounted() {
+            this.getUserInfo();
+        },
         methods: {
+            getUserInfo() {
+                var that = this;
+                if (this.isLogin) {
+                    that.$http({
+                        method: 'get',
+                        url: '/auth/getUserInfoById',
+                        params: {
+                            token: that.$store.state.token,
+                            uid: that.$store.state.uid,
+                            type: that.$store.state.usertype
+                        }
+                    }).then(function (response) {
+                        if (response.status === 1) {
+                            that.userName = response.result.name || '';
+                        }
+                        else {
+                            that.$router.push({
+                                name: 'mapShow'
+                            })
+                        }
+                    }).catch(function (e) {
+
+                    });
+                }
+            },
+
             onmousemove_person() {
                 console.log('over');
                 this.active_person = true;

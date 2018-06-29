@@ -6,6 +6,7 @@ import VueRouter from 'vue-router';
 import Routers from "./router";
 import iView from 'iview';
 import Cookie from '../helpers/cookies';
+import Config from '../appConfig/config';
 
 const Title = function(title) {
     title = title ? title + '' : '';
@@ -30,6 +31,7 @@ const routerConfig = function () {
         // console.dir('router');
         Title(to.meta.title);
         iView.LoadingBar.start();
+
 
         if (to.query.token !== undefined) {
             // 登陆有效期2个小时
@@ -75,10 +77,13 @@ const routerConfig = function () {
                 next();
             }
             else {
-
-                next({
-                    path: '/home/index'
-                });
+                var pUrl = window.location.origin+ '/\%23' + Config[Config.env].baseUrl + to.path.substring(1);
+                var url = "http://218.5.80.6:8070/OCEAN/api/login?url=" + pUrl;
+                window.location.href = url;
+                //
+                // next({
+                //     path: '/home/index'
+                // });
             }
 
         }
