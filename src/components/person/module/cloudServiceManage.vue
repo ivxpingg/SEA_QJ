@@ -6,6 +6,7 @@
                 <div class="hd">
                     <DatePicker :value="datePicker_default"
                                 :clearable="false"
+                                transfer
                                 format="yyyy-MM-dd"
                                 size="large"
                                 type="daterange"
@@ -25,7 +26,21 @@
             </div>
         </div>
 
-        <Modal v-model="modal_detail"></Modal>
+
+        <Modal v-model="modal_pay_serve_account"
+               title="服务器信息">
+
+            <div>
+                <Table border
+                       no-data-text="没有账号数据"
+                       no-filtered-data-text="没有账号数据"
+                       :columns="table_pay_columns_account"
+                       :data="orderServerAccount">
+
+                </Table>
+            </div>
+
+        </Modal>
 
     </div>
 </template>
@@ -35,6 +50,7 @@
     export default {
         name: "cloudServiceManage",
         data() {
+            var that = this;
             return {
                 datePicker_default: [],
                 searchParams: {
@@ -84,7 +100,10 @@
                     },{
                         title: '剩余使用时间',
                         key: 'remainDays',
-                        align: 'center'
+                        align: 'center',
+                        render(h, params) {
+                            return h('div', params.row.remainDays + '天');
+                        }
                     },{
                         title: '到期时间',
                         key: 'expiryTime',
@@ -104,10 +123,23 @@
                                     },
                                     on: {
                                         click() {
-
+                                            alert('未对接');
                                         }
                                     }
                                 }, '续费'),
+                                // h('Button', {
+                                //     props: {
+                                //         type: 'text'
+                                //     },
+                                //     style: {
+                                //         textDecoration: 'underline'
+                                //     },
+                                //     on: {
+                                //         click() {
+                                //
+                                //         }
+                                //     }
+                                // }, '重置密码'),
                                 h('Button', {
                                     props: {
                                         type: 'text'
@@ -117,20 +149,7 @@
                                     },
                                     on: {
                                         click() {
-
-                                        }
-                                    }
-                                }, '重置密码'),
-                                h('Button', {
-                                    props: {
-                                        type: 'text'
-                                    },
-                                    style: {
-                                        textDecoration: 'underline'
-                                    },
-                                    on: {
-                                        click() {
-
+                                            that.onClick_pay_detail(params.row);
                                         }
                                     }
                                 }, '详情')
@@ -153,7 +172,32 @@
                 }],
 
                 // 详情
-                modal_detail: false
+                modal_pay_serve_account: false,
+                table_pay_columns_account: [
+                    {
+                        type: 'index',
+                        title: '序号',
+                        width: '80',
+                        align: 'center'
+                    },
+                    {
+                        title: '登陆IP',
+                        width: 160,
+                        key: 'remoteAddress',
+                        align: 'center'
+                    },
+                    {
+                        title: '账号',
+                        key: 'account',
+                        align: 'center'
+                    },
+                    {
+                        title: '密码',
+                        key: 'password',
+                        align: 'center'
+                    }
+                ],
+                orderServerAccount: []
             };
         },
         components: {vMenuTitle},
@@ -194,8 +238,8 @@
                 }).then(function (response) {
                     that.tableLoading = false;
                     if (response.status === 1) {
-                        that.tableData = response.result.page.list;
-                        that.searchParams.count = response.result.page.count;
+                        that.tableData = response.result;
+                        // that.searchParams.count = response.result.page.count;
                     }
                     else {
                         this.$Modal.error({
@@ -206,6 +250,13 @@
                     that.tableLoading = false;
                 })
             },
+
+            // 获取服务器账号
+            onClick_pay_detail(row) {
+                var that = this;
+                that.modal_pay_serve_account = true;
+                that.orderServerAccount = row.accountList || [];
+            }
 
         }
     }

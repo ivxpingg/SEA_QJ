@@ -18,6 +18,7 @@
                 <div class="hd">
                     <DatePicker :value="datePicker_default"
                                 :clearable="false"
+                                transfer
                                 format="yyyy-MM-dd"
                                 size="large"
                                 type="daterange"
@@ -42,7 +43,9 @@
                 <Form v-model="workOrderInfo" :label-width="80">
                     <FormItem label="选择产品" prop="orderId">
                         <Select v-model="workOrderInfo.orderId" placeholder="请选择产品">
-                            <Option v-for="item in serverList_bought" value="item.value">{{item.name}}</Option>
+                            <Option v-for="item in serverList_bought"
+                                    :key="item.orderId"
+                                    value="item.orderId">{{item.serverName}}</Option>
                         </Select>
                     </FormItem>
 
@@ -260,6 +263,7 @@
              * 获取已购买的产品列表
              */
             getOrderList() {
+                var that = this;
                 this.$http({
                     method: 'get',
                     url: '/panoramic/workOrder/getPaidServerList',
@@ -268,7 +272,7 @@
                     }
                 }).then(function (response) {
                     if (response.status === 1) {
-
+                        that.serverList_bought = response.result;
                     }
                     else {}
                 }).catch(function (e) {

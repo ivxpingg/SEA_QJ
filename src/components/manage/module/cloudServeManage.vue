@@ -20,6 +20,7 @@
                                 <div class="value">
                                     <DatePicker :value="datePicker_default_paid"
                                                 :clearable="true"
+                                                transfer
                                                 format="yyyy-MM-dd"
                                                 type="daterange"
                                                 placeholder="日期选择"
@@ -61,6 +62,7 @@
                                 <div class="value">
                                     <DatePicker :value="datePicker_default_apply"
                                                 :clearable="true"
+                                                transfer
                                                 format="yyyy-MM-dd"
                                                 type="daterange"
                                                 placeholder="日期选择"
@@ -145,7 +147,7 @@
 
         </Modal>
 
-        <!--退款原因-->
+        <!--备注-->
         <Modal v-model="modal_pay_remark"
                @onOk="onClick_addRemark"
                ok-text="添加备注"
@@ -153,7 +155,6 @@
             <div>
                 <Input type="textarea"
                        :rows="5"
-                       readonly
                        :model="remark_content"
                        placeholder="请输入备注内容" />
             </div>
@@ -234,7 +235,7 @@
         </Modal>
 
         <Modal v-model="modal_look_image" title="附件">
-            <img :src="fileimgUrl" alt="">
+            <img :src="fileimgUrl" alt="" style="width: 100%;">
         </Modal>
 
     </div>
@@ -689,19 +690,18 @@
                         align: 'center'
                     },{
                         title: '申请人',
-                        key: 'remarkPerson',
+                        key: 'applyPerson',
                         align: 'center'
                     },{
                         title: '联系电话',
-                        key: 'd',
+                        key: 'phone',
                         align: 'center'
                     },{
                         title: '联系邮箱',
-                        key: 'd',
+                        key: 'mail',
                         align: 'center'
                     },{
                         title: '商品内容',
-                        key: 'name',
                         width: '220',
                         align: 'center',
                         render(h, params){
@@ -717,31 +717,30 @@
                         }
                     },{
                         title: '用途说明与特殊需求',
-                        key: 'remark',
+                        key: 'useDescription',
                         align: 'center'
                     }
                 ],
                 table_freeApply_data_detail: {
+                    applyPerson: '',
                     bandWidth: '',
                     chargeStandard: '',
                     cpu: '',
-                    hardDisk: '',
-                    insTime: '',
-                    memory: '',
-                    orderNum: '',
-                    serverName: '',
-                    serverNumber: '',
-                    systemDisk: '',
-                    remainDays: '',
-                    remark: '',
-                    remarkPerson: '',
-                    remarkTime: '',
-                    expiryTime: '',
-                    payTime: '',
-                    orderStatus: '',
-                    totalPrice: '',
-                    pictureUrl: '',
-
+                    expiryTime: "",
+                    hardDisk: "",
+                    insTime: "",
+                    mail: "",
+                    memory: "",
+                    orderNum: "",
+                    orderStatus: "",
+                    phone: "",
+                    pictureUrl: "",
+                    remainDays: 0,
+                    serverName: "",
+                    serverNumber: 0,
+                    systemDisk: "",
+                    totalPrice: 0,
+                    useDescription: "",
                     orderServerAccount: [
                         {
                             remoteAddress: '192.168.1.1', // IP
@@ -784,9 +783,14 @@
         },
         components: {},
         watch: {
-            'searchParams.pageNo': {
+            'searchParams_paid.pageNo': {
                 handler(val) {
-                    this.getTableData();
+                    this.getPayOrderData();
+                }
+            },
+            'searchParams_apply.pageNo': {
+                handler(val) {
+                    this.getApplyOrderData();
                 }
             }
         },
@@ -796,8 +800,6 @@
             }
         },
         mounted() {
-
-
             //this.getTableData();
             this.getPayOrderData();
             this.getApplyOrderData();
@@ -916,8 +918,9 @@
                         that.table_pay_data_detail.payTime = response.result.payTime || '';
                         that.table_pay_data_detail.orderStatus = response.result.orderStatus || '';
                         that.table_pay_data_detail.totalPrice = response.result.totalPrice || '';
+                        that.table_pay_data_detail.remainDays = response.result.remainDays || '';
 
-                        // that.table_pay_data_detail.orderServerAccount = response.result.orderServerAccount || [];
+                        that.table_pay_data_detail.orderServerAccount = response.result.accountList || [];
                     }
                     else {
                     }
@@ -1099,27 +1102,25 @@
                     }
                 }).then(function (response) {
                     if (response.status === 1) {
+                        that.table_freeApply_data_detail.applyPerson = response.result.applyPerson || '';
                         that.table_freeApply_data_detail.bandWidth = response.result.bandWidth || '';
                         that.table_freeApply_data_detail.chargeStandard = response.result.chargeStandard || '';
-                        that.table_freeApply_data_detail.cpu = response.result.cpu || '';
+                        that.table_freeApply_data_detail.expiryTime = response.result.expiryTime || '';
                         that.table_freeApply_data_detail.hardDisk = response.result.hardDisk || '';
-                        that.table_freeApply_data_detail.insTime = response.result.insTime || '';
+                        that.table_freeApply_data_detail.mail = response.result.mail || '';
                         that.table_freeApply_data_detail.memory = response.result.memory || '';
                         that.table_freeApply_data_detail.orderNum = response.result.orderNum || '';
-                        that.table_freeApply_data_detail.serverName = response.result.serverName || '';
-                        that.table_freeApply_data_detail.serverNumber = response.result.serverNumber || '';
-                        that.table_freeApply_data_detail.systemDisk = response.result.systemDisk || '';
-                        that.table_freeApply_data_detail.remark = response.result.remark || '';
-                        that.table_freeApply_data_detail.remarkPerson = response.result.remarkPerson || '';
-                        that.table_freeApply_data_detail.remarkTime = response.result.remarkTime || '';
-                        that.table_freeApply_data_detail.expiryTime = response.result.expiryTime || '';
-                        that.table_freeApply_data_detail.payTime = response.result.payTime || '';
                         that.table_freeApply_data_detail.orderStatus = response.result.orderStatus || '';
-                        that.table_freeApply_data_detail.totalPrice = response.result.totalPrice || '';
+                        that.table_freeApply_data_detail.phone = response.result.phone || '';
                         that.table_freeApply_data_detail.pictureUrl = response.result.pictureUrl || '';
+                        that.table_freeApply_data_detail.remainDays = response.result.remainDays || 0;
+                        that.table_freeApply_data_detail.serverName = response.result.serverName || '';
+                        that.table_freeApply_data_detail.serverNumber = response.result.serverNumber || 0;
+                        that.table_freeApply_data_detail.systemDisk = response.result.systemDisk || '';
+                        that.table_freeApply_data_detail.totalPrice = response.result.totalPrice || 0;
+                        that.table_freeApply_data_detail.useDescription = response.result.useDescription || '';
 
-
-                        // that.table_pay_data_detail.orderServerAccount = response.result.orderServerAccount || [];
+                        that.table_freeApply_data_detail.orderServerAccount = response.result.accountList || [];
                     }
                     else {
                     }

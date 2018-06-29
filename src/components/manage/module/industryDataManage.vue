@@ -20,6 +20,7 @@
                             <DatePicker element-id="userOrder_date"
                                         :value="datePicker_default"
                                         :clearable="true"
+                                        transfer
                                         format="yyyy-MM-dd"
                                         type="daterange"
                                         placeholder="日期选择"
@@ -59,7 +60,7 @@
 
                 <Table border
                        :columns="table_freeApply_columns_detail"
-                       :data="[table_freeApply_data_detail]"></Table>
+                       :data="[table_freeApply_data_detail.accountList]"></Table>
 
                 <div class="ft-bottom">
                     <Button @click="onClick_lookImage" >查看附件</Button>
@@ -279,7 +280,8 @@
                     insTime:'',
                     orderStatus: '',
                     payTime: '',
-                    pictureUrl: ''
+                    pictureUrl: '',
+                    accountList: []
                 },
 
                 // 驳回
@@ -380,6 +382,7 @@
                         that.table_freeApply_data_detail.payTime = response.result.payTime || '';
 
                         that.table_freeApply_data_detail.pictureUrl = response.result.pictureUrl || '';
+
 
                     }
                     else {

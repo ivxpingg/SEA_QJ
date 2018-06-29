@@ -20,6 +20,7 @@
                             <div class="hd">
                                 <DatePicker :value="datePicker_default_paid"
                                             :clearable="false"
+                                            transfer
                                             format="yyyy-MM-dd"
                                             size="large"
                                             type="daterange"
@@ -146,7 +147,7 @@
         </Modal>
 
          <!--免费的服务器信息弹窗-->
-        <Modal v-model="modal_pay_serve_account"
+        <Modal v-model="modal_freeApply_serve_account"
                title="服务器信息">
 
             <div>
@@ -795,7 +796,7 @@
                         that.table_pay_data_detail.orderStatus = response.result.orderStatus || '';
                         that.table_pay_data_detail.totalPrice = response.result.totalPrice || '';
 
-                        // that.table_pay_data_detail.orderServerAccount = response.result.orderServerAccount || [];
+                        that.table_pay_data_detail.orderServerAccount = response.result.accountList || [];
                     }
                     else {
                     }

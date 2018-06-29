@@ -344,6 +344,7 @@
                             redirectUrl: that.redirectUrl
                         }
                     }).then(function (response) {
+                        that.$Spin.hide();
                         if (response.status === 1) {
                             that.$router.push({
                                 name: 'cashierDesk',
@@ -353,7 +354,6 @@
                             })
                         }
                         else {
-                            that.$Spin.hide();
                             that.$Message.error({
                                 content: response.errMsg
                             });
@@ -464,6 +464,7 @@
                     })
                 }).then(function (response) {
                     if (response.status === 1) {
+                        that.modal_freeApply = false;
                         that.$Message.success({
                             content: '申请成功！'
                         });

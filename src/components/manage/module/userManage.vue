@@ -35,81 +35,81 @@
 
         </div>
 
-        <Modal v-model="modal_add_user"
-               title="添加用户">
-            <div>
-                <Form ref="add_user_form"
-                      :modal="addUserInfo"
-                      :rules="userInfo_rules"
-                      :label-width="80">
-                    <FormItem label="用户名">
-                        <Input type="text" placeholder="请输入用户名" />
-                    </FormItem>
-                    <FormItem label="密码">
-                        <Input type="password" placeholder="请输入密码" />
-                    </FormItem>
-                    <FormItem label="真实姓名">
-                        <Input type="text" placeholder="请输入真实姓名" />
-                    </FormItem>
-                    <FormItem label="身份证号码">
-                        <Input type="text" placeholder="请输入身份证号码" />
-                    </FormItem>
-                    <FormItem label="联系电话">
-                        <Input type="text" placeholder="请输入联系电话" />
-                    </FormItem>
-                    <FormItem label="单位名称">
-                        <Input type="text" placeholder="请输入单位名称" />
-                    </FormItem>
-                    <FormItem label="单位地址">
-                        <Input type="textarea" placeholder="请输入单位地址" />
-                    </FormItem>
-                    <FormItem label="邮箱">
-                        <Input type="text" placeholder="请输入邮箱地址" />
-                    </FormItem>
-                </Form>
-            </div>
-            <div slot="footer">
-                <Button type="primary" size="large" @click="onClick_add_user">确定</Button>
-            </div>
-        </Modal>
+        <!--<Modal v-model="modal_add_user"-->
+               <!--title="添加用户">-->
+            <!--<div>-->
+                <!--<Form ref="add_user_form"-->
+                      <!--:modal="addUserInfo"-->
+                      <!--:rules="userInfo_rules"-->
+                      <!--:label-width="80">-->
+                    <!--<FormItem label="用户名">-->
+                        <!--<Input type="text" placeholder="请输入用户名" />-->
+                    <!--</FormItem>-->
+                    <!--<FormItem label="密码">-->
+                        <!--<Input type="password" placeholder="请输入密码" />-->
+                    <!--</FormItem>-->
+                    <!--<FormItem label="真实姓名">-->
+                        <!--<Input type="text" placeholder="请输入真实姓名" />-->
+                    <!--</FormItem>-->
+                    <!--<FormItem label="身份证号码">-->
+                        <!--<Input type="text" placeholder="请输入身份证号码" />-->
+                    <!--</FormItem>-->
+                    <!--<FormItem label="联系电话">-->
+                        <!--<Input type="text" placeholder="请输入联系电话" />-->
+                    <!--</FormItem>-->
+                    <!--<FormItem label="单位名称">-->
+                        <!--<Input type="text" placeholder="请输入单位名称" />-->
+                    <!--</FormItem>-->
+                    <!--<FormItem label="单位地址">-->
+                        <!--<Input type="textarea" placeholder="请输入单位地址" />-->
+                    <!--</FormItem>-->
+                    <!--<FormItem label="邮箱">-->
+                        <!--<Input type="text" placeholder="请输入邮箱地址" />-->
+                    <!--</FormItem>-->
+                <!--</Form>-->
+            <!--</div>-->
+            <!--<div slot="footer">-->
+                <!--<Button type="primary" size="large" @click="onClick_add_user">确定</Button>-->
+            <!--</div>-->
+        <!--</Modal>-->
 
-        <Modal v-model="modal_edit_user"
-               title="修改用户信息">
-            <div>
-                <Form ref="edit_user_form"
-                      :modal="editUserInfo"
-                      :rules="userInfo_rules"
-                      :label-width="80">
-                    <FormItem label="用户名">
-                        <Input type="text" placeholder="请输入用户名" />
-                    </FormItem>
-                    <FormItem label="密码">
-                        <Input type="password" placeholder="请输入密码" />
-                    </FormItem>
-                    <FormItem label="真实姓名">
-                        <Input type="text" placeholder="请输入真实姓名" />
-                    </FormItem>
-                    <FormItem label="身份证号码">
-                        <Input type="text" placeholder="请输入身份证号码" />
-                    </FormItem>
-                    <FormItem label="联系电话">
-                        <Input type="text" placeholder="请输入联系电话" />
-                    </FormItem>
-                    <FormItem label="单位名称">
-                        <Input type="text" placeholder="请输入单位名称" />
-                    </FormItem>
-                    <FormItem label="单位地址">
-                        <Input type="textarea" placeholder="请输入单位地址" />
-                    </FormItem>
-                    <FormItem label="邮箱">
-                        <Input type="text" placeholder="请输入邮箱地址" />
-                    </FormItem>
-                </Form>
-            </div>
-            <div slot="footer">
-                <Button type="primary" size="large" @click="onClick_edit_user">确定</Button>
-            </div>
-        </Modal>
+        <!--<Modal v-model="modal_edit_user"-->
+               <!--title="修改用户信息">-->
+            <!--<div>-->
+                <!--<Form ref="edit_user_form"-->
+                      <!--:model="editUserInfo"-->
+                      <!--:rules="userInfo_rules"-->
+                      <!--:label-width="80">-->
+                    <!--<FormItem label="用户名" prop="account">-->
+                        <!--<Input v-model="editUserInfo.account" type="text" placeholder="请输入用户名" />-->
+                    <!--</FormItem>-->
+                    <!--&lt;!&ndash;<FormItem label="密码">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<Input type="password" placeholder="请输入密码" />&ndash;&gt;-->
+                    <!--&lt;!&ndash;</FormItem>&ndash;&gt;-->
+                    <!--<FormItem label="真实姓名" prop="name">-->
+                        <!--<Input v-model="editUserInfo.name" type="text" placeholder="请输入真实姓名" />-->
+                    <!--</FormItem>-->
+                    <!--&lt;!&ndash;<FormItem label="身份证号码">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<Input v-model="editUserInfo.name" type="text" placeholder="请输入身份证号码" />&ndash;&gt;-->
+                    <!--&lt;!&ndash;</FormItem>&ndash;&gt;-->
+                    <!--<FormItem label="联系电话" prop="mobile">-->
+                        <!--<Input  v-model="editUserInfo.mobile" type="text" placeholder="请输入联系电话" />-->
+                    <!--</FormItem>-->
+                    <!--<FormItem label="单位名称" prop="enterName">-->
+                        <!--<Input  v-model="editUserInfo.enterName" type="text" placeholder="请输入单位名称" />-->
+                    <!--</FormItem>-->
+                    <!--<FormItem label="单位地址" prop="address">-->
+                        <!--<Input  v-model="editUserInfo.address" type="textarea" placeholder="请输入单位地址" />-->
+                    <!--</FormItem>-->
+                    <!--<FormItem label="邮箱" prop="email">-->
+                        <!--<Input  v-model="editUserInfo.email" type="text" placeholder="请输入邮箱地址" />-->
+                    <!--</FormItem>-->
+                <!--</Form>-->
+            <!--</div>-->
+            <!--<div slot="footer">-->
+                <!--<Button type="primary" size="large" @click="onClick_edit_user">确定</Button>-->
+            <!--</div>-->
+        <!--</Modal>-->
 
     </div>
 </template>
@@ -137,7 +137,7 @@
                         align: 'center'
                     },{
                         title: '用户名',
-                        key: 'name',
+                        key: 'account',
                         align: 'center'
                     },{
                         title: '真实姓名',
@@ -145,72 +145,87 @@
                         align: 'center'
                     },{
                         title: '联系电话',
-                        key: 'name',
+                        key: 'mobile',
                         align: 'center'
                     },{
                         title: '单位名称',
-                        key: 'name',
+                        key: 'enterName',
                         align: 'center'
                     },{
                         title: '电子邮件',
-                        key: 'name',
+                        key: 'email',
                         align: 'center'
                     },{
                         title: '状态',
-                        key: 'name',
-                        align: 'center'
+                        key: 'status',
+                        align: 'center',
+                        render(h, params) {
+                            var text = '';
+                            // 0 待审核 1 通过 2 不通过 3禁用
+                            switch (params.row.status) {
+                                case '0': text = '待审核'; break;
+                                case '1': text = '通过'; break;
+                                case '2': text = '不通过'; break;
+                                case '3': text = '禁用'; break;
+                            }
+
+                            return h('div', text);
+                        }
                     },{
                         title: '创建日期',
-                        key: 'name',
+                        key: 'registTime',
                         align: 'center'
-                    },{
-                        title: '操作',
-                        align: 'center',
-                        width: 250,
-                        render(h, params) {
-                            return h('div',[
-                                h('Button', {
-                                    props: {
-                                        type: 'text'
-                                    },
-                                    style: {
-                                        textDecoration: 'underline'
-                                    },
-                                    on: {
-                                        click() {
-                                            that.onClick_getUserDetail(params.row);
-                                        }
-                                    }
-                                }, '修改'),
-                                h('Button', {
-                                    props: {
-                                        type: 'text'
-                                    },
-                                    style: {
-                                        textDecoration: 'underline'
-                                    },
-                                    on: {
-                                        click() {
-                                            that.onClick_reset_password(params.row);
-                                        }
-                                    }
-                                }, '重置密码'),
-                                h('Button', {
-                                    props: {
-                                        type: 'text'
-                                    },
-                                    style: {
-                                        textDecoration: 'underline'
-                                    },
-                                    on: {
-                                        click() {
-                                            that.onClick_del_user(params.row);
-                                        }
-                                    }
-                                }, '删除')
-                            ]);
-                        }
                     }
+                    // ,{
+                    //     title: '操作',
+                    //     align: 'center',
+                    //     width: 250,
+                    //     render(h, params) {
+                    //         return h('div',[
+                    //             h('Button', {
+                    //                 props: {
+                    //                     type: 'text'
+                    //                 },
+                    //                 style: {
+                    //                     textDecoration: 'underline'
+                    //                 },
+                    //                 on: {
+                    //                     click() {
+                    //                         that.onClick_getUserDetail(params.row);
+                    //                     }
+                    //                 }
+                    //             }, '修改')
+                    //             // ,
+                    //             // h('Button', {
+                    //             //     props: {
+                    //             //         type: 'text'
+                    //             //     },
+                    //             //     style: {
+                    //             //         textDecoration: 'underline'
+                    //             //     },
+                    //             //     on: {
+                    //             //         click() {
+                    //             //             that.onClick_reset_password(params.row);
+                    //             //         }
+                    //             //     }
+                    //             // }, '重置密码')
+                    //             // ,
+                    //             // h('Button', {
+                    //             //     props: {
+                    //             //         type: 'text'
+                    //             //     },
+                    //             //     style: {
+                    //             //         textDecoration: 'underline'
+                    //             //     },
+                    //             //     on: {
+                    //             //         click() {
+                    //             //             that.onClick_del_user(params.row);
+                    //             //         }
+                    //             //     }
+                    //             // }, '删除')
+                    //         ]);
+                    //     }
+                    // }
                 ],
                 tableData: [{name: ''}],
 
@@ -219,12 +234,36 @@
                 addUserInfo: {
 
                 },
-                userInfo_rules: {},
+                userInfo_rules: {
+                    account: [
+                        { required: true, message: '账号名称不能为空', trigger: 'blur'}
+                    ],
+                    name: [
+                        { required: true, message: '真实姓名不能为空', trigger: 'blur'}
+                    ],
+                    mobile: [
+                        { required: true, message: '联系电话不能为空', trigger: 'blur'}
+                    ],
+                    enterName: [
+                        { required: true, message: '单位名称不能为空', trigger: 'blur'}
+                    ],
+                    email: [
+                        { required: true, message: '邮箱不能为空', trigger: 'blur'}
+                    ],
+                    address: [
+                        { required: true, message: '单位地址不能为空', trigger: 'blur'}
+                    ]
+                },
 
                 //修改用户
                 modal_edit_user: false,
                 editUserInfo: {
-
+                    account: 'su1',
+                    name: 's',
+                    mobile: '13959260196',
+                    enterName: '厦门怡奇',
+                    email: '764341699@qq.com',
+                    address: '厦门软件园二期'
                 },
             };
         },
@@ -347,15 +386,14 @@
                 that.$refs['edit_user_form'].validate(function (valid) {
                     if (valid) {
 
-                        this.$http({
+                        that.$http({
                             method: 'post',
-                            url: '',
+                            url: '/auth/updateUserInfo',
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8'
                             },
-                            data: JSON.stringify(this.editUserInfo)
+                            data: JSON.stringify(that.editUserInfo)
                         }).then(function (response) {
-                            that.tableLoading = false;
                             if (response.status === 1) {
                                 that.$Message.success({
                                     content: '更新成功！'
@@ -369,7 +407,6 @@
                                 });
                             }
                         }).catch(function (e) {
-                            that.tableLoading = false;
                             that.$Modal.error({
                                 content: JSON.stringify(e)
                             });
@@ -386,6 +423,8 @@
             onClick_getUserDetail(row) {
                 var that = this;
 
+                that.modal_edit_user = true;
+                return;
                 that.$http({
                     method: 'get',
                     url: '',
@@ -424,7 +463,7 @@
                         }).then(function (response) {
                             if (response.status === 1) {
                                 that.$Message.success({
-                                    content: '重置成功！'
+                                    content: '已经密码重置为：123456！'
                                 });
                                 that.getTableData();
                             }

@@ -20,6 +20,7 @@
                         <div class="value">
                             <DatePicker element-id="userOrder_date"
                                         :value="datePicker_default"
+                                        transfer
                                         :clearable="true"
                                         format="yyyy-MM-dd"
                                         type="daterange"
@@ -320,7 +321,6 @@
             // 提交快递信息 或者 关闭快递信息弹窗
             onClick_express() {
                 var that = this;
-
 
                  if (that.expressInfo.type === 1){
                      this.$http({

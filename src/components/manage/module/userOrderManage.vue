@@ -19,6 +19,7 @@
                             <DatePicker element-id="userOrder_date"
                                         :value="datePicker_default"
                                         :clearable="false"
+                                        transfer
                                         format="yyyy-MM-dd"
                                         type="daterange"
                                         placeholder="日期选择"

@@ -11,6 +11,7 @@
                 <div class="hd hd-datePicker">
                     <DatePicker :value="datePicker_default"
                                 :clearable="false"
+                                transfer
                                 format="yyyy-MM-dd"
                                 size="large"
                                 type="daterange"
@@ -115,6 +116,25 @@
 
         </Modal>
 
+        <Modal v-model="modal_express"
+               title="快递信息">
+            <div>
+                <Form :label-width="80">
+                    <FormItem label="快递公司">
+                        <Input type="text"
+                               readonly
+                               v-model="expressInfo.expressCompany"
+                               placeholder="请填写快递公司" />
+                    </FormItem>
+                    <FormItem label="快递单号">
+                        <Input type="text"
+                               readonly
+                               v-model="expressInfo.expressNum" placeholder="请填写快递单号" />
+                    </FormItem>
+                </Form>
+            </div>
+        </Modal>
+
     </div>
 </template>
 
@@ -162,7 +182,10 @@
                         title: '操作',
                         align: 'center',
                         render(h, params){
-                            return h('Button', {
+
+                            var button1, button2, btn_list = [];
+
+                            button1 = h('Button', {
                                 props: {
                                     type: 'text'
                                 },
@@ -177,6 +200,29 @@
                                     }
                                 }
                             }, '详情');
+
+                            btn_list.push(button1);
+
+                            if (params.row.applyStatus === '申请成功') {
+                                button2 = h('Button', {
+                                    props: {
+                                        type: 'text'
+                                    },
+                                    style: {
+                                        textDecoration: 'underline'
+                                    },
+                                    on: {
+                                        click() {
+                                            that.getExpressDetailByID(params.row);
+                                        }
+                                    }
+                                }, '查看快递');
+
+                                btn_list.push(button2);
+                            }
+
+
+                            return h('div', btn_list);
                         }
                     }
                 ],
@@ -254,6 +300,13 @@
                     taxpayerNumber: "1",     // 纳税人识别号
                     userId: "1",             // 用户ID
                     zipCode: "1"             // 邮编
+                },
+
+                // 查看快递信息
+                modal_express: false,
+                expressInfo: {
+                    expressCompany: '',
+                    expressNum: ''
                 }
             };
         },
@@ -488,7 +541,44 @@
                     //     content: JSON.stringify(e)
                     // });
                 })
-            }
+            },
+
+            // 获取详细发票申请信息
+            /**
+             *
+             * @param row
+             * @param type {Number}  填写快递信息
+             */
+            getExpressDetailByID(row) {
+                var that = this;
+
+                this.$http({
+                    method: 'get',
+                    url: '/panoramic/invoice/getInvoiceApply',
+                    params: {
+                        invoiceApplyId: row.invoiceApplyId
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.expressInfo.type = 0;
+                        that.expressInfo.invoiceApplyId = row.invoiceApplyId;
+                        that.expressInfo.expressCompany = response.result.expressCompany;
+                        that.expressInfo.expressNum = response.result.expressNum;
+
+                        that.modal_express = true;
+                    }
+                    else {
+                        this.$Modal.error({
+                            content: response.errMsg
+                        });
+                    }
+                }).catch(function (e) {
+                    // that.$Modal.error({
+                    //     content: JSON.stringify(e)
+                    // });
+                })
+
+            },
         }
     }
 </script>

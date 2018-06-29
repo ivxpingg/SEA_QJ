@@ -6,6 +6,7 @@
                 <div class="hd">
                     <DatePicker :value="datePicker_default"
                                 :clearable="false"
+                                transfer
                                 format="yyyy-MM-dd"
                                 size="large"
                                 type="daterange"

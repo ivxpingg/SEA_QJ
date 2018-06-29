@@ -20,6 +20,7 @@
                             <DatePicker
                                         :value="datePicker_default"
                                         :clearable="true"
+                                        transfer
                                         format="yyyy-MM-dd"
                                         type="daterange"
                                         placeholder="日期选择"

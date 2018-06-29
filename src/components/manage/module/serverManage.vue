@@ -21,6 +21,7 @@
                             <DatePicker element-id="userOrder_date"
                                         :value="datePicker_default"
                                         :clearable="true"
+                                        transfer
                                         format="yyyy-MM-dd"
                                         type="daterange"
                                         placeholder="日期选择"
@@ -232,8 +233,10 @@
                :width="1200"
                title="服务器销售详情">
             <div>
-                <div>服务器剩余数据量</div>
-                <Table border :loading="tableLoading_detail" :columns="tableColumns_detail" :data="tableData_detail"></Table>
+                <div class="remain-server-number">服务器剩余数量：{{remainServerNumber}}</div>
+                <Table border
+                       height="500"
+                       :loading="tableLoading_detail" :columns="tableColumns_detail" :data="tableData_detail"></Table>
             </div>
             <div slot="footer">
                 <Button type="primary" size="large" @click="onClick_sell_detail_ok">确定</Button>
@@ -413,15 +416,15 @@
                         align: 'center'
                     },{
                         title: 'IP',
-                        key: 'name',
+                        key: 'remoteAddress',
                         align: 'center'
                     },{
                         title: '账号',
-                        key: 'name',
+                        key: 'account',
                         align: 'center'
                     },{
                         title: '密码',
-                        key: 'name',
+                        key: 'password',
                         align: 'center'
                     },{
                         title: '购买人',
@@ -429,19 +432,27 @@
                         align: 'center'
                     },{
                         title: '联系方式',
-                        key: 'name',
+                        key: 'mobile',
                         align: 'center'
                     },{
                         title: '购买时间',
-                        key: 'name',
+                        key: 'insTIme',
                         align: 'center'
                     },{
+                        title: '获取方式',
+                        key: 'insTIme',
+                        align: 'center',
+                        render(h, params) {
+                            return h('div', params.row.isFree ==='0' ? '支付购买':'免费申请');
+                        }
+                    },{
                         title: '备注',
-                        key: 'name',
+                        key: 'remark',
                         align: 'center'
                     }
                 ],
                 tableData_detail: [],
+                remainServerNumber: 0, // 剩余服务器数据量
 
                 // 新增服务器
                 modal_add_serve: false,
@@ -684,10 +695,18 @@
             /**
              * 上传服务器成功返回
              */
-            uploadHandleSuccess() {
-                this.$Message.success({
-                    content: '上传成功！'
-                });
+            uploadHandleSuccess(response) {
+                if (response.status === 1) {
+                    this.$Message.success({
+                        content: '上传成功！'
+                    });
+                }
+                else {
+                    this.$Message.error({
+                        content: response.errMsg
+                    });
+                }
+
             },
             /**
              * 上传服务器失败返回
@@ -793,7 +812,7 @@
                 this.tableLoading_detail = true;
                 this.$http({
                    method: 'get',
-                   url: '/panoramic/cloudServer/detail',
+                   url: '/panoramic/cloudServer/queryCloudServerAccountList',
                    params: {
                        cloudServerId: row.cloudServerId
                    }
@@ -805,6 +824,22 @@
                 }).catch(function (e) {
                     that.tableLoading_detail = false;
                 })
+
+                this.$http({
+                    method: 'get',
+                    url: '/panoramic/cloudServer/getServerRemainNumber',
+                    params: {
+                        cloudServerId: row.cloudServerId
+                    }
+                }).then(function (response) {
+                    if(response.status === 1 ) {
+                        that.remainServerNumber = response.result;
+                    }
+                }).catch(function (e) {
+                    that.tableLoading_detail = false;
+                })
+
+
             },
             onClick_sell_detail_ok() {
                 this.modal_table_detail = false;
@@ -860,6 +895,11 @@
                 text-align: center;
             }
 
+        }
+
+        @at-root .remain-server-number {
+            font-size: 14px;
+            line-height: 36px;
         }
     }
 </style>
