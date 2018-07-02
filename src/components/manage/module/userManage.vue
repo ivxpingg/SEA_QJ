@@ -73,43 +73,7 @@
             <!--</div>-->
         <!--</Modal>-->
 
-        <!--<Modal v-model="modal_edit_user"-->
-               <!--title="修改用户信息">-->
-            <!--<div>-->
-                <!--<Form ref="edit_user_form"-->
-                      <!--:model="editUserInfo"-->
-                      <!--:rules="userInfo_rules"-->
-                      <!--:label-width="80">-->
-                    <!--<FormItem label="用户名" prop="account">-->
-                        <!--<Input v-model="editUserInfo.account" type="text" placeholder="请输入用户名" />-->
-                    <!--</FormItem>-->
-                    <!--&lt;!&ndash;<FormItem label="密码">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<Input type="password" placeholder="请输入密码" />&ndash;&gt;-->
-                    <!--&lt;!&ndash;</FormItem>&ndash;&gt;-->
-                    <!--<FormItem label="真实姓名" prop="name">-->
-                        <!--<Input v-model="editUserInfo.name" type="text" placeholder="请输入真实姓名" />-->
-                    <!--</FormItem>-->
-                    <!--&lt;!&ndash;<FormItem label="身份证号码">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<Input v-model="editUserInfo.name" type="text" placeholder="请输入身份证号码" />&ndash;&gt;-->
-                    <!--&lt;!&ndash;</FormItem>&ndash;&gt;-->
-                    <!--<FormItem label="联系电话" prop="mobile">-->
-                        <!--<Input  v-model="editUserInfo.mobile" type="text" placeholder="请输入联系电话" />-->
-                    <!--</FormItem>-->
-                    <!--<FormItem label="单位名称" prop="enterName">-->
-                        <!--<Input  v-model="editUserInfo.enterName" type="text" placeholder="请输入单位名称" />-->
-                    <!--</FormItem>-->
-                    <!--<FormItem label="单位地址" prop="address">-->
-                        <!--<Input  v-model="editUserInfo.address" type="textarea" placeholder="请输入单位地址" />-->
-                    <!--</FormItem>-->
-                    <!--<FormItem label="邮箱" prop="email">-->
-                        <!--<Input  v-model="editUserInfo.email" type="text" placeholder="请输入邮箱地址" />-->
-                    <!--</FormItem>-->
-                <!--</Form>-->
-            <!--</div>-->
-            <!--<div slot="footer">-->
-                <!--<Button type="primary" size="large" @click="onClick_edit_user">确定</Button>-->
-            <!--</div>-->
-        <!--</Modal>-->
+
 
     </div>
 </template>
@@ -424,7 +388,6 @@
                 var that = this;
 
                 that.modal_edit_user = true;
-                return;
                 that.$http({
                     method: 'get',
                     url: '',

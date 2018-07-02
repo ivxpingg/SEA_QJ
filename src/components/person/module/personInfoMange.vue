@@ -16,7 +16,7 @@
                 </div>
                 <div class="item">
                     <span>所属单位：</span>
-                    <span>{{personInfo.company}}</span>
+                    <span>{{personInfo.enterName}}</span>
                 </div>
             </div>
         </div>
@@ -117,6 +117,38 @@
             </div>
         </Modal>
 
+        <Modal v-model="modal_edit_user"
+               title="修改用户信息">
+            <div>
+                <Form ref="edit_user_form"
+                      :model="editUserInfo"
+                      :rules="userInfo_rules"
+                      :label-width="80">
+                    <FormItem label="用户名" prop="account">
+                        <Input v-model="editUserInfo.account" type="text" placeholder="请输入用户名" />
+                    </FormItem>
+                    <FormItem label="真实姓名" prop="name">
+                        <Input v-model="editUserInfo.name" type="text" placeholder="请输入真实姓名" />
+                    </FormItem>
+                    <FormItem label="联系电话" prop="mobile">
+                        <Input  v-model="editUserInfo.mobile" type="text" placeholder="请输入联系电话" />
+                    </FormItem>
+                    <FormItem label="单位名称" prop="enterName">
+                        <Input  v-model="editUserInfo.enterName" type="text" placeholder="请输入单位名称" />
+                    </FormItem>
+                    <FormItem label="单位地址" prop="address">
+                        <Input  v-model="editUserInfo.address" type="textarea" placeholder="请输入单位地址" />
+                    </FormItem>
+                    <FormItem label="邮箱" prop="email">
+                        <Input  v-model="editUserInfo.email" type="text" placeholder="请输入邮箱地址" />
+                    </FormItem>
+                </Form>
+            </div>
+            <div slot="footer">
+                <Button type="primary" size="large" @click="onClick_edit_user">保存</Button>
+            </div>
+        </Modal>
+
     </div>
 </template>
 
@@ -127,17 +159,17 @@
         data() {
             return {
                 personInfo: {
-                    name: '',
+                    userId: '',
                     account: '',
-                    mobile: '',
+                    address: '',
                     email: '',
-                    company: '',
-                    address: ''
+                    mobile: '',
+                    name: '',
+                    enterName: ''
                 },
 
                 // 账户信息
                 person_info_modal: false,
-
 
                 // 手机绑定
                 model_mobile_edit: false,
@@ -165,6 +197,38 @@
                 email_rules: {
                     email: [
                         { required: true, message: '邮箱不能为空', trigger: 'blur'}
+                    ]
+                },
+
+                //修改用户
+                modal_edit_user: false,
+                editUserInfo: {
+                    userId: '',
+                    account: '',
+                    name: '',
+                    mobile: '',
+                    email: '',
+                    address: '',
+                    enterName: ''
+                },
+                userInfo_rules: {
+                    account: [
+                        { required: true, message: '账号名称不能为空', trigger: 'blur'}
+                    ],
+                    name: [
+                        { required: true, message: '真实姓名不能为空', trigger: 'blur'}
+                    ],
+                    mobile: [
+                        { required: true, message: '联系电话不能为空', trigger: 'blur'}
+                    ],
+                    enterName: [
+                        { required: true, message: '单位名称不能为空', trigger: 'blur'}
+                    ],
+                    email: [
+                        { required: true, message: '邮箱不能为空', trigger: 'blur'}
+                    ],
+                    address: [
+                        { required: true, message: '单位地址不能为空', trigger: 'blur'}
                     ]
                 }
             };
@@ -195,11 +259,14 @@
                     }
                 }).then(function(response) {
                     if(response.status === 1) {
-                        that.personInfo.name = response.result.name;
-                        that.personInfo.account = response.result.account;
-                        that.personInfo.mobile = response.result.mobile;
-                        that.personInfo.email = response.result.email;
-                        that.personInfo.address = response.result.address;
+                        that.personInfo.userId = response.result.userId;
+                        that.personInfo.account = response.result.account || '';
+                        that.personInfo.address = response.result.address || '';
+                        that.personInfo.email = response.result.email || '';
+                        that.personInfo.mobile = response.result.mobile || '';
+                        that.personInfo.name = response.result.name || '';
+                        that.personInfo.enterName = response.result.enterName || '';
+
                     }
                     
                 }).catch(function (e) {
@@ -208,7 +275,53 @@
             },
 
             // 编辑用户弹出框
-            onClick_edit_userInfo() {},
+            onClick_edit_userInfo() {
+                var that = this;
+                that.editUserInfo.userId = that.personInfo.userId;
+                that.editUserInfo.account = that.personInfo.account;
+                that.editUserInfo.address = that.personInfo.address;
+                that.editUserInfo.email = that.personInfo.email;
+                that.editUserInfo.mobile = that.personInfo.mobile;
+                that.editUserInfo.name = that.personInfo.name;
+                that.editUserInfo.enterName = that.personInfo.enterName;
+                that.modal_edit_user = true;
+            },
+            /**
+             * 更新用户信息
+             */
+            onClick_edit_user() {
+                var that = this;
+
+                that.$refs['edit_user_form'].validate(function (valid) {
+                    if (valid) {
+
+                        that.$http({
+                            method: 'post',
+                            url: '/auth/updateUserInfo',
+                            headers: {
+                                'Content-Type': 'application/json;charset=utf-8'
+                            },
+                            data: JSON.stringify(that.editUserInfo)
+                        }).then(function (response) {
+                            if (response.status === 1) {
+                                that.$Message.success({
+                                    content: '更新成功！'
+                                });
+                                that.modal_edit_user = false;
+                                that.getPersonInfo();
+                            }
+                            else {
+                                that.$Modal.error({
+                                    content: response.errMsg
+                                });
+                            }
+                        }).catch(function (e) {
+                        })
+
+                    }
+                    else {}
+                })
+            },
 
             // 编辑手机弹出框
             onClick_edit_mobile() {
