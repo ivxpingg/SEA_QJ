@@ -76,14 +76,27 @@
                                v-model="add_dataResource_info.description"
                                placeholder="请输入数据描述" />
                     </FormItem>
+
+                    <FormItem label="数据类型">
+                        <Select v-model="add_dataResource_info.dataType"
+                                transfer
+                                style="width: 180px" placeholder="">
+                            <Option v-for="item in dict_dataType"
+                                    :key="item.id"
+                                    :value="item.value"
+                                    :label="item.label"></Option>
+                        </Select>
+                    </FormItem>
                     <FormItem label="上传数据资源文件:">
-                        <Upload action="">
+                        <Upload :action="add_dataResource_info.fileUploadUrl"
+                                :on-success="onSuccess_file">
                             <Button type="ghost"
                                     icon="ios-cloud-upload-outline">上传文件</Button>
                         </Upload>
                     </FormItem>
                     <FormItem label="位置选择">
                         <Select v-model="add_dataResource_info.position"
+                                transfer
                                 style="width: 180px" placeholder="">
                             <Option v-for="item in dict_showPosition"
                                     :key="item.id"
@@ -224,17 +237,19 @@
                     endTime: '',
                     description: '',
                     position: 'ListPage',
+                    dataType: 'WaterMonitor',
                     uploadId: '',
                     fileUploadUrl: window.location.origin + Config[Config.env].ajaxUrl + '/sys/upload/file'
                 },
                 datePicker_default_add: [],
                 dataResourceInfo_rules: {
                     dataName: [{ required: true, message: '数据名称不能为空', trigger: 'blur'}],
-                    addTime: [{ required: true, message: '数据时效不能为空', trigger: 'blur'}]
+                    // addTime: [{ required: true, message: '数据时效不能为空', trigger: 'blur'}]
                 },
 
                 // 位置字典数据
                 dict_showPosition: [],
+                dict_dataType: [],
 
                 // 数据资源详情
                 modal_dataResource_detail: false,
@@ -353,6 +368,20 @@
                     else {
                     }
                 }).catch(function (e) {})
+
+                this.$http({
+                    method: 'get',
+                    url: '/sys/dict/listData',
+                    params: {
+                        type: 'dataType'
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.dict_dataType = response.result;
+                    }
+                    else {
+                    }
+                }).catch(function (e) {})
             },
 
             /**
@@ -361,6 +390,14 @@
             onClick_add_modal() {
                 this.modal_add_dataResource = true;
             },
+
+            // 上传发布数据
+            onSuccess_file(response) {
+                if(response.status === 1) {
+                    this.add_dataResource_info.uploadId = response.result.pictureId;
+                }
+            },
+
 
             /**
              *  新增发布数据

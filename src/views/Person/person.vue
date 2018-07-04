@@ -112,12 +112,15 @@
             top: 0;
             left: 0;
             right: 0;
+            z-index: 999;
         }
 
         .content-box {
             display: flex;
             padding-top: 62px;
             height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
 
             .left-panel {
                 width: 241px;

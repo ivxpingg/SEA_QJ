@@ -12,14 +12,6 @@ export default [
         },
         component: (resolve) => require(['../../views/Home/home.vue'], resolve),
         children: [{
-            path: 'mapShow',
-            name: 'mapShow',
-            meta: {
-                requireAuth: false,
-                title: '装备全景分析展示'
-            },
-            component: (resolve) => require(['../../components/home/content/mapShow.vue'], resolve)
-        },{
             path: 'index',
             name: 'index',
             // alias: '/ThemeApp',
