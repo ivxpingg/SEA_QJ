@@ -1,5 +1,5 @@
 <template>
-    <div class="p-header-container">
+    <div class="p-header-person-container">
         <div class="header-inner">
             <h2 class="logo-title" @click="onGotoHome">海洋装备全景分析</h2>
 
@@ -151,7 +151,7 @@
 </script>
 
 <style lang="scss">
-    .p-header-container {
+    .p-header-person-container {
         position: relative;
         height: 62px;
         transition: all 1s;

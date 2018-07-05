@@ -176,7 +176,7 @@
 
             onclick_login() {
 
-                var pUrl = window.location.origin+ '/\%23' + Config[Config.env].baseUrl + this.$route.path.substring(1);
+                var pUrl = window.location.origin + Config[Config.env].baseUrl + '\%23' + this.$route.path;
                 var url = "http://218.5.80.6:8070/OCEAN/api/login?url=" + pUrl;
                 window.location.href = url;
             }

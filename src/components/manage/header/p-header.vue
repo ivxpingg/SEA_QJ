@@ -1,5 +1,5 @@
 <template>
-    <div class="p-header-container">
+    <div class="p-header-manage-container">
         <div class="header-inner">
             <h2 class="logo-title"></h2>
 
@@ -83,7 +83,7 @@
 </script>
 
 <style lang="scss">
-    .p-header-container {
+    .p-header-manage-container {
         position: relative;
         height: 82px;
         transition: all 1s;

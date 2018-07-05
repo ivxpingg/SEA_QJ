@@ -112,8 +112,13 @@
         </Modal>
 
         <Modal v-model="modal_dataResource_detail"
+               :width="1000"
                title="数据内容">
-               <Table border :loading="tableLoading_detail" :columns="tableColumns_detail" :data="tableData_detail"></Table>
+               <Table border
+                      :height="400"
+                      :loading="tableLoading_detail"
+                      :columns="dataType === 'BiologyPolularScience' ? tableColumns_detail_kp : tableColumns_detail_water"
+                      :data="tableData_detail"></Table>
         </Modal>
 
     </div>
@@ -236,7 +241,7 @@
                     beginTime: '',
                     endTime: '',
                     description: '',
-                    position: 'ListPage',
+                    showPosition: 'ListPage',
                     dataType: 'WaterMonitor',
                     uploadId: '',
                     fileUploadUrl: window.location.origin + Config[Config.env].ajaxUrl + '/sys/upload/file'
@@ -252,11 +257,151 @@
                 dict_dataType: [],
 
                 // 数据资源详情
+                dataType: '',
                 modal_dataResource_detail: false,
                 tableLoading_detail: false,
-                tableColumns_detail: [],
+                // 科普
+                tableColumns_detail_kp: [
+                    {
+                        title: '中文学名',
+                        key: 'chineseName',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '拉丁学名',
+                        key: 'latinName',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '英文学名',
+                        key: 'englishName',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '同种异名',
+                        key: 'congenerDiffectName',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '中文俗名',
+                        key: 'chineseCommonName',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '命名者',
+                        key: 'namer',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '物种资源量',
+                        key: 'quantity',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '形态特征',
+                        key: 'formFeature',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '生态习性',
+                        key: 'ecologicalHabit',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '地理分布',
+                        key: 'geographyDistribution',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '经济意义',
+                        key: 'economicMean',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '目',
+                        key: 'item',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '科',
+                        key: 'section',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '属',
+                        key: 'genus',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '分类一',
+                        key: 'classifyOne',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '分类二',
+                        key: 'classifyTwo',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '形态分类',
+                        key: 'formClassify',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '背面颜色',
+                        key: 'backColor',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    },
+                    {
+                        title: '侧面颜色',
+                        key: 'sideColor',
+                        align: 'center',
+                        width: 120,
+                        ellipsis: true
+                    }
+                ],
+                // 水质
+                tableColumns_detail_water: [],
                 tableData_detail: [],
-                ajaxData_detail: []
+                ajaxData_detail: [],
+
+
             };
         },
         components: {},
@@ -266,30 +411,43 @@
                     this.getTableData();
                 }
             },
-            ajaxData_detail(val) {
-                var that = this;
-                that.tableColumns_detail = [];
+            ajaxData_detail: {
+                deep: true,
+                handler(val) {
+                    var that = this;
+                    that.tableColumns_detail_water = [];
+                    var keyList = [];
 
-                if (val.length > 0) {
-                    for(var key in val[0]) {
-                        if(key === '时间') {
-                            that.tableColumns_detail.splice(1,0, {
-                                title: key,
-                                key: key,
-                                align: 'center'
-                            })
+                    val.forEach(function (v, idx) {
+                        for(var key in v) {
+                            if (keyList.indexOf(key) < 0) {
+
+                                keyList.push(key);
+                                if (key === 'collectionTime') {
+                                    that.tableColumns_detail_water.push({
+                                        title: '时间',
+                                        key: key,
+                                        width: 160,
+                                        fixed: "left",
+                                        align: 'center'
+                                    });
+                                }
+                                else {
+                                    that.tableColumns_detail_water.push({
+                                        title: key.replace(/'/g, ''),
+                                        key: key,
+                                        width: 120,
+                                        align: 'center'
+                                    });
+
+                                }
+
+                            }
+
                         }
-                        else {
-                            that.tableColumns_detail.push({
-                                title: key,
-                                key: key,
-                                align: 'center'
-                            })
-                        }
-                    }
+                    })
+
                 }
-
-                that.tableData_detail = val;
             }
         },
         mounted() {
@@ -469,6 +627,9 @@
              */
             onClick_detail_dataResource(row) {
                 var that = this;
+                that.modal_dataResource_detail = true;
+                that.tableLoading_detail = true;
+                that.dataType = row.dataType;
 
                 that.$http({
                     method: 'get',
@@ -477,12 +638,22 @@
                         industryDataId: row.industryDataId
                     }
                 }).then(function (response) {
+                    that.tableLoading_detail = false;
                     if(response.status === 1) {
+                        that.tableData_detail = response.result;
+                        // 生物科普
+                        if (row.dataType === 'BiologyPolularScience') {
+
+                        }
+                        else {
+                            that.ajaxData_detail = response.result;
+                        }
                     }
                     else {
                     }
 
                 }).catch(function (e) {
+                    that.tableLoading_detail = false;
                 });
             }
         }

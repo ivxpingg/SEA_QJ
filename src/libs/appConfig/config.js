@@ -15,8 +15,8 @@ let config = {
         // port: '8090',
         ajaxUrl: '/oceanobservation/ocean',
         imgUrl: '/oceanobservation',
-        staticUrl: '/',
-        baseUrl: '/'
+        staticUrl: '/qj/',
+        baseUrl: '/qj/'
     }
 };
 export default config;

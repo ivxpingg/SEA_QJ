@@ -77,7 +77,7 @@ const routerConfig = function () {
                 next();
             }
             else {
-                var pUrl = window.location.origin+ '/\%23' + Config[Config.env].baseUrl + to.path.substring(1);
+                var pUrl = window.location.origin + Config[Config.env].baseUrl + '\%23'+ to.path;
                 var url = "http://218.5.80.6:8070/OCEAN/api/login?url=" + pUrl;
                 window.location.href = url;
                 //
