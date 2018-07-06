@@ -83,7 +83,7 @@
                         align: 'center'
                     },{
                         title: '订单号',
-                        key: 'industryDataId',
+                        key: 'orderNum',
                         align: 'center'
                     },{
                         title: '商品名称',
