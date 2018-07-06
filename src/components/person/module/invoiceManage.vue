@@ -10,7 +10,6 @@
                 </div>
                 <div class="hd hd-datePicker">
                     <DatePicker :value="datePicker_default"
-                                :clearable="false"
                                 transfer
                                 format="yyyy-MM-dd"
                                 size="large"

@@ -17,7 +17,7 @@
                      @click="onClick_timeInterval($event,'NearAYear')">近一年</div>
                 <div class="hd">
                     <DatePicker :value="datePicker_default"
-                                :clearable="false"
+
                                 transfer
                                 format="yyyy-MM-dd"
                                 size="large"
@@ -233,8 +233,8 @@
             // 本月、上月、近半年、近一年
             onClick_timeInterval(e, value) {
                 this.searchParams.timeInterval = value;
-                this.searchParams.startTime = '';
-                this.searchParams.endTime = '';
+                this.searchParams.beginDate = '';
+                this.searchParams.endDate = '';
                 this.datePicker_default = [];
                 this.getTableData();
             },

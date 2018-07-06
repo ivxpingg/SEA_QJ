@@ -17,7 +17,6 @@
                      @click="onClick_timeInterval($event,'NearAYear')">近一年</div>
                 <div class="hd">
                     <DatePicker :value="datePicker_default"
-                                :clearable="false"
                                 transfer
                                 format="yyyy-MM-dd"
                                 size="large"

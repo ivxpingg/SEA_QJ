@@ -19,7 +19,6 @@
                                  @click="onClick_timeInterval_paid($event,'NearAYear')">近一年</div>
                             <div class="hd">
                                 <DatePicker :value="datePicker_default_paid"
-                                            :clearable="false"
                                             transfer
                                             format="yyyy-MM-dd"
                                             size="large"
@@ -56,7 +55,6 @@
                                  @click="onClick_timeInterval_apply($event,'NearAYear')">近一年</div>
                             <div class="hd">
                                 <DatePicker :value="datePicker_default_apply"
-                                            :clearable="false"
                                             format="yyyy-MM-dd"
                                             size="large"
                                             type="daterange"
@@ -185,7 +183,7 @@
                     pageNo: 1, // 当前页
                     pageSize: 10, // 每页几行
                     count: 0,     // 总页数
-                    startDate: '',
+                    beginDate: '',
                     endDate: '',
                     timeInterval: '',
                     orderType: 'ServerOrder',
@@ -508,7 +506,7 @@
                     pageNo: 1, // 当前页
                     pageSize: 10, // 每页几行
                     count: 0,     // 总页数
-                    startDate: '',
+                    beginDate: '',
                     endDate: '',
                     timeInterval: '',
                     orderType: 'FreeServerOrder',
@@ -662,8 +660,8 @@
              * 已付订单时间选择
              */
             datePicker_onChange_paid(val) {
-                this.searchParams_paid.startTime = val[0];
-                this.searchParams_paid.endTime = val[1];
+                this.searchParams_paid.beginDate = val[0];
+                this.searchParams_paid.endDate = val[1];
                 this.searchParams_paid.timeInterval = '';
                 this.getPayOrderData();
             },
@@ -671,8 +669,8 @@
              * 申请订单时间选择
              */
             datePicker_onChange_apply(val) {
-                this.searchParams_apply.startTime = val[0];
-                this.searchParams_apply.endTime = val[1];
+                this.searchParams_apply.beginDate = val[0];
+                this.searchParams_apply.endDate = val[1];
                 this.searchParams_apply.timeInterval = '';
                 this.getApplyOrderData();
             },
@@ -693,17 +691,17 @@
             // 本月、上月、近半年、近一年
             onClick_timeInterval_paid(e, value) {
                 this.searchParams_paid.timeInterval = value;
-                this.searchParams_paid.startTime = '';
-                this.searchParams_paid.endTime = '';
+                this.searchParams_paid.beginDate = '';
+                this.searchParams_paid.endDate = '';
                 this.datePicker_default_paid = [];
                 this.getPayOrderData();
             },
             // 本月、上月、近半年、近一年
             onClick_timeInterval_apply(e, value) {
                 this.searchParams_apply.timeInterval = value;
-                this.searchParams_apply.startTime = '';
-                this.searchParams_apply.endTime = '';
-                this.datePicker_default_paid = [];
+                this.searchParams_apply.beginDate = '';
+                this.searchParams_apply.endDate = '';
+                this.datePicker_default_apply = [];
                 this.getApplyOrderData();
             },
 
