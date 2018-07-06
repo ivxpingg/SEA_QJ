@@ -125,7 +125,7 @@
                       :rules="userInfo_rules"
                       :label-width="80">
                     <FormItem label="用户名" prop="account">
-                        <Input v-model="editUserInfo.account" type="text" placeholder="请输入用户名" />
+                        <Input v-model="editUserInfo.account" readonly type="text" placeholder="请输入用户名" />
                     </FormItem>
                     <FormItem label="真实姓名" prop="name">
                         <Input v-model="editUserInfo.name" type="text" placeholder="请输入真实姓名" />
@@ -299,7 +299,10 @@
                             method: 'post',
                             url: '/auth/updateUserInfo',
                             headers: {
-                                'Content-Type': 'application/json;charset=utf-8'
+                                'Content-Type': 'application/json;charset=utf-8',
+                                uid: that.$store.state.uid,
+                                type: that.$store.state.usertype,
+                                token: that.$store.state.token
                             },
                             data: JSON.stringify(that.editUserInfo)
                         }).then(function (response) {

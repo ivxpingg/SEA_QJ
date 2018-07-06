@@ -11,6 +11,7 @@
             <div class="table-panel table-panel-message">
                 <Table ref="myTable"
                        border
+                       :height="500"
                        :loading="tableLoading"
                        :columns="tableColumns"
                        :data="tableData"></Table>
@@ -49,22 +50,18 @@
                     },
                     {
                         title: '消息类型',
-                        key: 'noticeType',
+                        key: 'noticeTypeStr',
                         align: 'center'
                     }
                 ],
-                tableData: [
-                    {noticeId: '1', noticeContent: '112', noticeStatus: 'unRead' },
-                    {noticeId: '2', noticeContent: '1121', noticeStatus: 'read'},
-                    {noticeId: '3', noticeContent: '123456', noticeStatus: 'unRead'}
-                    ],
+                tableData: [],
 
                 selectData: []
             };
         },
         components: {vMenuTitle},
         mounted() {
-           // this.getMessageData();
+           this.getMessageData();
         },
         methods:{
             /**
@@ -82,10 +79,10 @@
                 }).then(function (response) {
                     that.tableLoading = false;
                     if (response.status === 1) {
-                        that.tableData_paid = response.result.page.list;
+                        that.tableData = response.result;
                     }
                     else {
-                        that.$Modal.error({
+                        that.Message.error({
                             content: response.errMsg
                         });
                     }
@@ -129,7 +126,7 @@
                             that.getMessageData();
                         }
                         else {
-                            that.$Modal.error({
+                            that.$Message.error({
                                 content: response.errMsg
                             });
                         }
@@ -234,6 +231,7 @@
 </style>
 <style lang="scss">
     .table-panel-message {
+
         .unread-message {
             position: relative;
 

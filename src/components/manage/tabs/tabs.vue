@@ -33,7 +33,7 @@
         name: "mtabs",
         data() {
             return {
-                currentTab: 'userManage',
+                currentTab: '',
                 tabs: {
                     cloudServeManage: false,
                     dataResourceMange: false,
@@ -77,8 +77,30 @@
                 }
             }
         },
-        mounted() {},
+        mounted() {
+            this.getMenuData();
+        },
         methods: {
+            getMenuData() {
+                var that = this;
+                that.$http({
+                    method: 'get',
+                    url: '/auth/userMenu',
+                    params: {
+                        type: that.$store.state.type,
+                        uid: that.$store.state.uid,
+                        syscode: that.$store.state.syscode,
+                        token: that.$store.state.token
+                    }
+                }).then(function (response) {
+                    if(response.status === 1) {
+
+                    }
+                    
+                }).catch(function (e) {
+                    
+                })
+            },
             handleTabRemove(name) {
                 this.tabs[name] = false;
             }

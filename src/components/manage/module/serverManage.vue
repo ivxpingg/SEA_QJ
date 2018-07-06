@@ -671,7 +671,7 @@
                                 that.getTableData();
                             }
                             else {
-                                that.$Modal.error({
+                                that.$Message.error({
                                     content: response.errMsg
                                 });
                             }

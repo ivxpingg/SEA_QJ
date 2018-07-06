@@ -108,7 +108,7 @@
                 this.active_person = false;
             },
             onGotoHome() {
-                this.$router.push('/home');
+                this.$router.push('/home/index');
             },
             onClick_gotoPerson() {
                 this.$router.push({

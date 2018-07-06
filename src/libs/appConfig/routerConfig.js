@@ -72,10 +72,14 @@ const routerConfig = function () {
             });
         }
         else if (to.meta.requireAuth && Cookie.read('token') == null) {
-            if (to.path.indexOf('/manage') === 0) {
-                // window.location.href = 'http://218.5.80.6:8091/OCEANAM/logout';
+            if (to.path.indexOf('/manage') === 0  &&  Cookie.read('syscode') != null) {
                 next();
             }
+
+            else if (to.path.indexOf('/manage') === 0) {
+                window.location.href = 'http://218.5.80.6:8091/OCEANAM/logout';
+            }
+
             else {
                 var pUrl = window.location.origin + Config[Config.env].baseUrl + '\%23'+ to.path;
                 var url = "http://218.5.80.6:8070/OCEAN/api/login?url=" + pUrl;

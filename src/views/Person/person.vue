@@ -146,6 +146,7 @@
             .right-panel {
                 flex: 1;
                 padding: 0 52px 0 22px;
+                overflow-x: hidden;
             }
         }
     }

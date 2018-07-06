@@ -9,7 +9,7 @@
                         <!--<i class="icon iconfont icon-bianji"></i>-->
                         <!--<div class="name">修改密码</div>-->
                     <!--</li>-->
-                    <li @clikc="onClick_logout">
+                    <li @click="onClick_logout">
                         <i class="icon iconfont icon-tuichu"></i>
                         <div class="name">退出系统</div>
                     </li>
@@ -54,6 +54,7 @@
                 });
             },
             onClick_logout() {
+
                 Cookie.remove('uid');
                 Cookie.remove('token');
                 Cookie.remove('type');

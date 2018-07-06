@@ -118,23 +118,18 @@
                     </div>
                 </div>
 
-                <div class="other-title">其它信息</div>
-                <div class="text-info">
-                    <span class="text-k">订单备注</span>
-                    <span class="text-k">备注时间：<span>{{table_pay_data_detail.remarkTime}}</span></span>
-
-                    <span class="text-k">备注人：<span>{{table_pay_data_detail.remarkPerson}}</span></span>
-
-                </div>
-
-                <div class="area-text"> {{table_pay_data_detail.remark}} </div>
+                <div class="other-title">备注信息</div>
+                <Table border
+                       :height="200"
+                       :columns="table_columns_remark_pay"
+                       :data="table_pay_data_detail.orderRemarkList" ></Table>
 
             </div>
         </Modal>
 
         <!--退款原因-->
         <Modal v-model="modal_pay_refund"
-               @onOk="onClick_refund"
+               @on-ok="onClick_refund"
                ok-text="同意退款"
                title="用户退款原因" >
             <div>
@@ -149,13 +144,13 @@
 
         <!--备注-->
         <Modal v-model="modal_pay_remark"
-               @onOk="onClick_addRemark"
+               @on-ok="onClick_addRemark"
                ok-text="添加备注"
                title="备注" >
             <div>
                 <Input type="textarea"
                        :rows="5"
-                       :model="remark_content"
+                       v-model="remark_content"
                        placeholder="请输入备注内容" />
             </div>
 
@@ -463,18 +458,37 @@
                     totalPrice: '',
 
                     orderServerAccount: [
-                        {
-                            remoteAddress: '192.168.1.1', // IP
-                            account: 'admin',   // 账号
-                            password: '123456'    // 密码
-                        },
-                        {
-                            remoteAddress: '192.168.1.1', // IP
-                            account: 'admin',   // 账号
-                            password: '123456'    // 密码
-                        }
-                    ]
+                        // {
+                        //     remoteAddress: '192.168.1.1', // IP
+                        //     account: 'admin',   // 账号
+                        //     password: '123456'    // 密码
+                        // },
+                        // {
+                        //     remoteAddress: '192.168.1.1', // IP
+                        //     account: 'admin',   // 账号
+                        //     password: '123456'    // 密码
+                        // }
+                    ],
+                    orderRemarkList: []
                 },
+
+                table_columns_remark_pay: [
+                    {
+                        title: '备注时间',
+                        key: 'remarkTime',
+                        width: 180,
+                        align: 'center'
+                    },{
+                        title: '备注内容',
+                        key: 'remark',
+                        align: 'left'
+                    },{
+                        title: '备注人',
+                        key: 'remarkPerson',
+                        width: 180,
+                        align: 'center'
+                    }
+                ],
 
                 //付费 退款原因
                 modal_pay_refund: false,
@@ -921,6 +935,7 @@
                         that.table_pay_data_detail.remainDays = response.result.remainDays || '';
 
                         that.table_pay_data_detail.orderServerAccount = response.result.accountList || [];
+                        that.table_pay_data_detail.orderRemarkList = response.result.orderRemarkList || [];
                     }
                     else {
                     }
@@ -980,10 +995,11 @@
                 var that = this;
                 that.$http({
                     method: 'get',
-                    url: '/panoramic/serverOrder/updateOrderRemark',
+                    url: '/panoramic/serverOrder/addOrderRemark',
                     params: {
                         orderId: that.remarkOrderId,
-                        remark: that.remark_content
+                        remark: that.remark_content,
+                        remarkPerson: '写死备注人账号' // that.$store.state.uid
                     }
                 }).then(function (response) {
                     that.modal_pay_remark = false;
@@ -1121,6 +1137,8 @@
                         that.table_freeApply_data_detail.useDescription = response.result.useDescription || '';
 
                         that.table_freeApply_data_detail.orderServerAccount = response.result.accountList || [];
+
+
                     }
                     else {
                     }

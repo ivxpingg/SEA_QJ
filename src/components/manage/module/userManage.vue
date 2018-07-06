@@ -277,13 +277,13 @@
                         that.searchParams.count = response.result.page.count;
                     }
                     else {
-                        this.$Modal.error({
+                        this.$Message.error({
                             content: response.errMsg
                         });
                     }
                 }).catch(function (e) {
                     that.tableLoading = false;
-                    that.$Modal.error({
+                    that.$Message.error({
                         content: JSON.stringify(e)
                     });
                 })

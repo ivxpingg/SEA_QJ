@@ -106,16 +106,11 @@
                     </div>
                 </div>
 
-                <div class="other-title">其它信息</div>
-                <div class="text-info">
-                    <span class="text-k">订单备注</span>
-                    <span class="text-k">备注时间：<span>{{table_pay_data_detail.remarkTime}}</span></span>
-
-                    <span class="text-k">备注人：<span>{{table_pay_data_detail.remarkPerson}}</span></span>
-
-                </div>
-
-                <div class="area-text"> {{table_pay_data_detail.remark}} </div>
+                <div class="other-title">备注信息</div>
+                <Table border
+                       :height="200"
+                       :columns="table_columns_remark_pay"
+                       :data="table_pay_data_detail.orderRemarkList" ></Table>
 
             </div>
         </Modal>
@@ -444,18 +439,36 @@
                     totalPrice: '',
 
                     orderServerAccount: [
-                        {
-                            remoteAddress: '192.168.1.1', // IP
-                            account: 'admin',   // 账号
-                            password: '123456'    // 密码
-                        },
-                        {
-                            remoteAddress: '192.168.1.1', // IP
-                            account: 'admin',   // 账号
-                            password: '123456'    // 密码
-                        }
-                    ]
+                        // {
+                        //     remoteAddress: '192.168.1.1', // IP
+                        //     account: 'admin',   // 账号
+                        //     password: '123456'    // 密码
+                        // },
+                        // {
+                        //     remoteAddress: '192.168.1.1', // IP
+                        //     account: 'admin',   // 账号
+                        //     password: '123456'    // 密码
+                        // }
+                    ],
+                    orderRemarkList: []
                 },
+                table_columns_remark_pay: [
+                    {
+                        title: '备注时间',
+                        key: 'remarkTime',
+                        width: 180,
+                        align: 'center'
+                    },{
+                        title: '备注内容',
+                        key: 'remark',
+                        align: 'left'
+                    },{
+                        title: '备注人',
+                        key: 'remarkPerson',
+                        width: 180,
+                        align: 'center'
+                    }
+                ],
 
                 // 付费账号信息
                 modal_pay_serve_account: false,
@@ -797,6 +810,8 @@
                         that.table_pay_data_detail.totalPrice = response.result.totalPrice || '';
 
                         that.table_pay_data_detail.orderServerAccount = response.result.accountList || [];
+                        that.table_pay_data_detail.orderRemarkList = response.result.orderRemarkList || [];
+
                     }
                     else {
                     }

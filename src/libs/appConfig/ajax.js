@@ -64,10 +64,12 @@ Ajax.interceptors.request.use(function (config) {
 });
 //ajax响应后拦截器
 Ajax.interceptors.response.use(function (response) {
-    if (response.data.errMsg === 'token错误') {
+    if (response.data.errCode === 'A0002') {
         Cookie.remove('uid');
         Cookie.remove('token');
         Cookie.remove('usertype');
+        Cookie.remove('type');
+        Cookie.remove('syscode');
     }
 
     // if(response.data.errCode === "A0002") {

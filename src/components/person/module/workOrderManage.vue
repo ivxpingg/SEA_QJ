@@ -45,7 +45,7 @@
                         <Select v-model="workOrderInfo.orderId" placeholder="请选择产品">
                             <Option v-for="item in serverList_bought"
                                     :key="item.orderId"
-                                    value="item.orderId">{{item.serverName}}</Option>
+                                    :value="item.orderId">{{item.serverName}}</Option>
                         </Select>
                     </FormItem>
 
@@ -160,9 +160,11 @@
                 modal_add_workOrder: false,
                 workOrderInfo: {
                     orderId: '',
+                    ip: '',
                     applyContent: '',
                     applyName: '',
-                    phone: ''
+                    phone: '',
+                    serverName: ''
                 }
             };
         },
@@ -171,6 +173,18 @@
             'searchParams.pageNo': {
                 handler(val) {
                     this.getTableData();
+                }
+            },
+            'workOrderInfo.orderId': {
+                handler(val) {
+                    for(var i = 0; i < this.serverList_bought.length; i++){
+                        if(val === this.serverList_bought[i].orderId) {
+                            this.workOrderInfo.ip = this.serverList_bought[i].remoteAddress || '';
+                            this.workOrderInfo.serverName = this.serverList_bought[i].serverName || '';
+                            return;
+                        }
+                    }
+
                 }
             }
         },
@@ -280,8 +294,9 @@
                 })
             },
 
+            // 添加工单
             onClick_addWorkOrder() {
-
+                var that = this;
                 this.$http({
                     method: 'post',
                     url: '/panoramic/workOrder/add',
@@ -291,6 +306,7 @@
                     data: JSON.stringify(this.workOrderInfo)
                 }).then(function (response) {
                     if (response.status === 1) {
+                        that.modal_add_workOrder = false;
                         that.$Message.success({
                             content: '添加成功！'
                         });
@@ -331,7 +347,7 @@
                                 that.getTableData();
                             }
                             else {
-                                that.$Modal.error({
+                                that.$Message.error({
                                     content: response.errMsg
                                 });
                             }
