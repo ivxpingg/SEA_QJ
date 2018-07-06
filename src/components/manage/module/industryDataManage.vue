@@ -53,14 +53,14 @@
                title="详情">
             <div class="modal_pay_detail">
                 <div class="text-info">
-                    <span class="text-k">申请时间：<span>{{table_freeApply_data_detail.insTime}}</span></span>
-                    <span class="text-k">订单状态：<span>{{table_freeApply_data_detail.orderStatus}}</span></span>
-                    <span class="text-k">通过时间：<span>{{table_freeApply_data_detail.payTime}}</span></span>
+                    <span class="text-k">申请时间：<span>{{table_freeApply_data_detail.applyTime}}</span></span>
+                    <span class="text-k">订单状态：<span>{{table_freeApply_data_detail.orderStatusStr}}</span></span>
+                    <span class="text-k">通过时间：<span>{{table_freeApply_data_detail.applySuccTime}}</span></span>
                 </div>
 
                 <Table border
                        :columns="table_freeApply_columns_detail"
-                       :data="[table_freeApply_data_detail.accountList]"></Table>
+                       :data="[table_freeApply_data_detail]"></Table>
 
                 <div class="ft-bottom">
                     <Button @click="onClick_lookImage" >查看附件</Button>
@@ -71,7 +71,7 @@
 
         <!--驳回原因-->
         <Modal v-model="modal_freeApply_reject"
-               @onOk="onClick_reject"
+               @on-ok="onClick_reject"
                ok-text="驳回"
                title="驳回原因" >
             <div>
@@ -84,7 +84,7 @@
         </Modal>
 
         <Modal v-model="modal_look_image" title="附件">
-            <img :src="fileimgUrl" alt="">
+            <img :src="fileimgUrl" alt="" style="width: 100%">
         </Modal>
 
     </div>
@@ -177,7 +177,7 @@
                                                             method: 'get',
                                                             url: '/panoramic/dataOrder/auditSuccess',
                                                             params: {
-                                                                orderId: params.row.orderId
+                                                                orderIds: params.row.orderId
                                                             }
                                                         }).then(function (response) {
                                                             if (response.status === 1) {
@@ -185,7 +185,7 @@
                                                                     content: '审核通过成功！'
                                                                 });
 
-                                                                that.getApplyOrderData();
+                                                                that.getTableData();
                                                             }
                                                             else {
                                                                 that.$Message.error({
@@ -278,8 +278,9 @@
                     dataContent: '',
                     useDescription: '',
                     insTime:'',
-                    orderStatus: '',
-                    payTime: '',
+                    orderStatusStr: '',
+                    applyTime: '',
+                    applySuccTime: '',
                     pictureUrl: '',
                     accountList: []
                 },
@@ -366,10 +367,12 @@
                     method: 'get',
                     url: '/panoramic/dataOrder/detail',
                     params: {
+
                         orderId: row.orderId
                     }
                 }).then(function (response) {
                     if (response.status === 1) {
+
                         that.table_freeApply_data_detail.orderNum = response.result.orderNum || '';
                         that.table_freeApply_data_detail.applyUnit = response.result.applyUnit || '';
                         that.table_freeApply_data_detail.applyPerson = response.result.applyPerson || '';
@@ -378,10 +381,12 @@
                         that.table_freeApply_data_detail.dataContent = response.result.dataContent || '';
                         that.table_freeApply_data_detail.useDescription = response.result.useDescription || '';
                         that.table_freeApply_data_detail.insTime = response.result.insTime || '';
-                        that.table_freeApply_data_detail.orderStatus = response.result.orderStatus || '';
-                        that.table_freeApply_data_detail.payTime = response.result.payTime || '';
+                        that.table_freeApply_data_detail.orderStatusStr = response.result.orderStatusStr || '';
+                        that.table_freeApply_data_detail.applyTime = response.result.applyTime || '';
+                        that.table_freeApply_data_detail.applySuccTime = response.result.applySuccTime || '';
 
-                        that.table_freeApply_data_detail.pictureUrl = response.result.pictureUrl || '';
+
+                        that.table_freeApply_data_detail.pictureUrl = response.result.certificate || '';
 
 
                     }
@@ -406,6 +411,7 @@
                         that.$Message.success({
                             content: '驳回成功！'
                         });
+                        that.getTableData();
                     }
                     else {
                         that.$Message.error({

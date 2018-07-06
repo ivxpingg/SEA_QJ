@@ -1,7 +1,7 @@
 <template>
     <div class="header-container">
          <div class="header-inner">
-             <h2 class="logo-title">海洋装备全景分析</h2>
+             <h2 class="logo-title">海洋装备全景观测试验分析组件</h2>
              <div class="header-menu-panel">
                  <ul class="menu-ul">
                      <li class="menu-li" ref="menu1" @click="goto($event, '/mapShow')">装备全景分析展示</li>

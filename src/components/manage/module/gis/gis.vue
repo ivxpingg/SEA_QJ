@@ -40,6 +40,14 @@
         </div>
         <div class="right-panel"  :class="{'show': showPanel}">
             <div class="equipment-name">设备实时检测数据</div>
+            <div class="factor-select">
+                <Select v-model="factor_select_value"
+                        size="small" style="width: 120px;">
+                    <Option v-for="item in chart1_selectData"
+                            :value="item.itemId"
+                            :key="item.itemId">{{item.itemName}}</Option>
+                </Select>
+            </div>
             <div ref="chart1"
                  class="chart"></div>
 
@@ -72,7 +80,7 @@
         <div class="toolbox" v-if="edit"  :class="{'show': showPanel}">
 
 
-            <Poptip title="提示" content="请在地图点击选择添加的位置">
+            <Poptip title="提示" placement="bottom-start" content="请在地图点击选择添加的位置">
                 <Button class="my-btn"
                         size="small"
                         @click="onClick_gis_add"
@@ -321,8 +329,67 @@
                     unit: ""
                 },
 
-                chart1: null,
-                chart2: null,
+                // *************  图表  *************
+                chart1: null,    // 折线图
+                chart1_option: {
+                    xAxis: {
+                        data: []
+                    },
+                    series: [{
+                        name: '',
+                        data: [],
+                        type: 'line',
+                        smooth: true,
+                        areaStyle: {
+                            normal: {
+                                color: new Echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 0,
+                                    color: 'rgba(0, 192, 221, 0.8)'
+                                }, {
+                                    offset: 1,
+                                    color: 'rgba(0, 192, 221,0)'
+                                }])
+                            }
+                        }
+                    }]
+                },
+                chart1_selectData: [
+                    // {itemId: '001', itemName: '叶绿素'}
+                ],  // 分析因子选择数据
+                factor_select_value: '',
+                chart_data1: [],
+
+                chart2: null,  // 雷达图
+                chart2_option: {
+                    radar: {
+                        indicator: [
+                            // {name: '', max: 0}
+                        ]
+                    },
+                    series: [
+                        {
+                            name: '分析',
+                            type: 'radar',
+                            areaStyle: {
+                                normal: {
+                                    color: 'rgba(0, 192, 221, 0.5)'
+                                }
+                            },
+                            data: [
+                                {
+                                    value: [],
+                                    name: '设备采集'
+                                },
+                                {
+                                    value: [],
+                                    name: '人工采集'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                chart_data2: [],
+
 
                 // static图片路径
                 staticImgBaseUrl: window.location.origin + Config[Config.env].staticUrl,
@@ -671,7 +738,62 @@
 
                     that.average = (that.average / len).toFixed(2);
                 }
-            }
+            },
+
+            chart_data1: {
+                deep: true,
+                handler(val) {
+                    var that = this;
+                    that.chart1_option.xAxis.data = [];
+                    that.chart1_option.series[0].data = [];
+                    val.forEach(function (v) {
+
+                        that.chart1_option.xAxis.data.push(v.collectionTime);
+                        that.chart1_option.series[0].data.push(parseFloat(v.quantValue));
+
+                    });
+
+                    for (var i = 0; i < that.chart1_selectData.length; i++) {
+
+                        if (that.chart1_selectData[i].itemId === that.factor_select_value) {
+
+                            that.chart1_option.series[0].name = that.chart1_selectData[i].itemName;
+                            break;
+                        }
+                    }
+
+                    that.chart1.setOption(that.chart1_option);
+                }
+            },
+            // 图表1 因子选择变化重新获取数据
+            factor_select_value(val) {
+
+                this.getChart1_data();
+            },
+            chart_data2: {
+                deep: true,
+                handler(val) {
+                    var that = this;
+
+                    that.chart2_option.radar.indicator = [];
+                    that.chart2_option.series[0].data[0].value = [];
+                    that.chart2_option.series[0].data[1].value = [];
+
+                    val.forEach(function (v) {
+                        that.chart2_option.radar.indicator.push({
+                            name: v.itemName,
+                            max: parseFloat(v.standardMax)
+                        });
+
+                        that.chart2_option.series[0].data[0].value.push(parseFloat(v.quantValue || 0));
+                        that.chart2_option.series[0].data[1].value.push(parseFloat(v.artificialData || 0));
+                    })
+
+                    that.chart2.setOption(that.chart2_option);
+                }
+            },
+
+
         },
         mounted() {
             this.gisInit();
@@ -714,16 +836,24 @@
              */
             setChart() {
                 this.chart1 = Echarts.init(this.$refs.chart1);
-                var option1 = {
+                var chart1_option = {
                     color: ['#00c0dd','#ff931e'],
                     legend: {
+                        show: false,
                         align: 'left',
                         right: 20,
-                        data: ['图一','图二']
+                        data: []
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    grid: {
+                        top: 20,
+                        bottom: 60
                     },
                     xAxis: {
                         type: 'category',
-                        data: ['Mon', 'Tue', 'Wed', 'Thu'],
+                        data: [],
                         boundaryGap: false,
                         axisLine: {
                             lineStyle: {
@@ -737,6 +867,7 @@
                             show: false
                         },
                         axisLabel: {
+                            show:false,
                             color: '#FFF'
                         }
                     },
@@ -757,45 +888,47 @@
                             color: '#FFF'
                         }
                     },
-                    series: [{
-                        name: '图一',
-                        data: [820, 932, 901, 934],
-                        type: 'line',
-                        smooth: true,
-                        areaStyle: {
-                            normal: {
-                                color: new Echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                    offset: 0,
-                                    color: 'rgba(0, 192, 221, 0.8)'
-                                }, {
-                                    offset: 1,
-                                    color: 'rgba(0, 192, 221,0)'
-                                }])
-                            }
-                        }
-                    },{
-                        name: '图二',
-                        data: [820, 932, 901, 934],
-                        type: 'line',
-                        smooth: true,
-                        areaStyle: {
-                            normal: {
-                                color: new Echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                    offset: 0,
-                                    color: 'rgba(255,147,30, 0.8)'
-                                }, {
-                                    offset: 1,
-                                    color: 'rgba(255,147,30,0)'
-                                }])
-                            }
-                        }
-                    }]
+                    series: [
+                    //     {
+                    //     name: '图一',
+                    //     data: [820, 932, 901, 934],
+                    //     type: 'line',
+                    //     smooth: true,
+                    //     areaStyle: {
+                    //         normal: {
+                    //             color: new Echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    //                 offset: 0,
+                    //                 color: 'rgba(0, 192, 221, 0.8)'
+                    //             }, {
+                    //                 offset: 1,
+                    //                 color: 'rgba(0, 192, 221,0)'
+                    //             }])
+                    //         }
+                    //     }
+                    // }, {
+                    //         name: '图二',
+                    //         data: [820, 932, 901, 934],
+                    //         type: 'line',
+                    //         smooth: true,
+                    //         areaStyle: {
+                    //             normal: {
+                    //                 color: new Echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    //                     offset: 0,
+                    //                     color: 'rgba(255,147,30, 0.8)'
+                    //                 }, {
+                    //                     offset: 1,
+                    //                     color: 'rgba(255,147,30,0)'
+                    //                 }])
+                    //             }
+                    //         }
+                    //     }
+                    ]
                 };
 
-                this.chart1.setOption(option1);
+                this.chart1.setOption(chart1_option);
 
                 this.chart2 = Echarts.init(this.$refs.chart2);
-                var option2 = {
+                var chart2_option = {
                     color: ['#00c0dd','#ff931e'],
                     title: {
                         show: false,
@@ -804,7 +937,7 @@
                     tooltip: {},
                     legend: {
                         show: false,
-                        data: ['预算分配（Allocated Budget）', '实际开销（Actual Spending）']
+                        data: ['设备采集', '人工采集']
                     },
                     radar: {
                         shape: 'circle',
@@ -814,12 +947,12 @@
                             }
                         },
                         indicator: [
-                            { name: '销售', max: 6500},
-                            { name: '管理', max: 16000},
-                            { name: '信息技术', max: 30000},
-                            { name: '客服', max: 38000},
-                            { name: '研发', max: 52000},
-                            { name: '市场', max: 25000}
+                            // { name: '销售', max: 6500},
+                            // { name: '管理', max: 16000},
+                            // { name: '信息技术', max: 30000},
+                            // { name: '客服', max: 38000},
+                            // { name: '研发', max: 52000},
+                            // { name: '市场', max: 25000}
                         ],
                         splitArea: {
                             show: false
@@ -836,27 +969,89 @@
                         },
 
                     },
-                    series: [{
-                        name: '预算',
-                        type: 'radar',
-                        areaStyle: {
-                            normal: {
-                                color: 'rgba(0, 192, 221, 0.5)'
-                            }
-                        },
-
-                        data : [
-                            {
-                                value : [4300, 10000, 28000, 35000, 50000, 19000],
-                                name : '预算分配（Allocated Budget）'
-                            }
-                        ]
-                    }]
+                    series: [
+                        // {
+                        //     name: '预算',
+                        //     type: 'radar',
+                        //     areaStyle: {
+                        //         normal: {
+                        //             color: 'rgba(0, 192, 221, 0.5)'
+                        //         }
+                        //     },
+                        //
+                        //     data: [
+                        //         {
+                        //             value: [4300, 10000, 28000, 35000, 50000, 19000],
+                        //             name: '预算分配（Allocated Budget）'
+                        //         }
+                        //     ]
+                        // }
+                    ]
 
                 };
 
-                this.chart2.setOption(option2);
+                this.chart2.setOption(chart2_option);
             },
+
+            // 获取图表数据
+            getChartData() {
+                var that = this;
+                // 获取折线图因子选择数据
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/equipment/getItemIdInOneDay',
+                    params: {
+                        equipmentNo: that.equipmentInfo.equipmentNo
+                    }
+                }).then(function (response) {
+                    if(response.status === 1) {
+                        that.chart1_selectData = response.result;
+                        that.factor_select_value = response.result[0].itemId;
+                    }
+
+                }).catch(function (e) {
+
+                })
+
+                // 获取雷达图数据
+
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/equipment/getRadarChartData',
+                    params: {
+                        equipmentNo: that.equipmentInfo.equipmentNo,
+                        equipmentType: that.equipmentInfo.equipmentType
+                    }
+                }).then(function (response) {
+                    if(response.status === 1) {
+                        that.chart_data2 = response.result.radarChartData || [];
+
+                    }
+                }).catch(function (e) {
+
+                })
+            },
+            // 获取折线图数据
+            getChart1_data() {
+                var that = this;
+                that.$http({
+                    method: 'get',
+                    url: '/panoramic/equipment/getLineChartData',
+                    params: {
+                        equipmentNo: that.equipmentInfo.equipmentNo,
+                        equipmentType: that.equipmentInfo.equipmentType,
+                        itemId: that.factor_select_value
+                    }
+                }).then(function (response) {
+                    if(response.status === 1) {
+                        that.chart_data1 = response.result.lineChartData || [];
+                    }
+
+                }).catch(function (e) {
+
+                })
+            },
+
 
             /**
              * 获取字典数据
@@ -1145,6 +1340,7 @@
                         that.getEquipmentInfo_detail();
                         that.showPanel = true;
                         that.marker_active_update();
+
                         // stopTwinkle();
                     });
 
@@ -1207,6 +1403,8 @@
                         that.equipmentInfo.unit = response.result.unit;
 
                         that.searchParams_equipData.equipId = response.result.equipmentNo;
+
+                        that.getChartData(); // 获取图表数据
                     }
                     else {}
                 }).catch(function (e) {
@@ -1449,6 +1647,10 @@
                     border: 3px solid #00c0dd;
                     border-radius: 50%;
                 }
+            }
+
+            .factor-select {
+                padding-left: 150px;
             }
 
             .chart {

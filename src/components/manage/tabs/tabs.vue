@@ -44,7 +44,7 @@
                     slideshowManage: false,
                     userManage: false,
                     userOrderManage: false
-                },
+                }
             };
         },
         components: {
@@ -78,7 +78,7 @@
             }
         },
         mounted() {
-            this.getMenuData();
+
         },
         methods: {
             getMenuData() {

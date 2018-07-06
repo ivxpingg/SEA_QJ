@@ -1,7 +1,7 @@
 <template>
     <div class="p-header-person-container">
         <div class="header-inner">
-            <h2 class="logo-title" @click="onGotoHome">海洋装备全景分析</h2>
+            <h2 class="logo-title" @click="onGotoHome">海洋装备全景观测试验分析组件</h2>
 
             <div class="user-menu-panel">
                 <ul class="user-ul">

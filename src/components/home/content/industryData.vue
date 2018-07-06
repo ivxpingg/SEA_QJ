@@ -17,7 +17,7 @@
                         <div class="attr">数据数量: <span>{{item.dataNumber}}</span>条</div>
                         <div class="attr">数据时效: <span>{{transformFormat(item)}}</span></div>
                         <div class="attr">数据格式: <span>{{item.format}}</span></div>
-                        <div class="attr">数据内容: <span>{{item.description}}</span></div>
+                        <div class="attr">数据内容: <span>{{item.dataContent}}</span></div>
                     </div>
                     <div class="apply-panel">
                         <div class="num">申请数: <span>{{item.applyTimes}}</span></div>

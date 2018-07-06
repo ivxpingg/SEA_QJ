@@ -63,8 +63,8 @@
                     this.menuUrl = {};
                     this.getMenuUrl(val);
 
-                    this.open_names = [ this.menu_nameInName[this.active_tab].parentName ];
-                    this.active_name = this.menu_nameInName[this.active_tab].name;
+                   // this.open_names = [ this.menu_nameInName[this.active_tab].parentName ];
+                   // this.active_name = this.menu_nameInName[this.active_tab].name;
 
                     this.$nextTick(function () {
                         this.$refs.menuManage.updateOpened();
@@ -101,118 +101,120 @@
             getMenuData() {
                 var that = this;
 
-                this.menuData = [{
-                    parentId: '0',
-                    menuId: '01',
-                    menuName: '用户管理',
-                    menuUrl: '',
-                    menuOrder: '1',
-                    subMenu: [{
-                        parentId: '01',
-                        menuId: '1001',
-                        menuName: '用户管理',
-                        menuUrl: 'userManage',
-                        menuOrder: '1',
-                    }]
-                },{
-                    parentId: '0',
-                    menuId: '02',
-                    menuName: '服务器管理',
-                    menuUrl: '',
-                    menuOrder: '2',
-                    subMenu: [{
-                        parentId: '02',
-                        menuId: '2001',
-                        menuName: '服务器管理',
-                        menuUrl: 'serverManage',
-                        menuOrder: '1',
-                    }]
-                },{
-                    parentId: '0',
-                    menuId: '03',
-                    menuName: '数据资源管理',
-                    menuUrl: '',
-                    menuOrder: '3',
-                    subMenu: [{
-                        parentId: '03',
-                        menuId: '3001',
-                        menuName: '数据资源管理',
-                        menuUrl: 'dataResourceMange',
-                        menuOrder: '1',
-                    }]
-                },{
-                    parentId: '0',
-                    menuId: '04',
-                    menuName: '用户订单管理',
-                    menuUrl: '',
-                    menuOrder: '4',
-                    subMenu: [{
-                        parentId: '04',
-                        menuId: '4001',
-                        menuName: '云服务器订单',
-                        menuUrl: 'cloudServeManage',
-                        menuOrder: '1',
-                    },{
-                        parentId: '04',
-                        menuId: '4002',
-                        menuName: '行业数据订单',
-                        menuUrl: 'industryDataManage',
-                        menuOrder: '2',
-                    },{
-                        parentId: '04',
-                        menuId: '4003',
-                        menuName: '发票申请管理',
-                        menuUrl: 'invoiceApplyManage',
-                        menuOrder: '3',
-                    },{
-                        parentId: '04',
-                        menuId: '4004',
-                        menuName: '用户工单管理',
-                        menuUrl: 'userOrderManage',
-                        menuOrder: '4',
-                    }]
-                },{
-                    parentId: '0',
-                    menuId: '05',
-                    menuName: '轮播图管理',
-                    menuUrl: '',
-                    menuOrder: '5',
-                    subMenu: [{
-                        parentId: '05',
-                        menuId: '5001',
-                        menuName: '轮播图管理',
-                        menuUrl: 'slideshowManage',
-                        menuOrder: '1',
-                    }]
-                },{
-                    parentId: '0',
-                    menuId: '06',
-                    menuName: '全景观测分析系统',
-                    menuUrl: '',
-                    menuOrder: '6',
-                    subMenu: [{
-                        parentId: '06',
-                        menuId: '6001',
-                        menuName: '全景观测分析系统',
-                        menuUrl: 'seaSystem',
-                        menuOrder: '1',
-                    }]
-                }];
+                // this.menuData = [{
+                //     parentId: '0',
+                //     menuId: '01',
+                //     menuName: '用户管理',
+                //     menuUrl: '',
+                //     menuOrder: '1',
+                //     subMenu: [{
+                //         parentId: '01',
+                //         menuId: '1001',
+                //         menuName: '用户管理',
+                //         menuUrl: 'userManage',
+                //         menuOrder: '1',
+                //     }]
+                // },{
+                //     parentId: '0',
+                //     menuId: '02',
+                //     menuName: '服务器管理',
+                //     menuUrl: '',
+                //     menuOrder: '2',
+                //     subMenu: [{
+                //         parentId: '02',
+                //         menuId: '2001',
+                //         menuName: '服务器管理',
+                //         menuUrl: 'serverManage',
+                //         menuOrder: '1',
+                //     }]
+                // },{
+                //     parentId: '0',
+                //     menuId: '03',
+                //     menuName: '数据资源管理',
+                //     menuUrl: '',
+                //     menuOrder: '3',
+                //     subMenu: [{
+                //         parentId: '03',
+                //         menuId: '3001',
+                //         menuName: '数据资源管理',
+                //         menuUrl: 'dataResourceMange',
+                //         menuOrder: '1',
+                //     }]
+                // },{
+                //     parentId: '0',
+                //     menuId: '04',
+                //     menuName: '用户订单管理',
+                //     menuUrl: '',
+                //     menuOrder: '4',
+                //     subMenu: [{
+                //         parentId: '04',
+                //         menuId: '4001',
+                //         menuName: '云服务器订单',
+                //         menuUrl: 'cloudServeManage',
+                //         menuOrder: '1',
+                //     },{
+                //         parentId: '04',
+                //         menuId: '4002',
+                //         menuName: '行业数据订单',
+                //         menuUrl: 'industryDataManage',
+                //         menuOrder: '2',
+                //     },{
+                //         parentId: '04',
+                //         menuId: '4003',
+                //         menuName: '发票申请管理',
+                //         menuUrl: 'invoiceApplyManage',
+                //         menuOrder: '3',
+                //     },{
+                //         parentId: '04',
+                //         menuId: '4004',
+                //         menuName: '用户工单管理',
+                //         menuUrl: 'userOrderManage',
+                //         menuOrder: '4',
+                //     }]
+                // },{
+                //     parentId: '0',
+                //     menuId: '05',
+                //     menuName: '轮播图管理',
+                //     menuUrl: '',
+                //     menuOrder: '5',
+                //     subMenu: [{
+                //         parentId: '05',
+                //         menuId: '5001',
+                //         menuName: '轮播图管理',
+                //         menuUrl: 'slideshowManage',
+                //         menuOrder: '1',
+                //     }]
+                // },{
+                //     parentId: '0',
+                //     menuId: '06',
+                //     menuName: '全景观测分析系统',
+                //     menuUrl: '',
+                //     menuOrder: '6',
+                //     subMenu: [{
+                //         parentId: '06',
+                //         menuId: '6001',
+                //         menuName: '全景观测分析系统',
+                //         menuUrl: 'seaSystem',
+                //         menuOrder: '1',
+                //     }]
+                // }];
 
-                // that.$http({
-                //     method: 'get',
-                //     url: '/auth/userMenu',
-                //     params: {
-                //         type: this.$store.state.usertype,
-                //         uid: this.$store.state.uid,
-                //         syscode: 'QJFX',
-                //         token: that.$store.state.token
-                //     }
-                // }).then(function (response) {
-                //     console.dir(response);
-                // }).catch(function (e) {
-                //    console.dir(e);
-                // });
+                that.$http({
+                    method: 'get',
+                    url: '/auth/userMenu',
+                    params: {
+                        type: that.$store.state.type,
+                        uid: that.$store.state.uid,
+                        syscode: that.$store.state.syscode,
+                        token: that.$store.state.token
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.menuData = response.result.userMenu;
+                    }
+                }).catch(function (e) {
+                   console.dir(e);
+                });
             },
             getMenuUrl(attr, menuId) {
                 var that = this;
