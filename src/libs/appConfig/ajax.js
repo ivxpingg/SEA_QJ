@@ -7,6 +7,7 @@ import axios from 'axios';
 import utils from '../utils';
 import Config from './config';
 import Cookie from '../helpers/cookies';
+import iView from 'iview';
 
 const ajaxUrl = window.location.origin + Config[Config.env].ajaxUrl;
 
@@ -58,12 +59,22 @@ var Ajax = axios.create({
 
 //ajax请求前拦截器
 Ajax.interceptors.request.use(function (config) {
+
+
+    if (config.iLoading) {
+        iView.Spin.show();
+    }
+
     return config;
 }, function (error) {
     return Promise.reject(error);
 });
 //ajax响应后拦截器
 Ajax.interceptors.response.use(function (response) {
+    if (response.config.iLoading) {
+        iView.Spin.hide();
+    }
+
     if (response.data.errCode === 'A0002') {
         Cookie.remove('uid');
         Cookie.remove('token');
@@ -84,6 +95,9 @@ Ajax.interceptors.response.use(function (response) {
 
     return response.data;
 }, function (error) {
+    if (error.config.iLoading) {
+        iView.Spin.hide();
+    }
     return Promise.reject(error);
 });
 

@@ -128,12 +128,12 @@
         </Modal>
 
         <Modal v-model="modal_pay_refund"
-               @onOk="onClick_refund"
+               @on-ok="onClick_refund"
                title="退款" >
             <div>
                 <Input type="textarea"
                        :rows="5"
-                       :model="refund_result"
+                       v-model="refund_result"
                        placeholder="请输入退款原因！" />
             </div>
 
@@ -761,6 +761,7 @@
                 that.$http({
                     method: 'get',
                     url: '/auth/getUserInfoById',
+                    iLoading: true,
                     params: {
                         type: that.$store.state.usertype,
                         uid: that.$store.state.uid,
@@ -784,6 +785,7 @@
                 that.$http({
                     method: 'get',
                     url: '/panoramic/serverOrder/detail',
+                    iLoading: true,
                     params: {
                         orderId: row.orderId
                     }
@@ -836,6 +838,7 @@
                         that.$http({
                             method: 'get',
                             url: '/panoramic/serverOrder/cancel',
+                            iLoading: true,
                             params: {
                                 orderId: row.orderId,
                             }
@@ -858,7 +861,7 @@
             // 购买订单表格接口 - 退款
             onclick_pay_refund(row) {
                 this.modal_pay_refund = true;
-                this.refund_orderNum = row.orderNum;
+                this.refund_orderNum = row.orderId;
             },
             // 购买订单表格接口 - 获取账号信息
             onclick_pay_getInfo(row) {
@@ -889,15 +892,17 @@
                     onOk() {
                         that.$http({
                             method: 'get',
-                            url: '/panoramic/serverOrder',
+                            url: '/panoramic/serverOrder/cancelRefund',
+                            iLoading: true,
                             params: {
-                                orderNum: row.orderNum,
+                                orderId: row.orderId,
                             }
                         }).then(function (response) {
                             if (response.status === 1) {
                                 that.$Message.success({
                                     content: '取消退款成功！'
                                 });
+                                that.getPayOrderData();
                             }
                             else {
                                 that.$Message.error({
@@ -917,23 +922,27 @@
             onClick_refund() {
                 var that = this;
 
-
                 // 接口未实现
 
                 that.$http({
                     method: 'post',
-                    url: '/panoramic/serverOrder',
+                    url: '/panoramic/serverOrder/applyRefund',
+                    iLoading: true,
                     params: {
-                        orderNum: that.refund_orderNum,
-                        result: that.refund_result
+                        orderId: that.refund_orderNum,
+                        refundReason: that.refund_result
                     }
                 }).then(function (response) {
                     if (response.status === 1) {
                         that.$Message.success({
                             content: '申请退款成功！'
                         });
+                        that.getPayOrderData();
                     }
                     else {
+                        that.$Message.error({
+                            content: '申请退款失败！'
+                        });
                     }
                 }).catch(function (e) {});
             },

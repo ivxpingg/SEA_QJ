@@ -267,6 +267,7 @@
              */
             getServeData() {
                 var that = this;
+
                 that.$http({
                     method: 'get',
                     url: '/panoramic/cloudServer/homePageServerList'

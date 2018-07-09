@@ -149,7 +149,7 @@
                 }
             },
             handleSuccess(res, file, fileList) {
-
+                this.$Spin.hide();
                 if (res.status === 1) {
                     file.url =  window.location.origin + Config[Config.env].imgUrl  + res.result.pictureUrl;
                     file.name = res.result.pictureName;
@@ -174,6 +174,7 @@
                 }
             },
             handleFormatError (file) {
+                this.$Spin.hide();
                 this.$Notice.warning({
                     title: '文件格式不正确',
                     desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg | jpeg | png | bmp | gif 格式的图片。'
@@ -186,6 +187,7 @@
                 });
             },
             handleBeforeUpload (file) {
+                this.$Spin.show();
                 const check = this.uploadList.length < this.maxCount;
                 if (!check) {
                     this.$Notice.warning({

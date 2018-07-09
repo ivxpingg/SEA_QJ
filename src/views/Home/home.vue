@@ -5,7 +5,7 @@
                  @parentIScroll="refreshIScroll"></vHeader>
         <div class="wrapper" id="wrapper">
             <div class="home-scroll">
-                <vHSwiper class="home-swiper iscrollP"></vHSwiper>
+                <vHSwiper class="home-swiper iscrollP" @parentIScroll="refreshIScroll"></vHSwiper>
                 <router-view class="iscrollP"></router-view>
                 <!--<vContent class="home-content"></vContent>-->
                 <vFooter class="home-footer iscrollP"></vFooter>
@@ -28,7 +28,6 @@
                 headerBg: false,
 
                 myScroll: null,
-
             };
         },
         components: {vHeader, vFooter, vContent, vHSwiper},

@@ -6,12 +6,12 @@
                     <div class="slide-panel slide-panel-1">
 
                         <div class="slide-info">
-                            <div class="title">行业数据开放!</div>
+                            <div class="title">行业数据免费申请!</div>
                             <div class="desc">
-                                XXX区水质数据 XXX区水质数据 XXX区水质数据
+                                对行业用户提供海洋数据综合服务
                             </div>
                             <div class="btn-panel">
-                                <Button>立即申请</Button>
+                                <Button @click="goto('industryData')">立即申请</Button>
                             </div>
                         </div>
 
@@ -25,9 +25,12 @@
 
                     <div class="slide-panel slide-panel-2">
                         <div class="slide-info">
-                            <div class="title">服务器开放免费申请通道!</div>
+                            <div class="title">服务器开放免费申请!</div>
+                            <div class="desc">
+                                为海洋装备投入测试的行业用户提供优质的服务器资源
+                            </div>
                             <div class="btn-panel">
-                                <Button>立即申请</Button>
+                                <Button @click="goto('cloudService')">立即申请</Button>
                             </div>
                         </div>
 
@@ -107,6 +110,14 @@
 
                 }).catch(function (e) {
                 })
+            },
+
+            // 跳转
+            goto(name) {
+                this.$router.push({
+                    name: name
+                });
+                this.$emit('parentIScroll', name);
             }
         }
     }

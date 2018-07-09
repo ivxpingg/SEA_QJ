@@ -564,6 +564,8 @@
                 var that = this;
                 that.$refs['add_dataResource_form'].validate((valid) => {
                     if(valid) {
+                        that.$Spin.show();
+
                         that.$http({
                             method: 'post',
                             url: '/panoramic/industryData/add',
@@ -572,6 +574,7 @@
                             },
                             data: JSON.stringify(that.add_dataResource_info)
                         }).then(function (response) {
+                            that.$Spin.hide();
                             if(response.status === 1) {
                                 that.$Message.success({content: '添加成功！'});
                                 that.modal_add_dataResource = false;
@@ -582,6 +585,7 @@
                             }
 
                         }).catch(function (e) {
+                            that.$Spin.hide();
                             that.$Message.error({content: '添加失败！'});
                             console.log(e);
                         });

@@ -8,6 +8,25 @@
                 <span>科研</span>
             </div>
 
+            <div class="search-bar">
+                <div class="handle-bar">
+
+                    <div class="hd">
+                        <div class="form-item">
+                            <!--<label class="label" for="userOrder_keyword"></label>-->
+                            <div class="value">
+                                <Input id="userOrder_keyword" v-model="searchParams.keyword" placeholder="输入关键字查询"></Input>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hd">
+                        <Button type="primary" @click="getData">查询</Button>
+                    </div>
+
+                </div>
+            </div>
+
             <div class="list-panel">
 
                 <div v-for="item in dataResourceList" class="item">
@@ -96,6 +115,7 @@
                     pageNo: 1, // 当前页
                     pageSize: 10, // 每页几行
                     count: 0,     // 总页数
+                    keyword: ''
                 },
                 dataResourceList: [],
 
@@ -145,6 +165,7 @@
              */
             getData() {
                 var that = this;
+                that.$Spin.show();
                 this.$http({
                     method: 'post',
                     url: '/panoramic/industryData/list',
@@ -153,6 +174,8 @@
                     },
                     data: JSON.stringify(this.searchParams)
                 }).then(function (response) {
+
+                    that.$Spin.hide();
                     if (response.status === 1) {
                         that.searchParams.count =  response.result.page.count;
                         that.dataResourceList = response.result.page.list;
@@ -160,6 +183,7 @@
                     else {
                     }
                 }).catch(function (e) {
+                    that.$Spin.hide();
                 })
             },
 
@@ -290,6 +314,38 @@
                     &:last-child {
                         &:after {
                             display: none;
+                        }
+                    }
+                }
+            }
+
+            .search-bar {
+                overflow: hidden;
+                .handle-bar {
+                    float: right;
+                    padding: 17px 11px 20px 11px;
+
+                    overflow: hidden;
+
+                    .hd {
+                        margin-right: 12px;
+                        float: left;
+
+                        .form-item {
+
+                            .label {
+                                text-align: right;
+                                vertical-align: middle;
+                                float: left;
+                                font-size: 12px;
+                                color: #495060;
+                                line-height: 1;
+                                padding: 10px 12px 10px 0;
+                                box-sizing: border-box;
+                            }
+                            .value {
+                                float: right;
+                            }
                         }
                     }
                 }

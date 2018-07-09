@@ -128,6 +128,7 @@
                     <FormItem label="证件信息" prop="">
                         <Upload :action="uploadUrl"
                                 :headers="headers"
+                                :before-upload="uploadHandleBeforeUpload"
                                 :on-error="uploadHandleError"
                                 :on-success="uploadHandleSuccess">
                             <Button type="ghost" icon="ios-cloud-upload-outline">上传证件信息</Button>
@@ -422,6 +423,11 @@
             },
 
             /**
+             * 上传服务器之前
+             */
+            uploadHandleBeforeUpload() { },
+
+            /**
              * 上传服务器成功返回
              */
             uploadHandleSuccess(res) {
@@ -442,6 +448,7 @@
 
             onClick_freeApply_ok() {
                 var that = this;
+                that.$Spin.show();
                 that.$http({
                     method: 'post',
                     url: '/panoramic/serverOrder/applyCloudServer',
@@ -463,6 +470,7 @@
 
                     })
                 }).then(function (response) {
+                    that.$Spin.hide();
                     if (response.status === 1) {
                         that.modal_freeApply = false;
                         that.$Message.success({
@@ -475,7 +483,7 @@
                         });
                     }
                 }).catch(function (e) {
-
+                    that.$Spin.show();
                 });
             }
         }
@@ -499,7 +507,7 @@
             .box-panel {
                 margin-bottom: 12px;
                 padding: 20px 32px 30px;
-                border: 2px solid #f5f5f5;
+                border: 2px solid #e7e7e7;
 
                 .title {
                     color: #1a1a1a;
@@ -518,7 +526,7 @@
                         color: #FFF;
                         font-size: 18px;
                         line-height: 20px;
-                        border: 1px solid #f7f7f7;
+                        border: 1px solid #e7e7e7;
                         background-color: #00c0dd;
                     }
                 }
@@ -531,7 +539,7 @@
                         padding: 0 0 20px 0;
                         float: left;
                         width: 304px;
-                        border: 1px solid #f7f7f7;
+                        border: 1px solid #e7e7e7;
                         cursor: pointer;
 
 
@@ -565,7 +573,7 @@
                         .type-desc {
                             margin-top: 18px;
                             color: #666666;
-                            font-size: 18px;
+                            font-size: 15px;
                             line-height: 26px;
                             text-align: center;
                         }
