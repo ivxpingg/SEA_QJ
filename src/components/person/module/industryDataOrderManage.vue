@@ -37,24 +37,7 @@
         </div>
 
 
-        <!--免费的服务器信息弹窗-->
-        <Modal v-model="modal_freeApply_info"
-               title="数据获取">
 
-            <div>
-                <Form :label-width="100">
-                    <FormItem label="数据接口信息:">
-                        <Input type="text"
-                               v-model="table_freeApply_info.address"
-                               readonly />
-                    </FormItem>
-                    <FormItem label="数据文档下载:">
-                        <Button>下载</Button>
-                    </FormItem>
-                </Form>
-            </div>
-
-        </Modal>
 
 
         <Modal v-model="modal_freeApply_result"
@@ -146,19 +129,7 @@
                                     break;
 
                                 case 'AuditSucc':  // 审核成功
-                                    button = h('Button', {
-                                        props: {
-                                            type: 'text'
-                                        },
-                                        style: {
-                                            textDecoration: 'underline'
-                                        },
-                                        on: {
-                                            click() {
-                                                that.onClick_freeApply_getAccount(params.row);
-                                            }
-                                        }
-                                    }, '获取');
+                                    return '';
                                     break;
 
                                 case 'TurnDown':  // 已驳回
@@ -189,11 +160,6 @@
                     }],
                 tableData: [],
 
-                // 免费申请 - 数据下载信息
-                modal_freeApply_info: false,
-                table_freeApply_info: {
-                    address: ''
-                },
 
                 //免费申请- 查看原因
                 modal_freeApply_result: false,
@@ -278,7 +244,7 @@
                     onOk() {
                         that.$http({
                             method: 'get',
-                            url: '/panoramic/serverOrder/',
+                            url: '/panoramic/dataOrder/cancel',
                             params: {
                                 orderId: row.orderId,
                             }
@@ -287,6 +253,7 @@
                                 that.$Message.success({
                                     content: '取消成功！'
                                 });
+                                that.getTableData();
                             }
                             else {
                                 that.$Message.error({
@@ -297,26 +264,7 @@
                     }
                 });
             },
-            // 免费申请订单-表格-获取
-            onClick_freeApply_getAccount(row) {
-                var that = this;
-                this.modal_freeApply_info = true;
-                alert('接口还没实现！');
 
-                that.$http({
-                    method: 'get',
-                    url: '/panoramic/dataOrder/getIndustryData',
-                    params: {
-                        orderId: row.orderId
-                    }
-                }).then(function (response) {
-                    if (response.status === 1) {
-                       // that.table_freeApply_data_account = response.result || [];
-                    }
-                    else {
-                    }
-                }).catch(function (e) {})
-            },
             // 免费申请订单-表格-查看原因
             onClick_freeApply_lookResult(row) {
                 var that = this;

@@ -14,10 +14,9 @@
 
                 <div class="hd">
                     <div class="form-item">
-                        <label class="label" for="userOrder_date">时间</label>
+                        <label class="label">时间</label>
                         <div class="value">
-                            <DatePicker element-id="userOrder_date"
-                                        :value="datePicker_default"
+                            <DatePicker :value="datePicker_default"
                                         :clearable="false"
                                         transfer
                                         format="yyyy-MM-dd"
@@ -172,7 +171,7 @@
                         align: 'center'
                     },{
                         title: '状态',
-                        key: 'workOrderStatus',
+                        key: 'workOrderStatusStr',
                         align: 'center'
                     },{
                         title: '操作',
@@ -180,10 +179,10 @@
                         render(h, params) {
                             var text = '';
                             switch (params.row.workOrderStatus) {
-                                case '待处理': text = '接受处理'; break;
-                                case '处理中': text =  '完成结单'; break;
-                                case '已结单': text = '详情'; break;
-                                case '已取消': text = '详情'; break;
+                                case 'WaitHandle': text = '接受处理'; break;
+                                case 'InHandle': text =  '完成结单'; break;
+                                case 'Finish': text = '详情'; break;
+                                case 'Cancel': text = '详情'; break;
                             }
 
                             return h('Button', {
@@ -196,10 +195,13 @@
                                 on: {
                                     click() {
                                         switch (params.row.workOrderStatus) {
-                                            case '待处理': that.onClick_accept(params.row); break;
-                                            case '处理中': that.onClick_finish(params.row); break;
-                                            case '已结单': that.getWorkOrderDetail(params.row); break;
-                                            case '已取消': that.getWorkOrderDetail(params.row); break;
+                                            case 'WaitHandle': that.onClick_accept(params.row); break;
+                                            case 'InHandle':
+                                                that.modal_finish = true;
+                                                that.workOrderFinish.workOrderId = params.row.workOrderId;
+                                                break;
+                                            case 'Finish': that.getWorkOrderDetail(params.row); break;
+                                            case 'Cancel': that.getWorkOrderDetail(params.row); break;
                                         }
                                     }
                                 }
@@ -216,7 +218,8 @@
                 modal_finish: false,
                 workOrderFinish: {
                     workOrderId: '',
-                    handleResult: ''
+                    handleResult: '',
+                    account: ''
                 },
 
                 // 查看工单详情
@@ -246,6 +249,7 @@
         mounted() {
             this.getDict();
             this.getTableData();
+            this.getUserInfo();
         },
         methods: {
             getDict() {
@@ -283,6 +287,27 @@
              */
             onPageNo_change(pageNo) {
                 this.searchParams.pageNo = pageNo;
+            },
+
+            getUserInfo() {
+
+                var that = this;
+                that.$http({
+                    method: 'get',
+                    url: '/auth/getUserInfoById',
+                    params: {
+                        token: that.$store.state.token,
+                        uid: that.$store.state.uid,
+                        type: that.$store.state.type
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.workOrderFinish.account = response.result.account || '';
+                    }
+                    else {}
+                }).catch(function (e) {
+
+                });
             },
             /**
              * 获取表格数据
@@ -325,32 +350,42 @@
             // 接受处理工单
             onClick_accept(row) {
                 var that = this;
-                that.$http({
-                    method: 'get',
-                    url: '/panoramic/workOrder/receiveHandle',
-                    params: {
-                        workOrderIds: row.workOrderId
-                    }
-                }).then(function (response) {
-                    if (response.status === 1) {
-                        console.dir(response.result);
-                    }
-                    else {}
-                }).catch(function (e) {
 
-                });
+                that.$Modal.confirm({
+                    title: '提示',
+                    content: '确定要接受处理《'+ row.workOrderNum +'》工单?',
+                    onOk() {
+                        that.$http({
+                            method: 'get',
+                            url: '/panoramic/workOrder/receiveHandle',
+                            params: {
+                                workOrderIds: row.workOrderId
+                            }
+                        }).then(function (response) {
+                            if (response.status === 1) {
+
+                                that.getTableData();
+                            }
+                            else {}
+                        }).catch(function (e) {
+
+                        });
+                    }
+                })
+
             },
 
             // 结单
-            onClick_finish(row) {
+            onClick_finish() {
                 var that = this;
+
                 that.$http({
                     method: 'post',
                     url: '/panoramic/workOrder/completeHandle',
                     data: {
-                        workOrderId: '',
-                        userId: '',
-                        handleResult: ''
+                        workOrderId: that.workOrderFinish.workOrderId,
+                        finishAccount: that.workOrderFinish.account,
+                        handleResult: that.workOrderFinish.handleResult
                     }
                 }).then(function (response) {
                     if(response.status === 1) {
@@ -366,7 +401,7 @@
                         });
                     }
                 }).catch(function (e) {
-                   console.log(JOSN.stringify(e));
+
                 });
             },
 

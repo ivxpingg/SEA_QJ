@@ -247,6 +247,15 @@ export default [
             title: '厦门观测装备全景试验分析'
         },
         component: (resolve) => require(['../../views/Login/login.vue'], resolve)
+    },
+    {
+        path: '/manageLog',
+        name: 'manageLog',
+        meta: {
+            requireAuth: false,
+            title: '日志'
+        },
+        component: (resolve) => require(['../../views/Log/Log.vue'], resolve)
     }
 
 ];

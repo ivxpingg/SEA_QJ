@@ -62,7 +62,8 @@
 
         <div class="goback"
              @click="onClick_goback"
-             :class="{'show': showPanel}">
+             :class="{'show': showPanel}"
+             v-if="showPanel">
             <Icon type="chevron-left"></Icon>返回
         </div>
 
@@ -434,6 +435,9 @@
                     ],
                     position: [
                         { required: true, message: '位置名称不能为空', trigger: 'blur'}
+                    ],
+                    observationContent: [
+                        { required: true, message: '观测内容不能为空', trigger: 'blur'}
                     ]
                 },
 

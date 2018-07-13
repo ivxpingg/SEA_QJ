@@ -2,23 +2,23 @@
     <div class="orderInfo-container">
         <div class="merchant-info-wrapper">
             <div class="merchant-info">
-                <p><span class="title">购买商品：</span><span>苹果</span></p>
-                <p><span class="title">订单号：</span><span title="YOP-API_TRADEORDER1530005902107">YOP-API_TRADEORDER1530005902107</span></p>
+                <p><span class="title">购买商品：</span><span>{{productName}}</span></p>
+                <p><span class="title">订单号：</span><span :title="orderNum">{{orderNum}}</span></p>
             </div>
-            <input type="checkbox" id="order-details-handler">
+            <!--<input type="checkbox" id="order-details-handler">-->
             <div class="merchant-info details">
-                <p><span class="title">收款商家：</span><span>薛崑</span></p>
-                <p><span class="title">交易时间：</span><span>2018-06-26 17:38:22</span></p>
+                <!--<p><span class="title">收款商家：</span><span></span></p>-->
+                <p><span class="title">交易时间：</span><span>{{insTime}}</span></p>
             </div>
 
-            <label for="order-details-handler">
-                <span class="order-details-trigger icon"><i class="br-hack">详情</i></span>
-            </label>
+            <!--<label for="order-details-handler">-->
+                <!--<span class="order-details-trigger icon"><i class="br-hack">详情</i></span>-->
+            <!--</label>-->
         </div>
 
         <div class="amount">
             <span class="title">订单总额：</span>
-            <span class="money" title="0.10">0.10</span>元
+            <span class="money" :title="totalPrice">{{totalPrice}}</span>元
         </div>
     </div>
 </template>
@@ -28,7 +28,12 @@
         name: "orderInfo",
         data() {
             return {
-                orderId: ''
+                orderId: '',
+
+                orderNum: '',
+                productName: '',
+                totalPrice: '0.00',
+                insTime: ''
             };
         },
         created() {
@@ -42,13 +47,17 @@
                 var that = this;
                 that.$http({
                     method: 'get',
-                    url: '/panoramic/serverOrder/detail',
+                    url: '/panoramic/serverOrder/pay',
                     params: {
                         orderId: that.orderId
                     }
                 }).then(function (response) {
 
                     if (response.status === 1) {
+                        that.orderNum = response.result.orderNum || '';
+                        that.productName = response.result.serverName || '';
+                        that.totalPrice = response.result.totalPrice || '0.00';
+                        that.insTime = response.result.insTime || '';
                     }
                     else {
                         that.$Message.error({
@@ -85,7 +94,7 @@
 
             .merchant-info.details {
                 margin-top: 10px;
-                opacity: 0;
+                // opacity: 0;
                 transition: opacity .5s;
             }
 

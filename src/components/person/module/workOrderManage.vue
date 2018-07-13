@@ -116,7 +116,7 @@
                     align: 'center'
                 },{
                     title: '状态',
-                    key: 'workOrderStatus',
+                    key: 'workOrderStatusStr',
                     align: 'center'
                 },{
                     title: '操作',
@@ -124,10 +124,10 @@
                     render(h, params) {
                         var text = '';
                         switch (params.row.workOrderStatus) {
-                            case '待处理': text = '取消工单'; break;
-                            case '处理中': text =  '取消工单'; break;
-                            case '已结单': text = '查看结果'; break;
-                            case '已取消': text = '重新开单'; break;
+                            case 'WaitHandle': text = '取消工单'; break;
+                            case 'InHandle': text =  '取消工单'; break;
+                            case 'Finish': text = '查看结果'; break;
+                            case 'Cancel': text = '重新开单'; break;
                         }
 
                         return h('Button', {
@@ -140,10 +140,10 @@
                             on: {
                                 click() {
                                     switch (params.row.workOrderStatus) {
-                                        case '待处理': that.onClick_cancelWorkOrder(params.row); break;
-                                        case '处理中': that.onClick_cancelWorkOrder(params.row); break;
-                                        case '已结单': that.onClick_viewDetail(params.row); break;
-                                        case '已取消': that.onClick_reOrder(params.row); break;
+                                        case 'WaitHandle': that.onClick_cancelWorkOrder(params.row); break;
+                                        case 'InHandle': that.onClick_cancelWorkOrder(params.row); break;
+                                        case 'Finish': that.onClick_viewDetail(params.row); break;
+                                        case 'Cancel': that.onClick_reOrder(params.row); break;
                                     }
                                 }
                             }

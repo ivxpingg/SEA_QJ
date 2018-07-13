@@ -17,6 +17,8 @@ function setContentTypeIfUnset(headers, value) {
     }
 }
 
+axios.defaults.withCredentials=true;
+
 var Ajax = axios.create({
     baseURL: ajaxUrl,
     timeout: 30000,
@@ -57,9 +59,9 @@ var Ajax = axios.create({
     }]
 });
 
+
 //ajax请求前拦截器
 Ajax.interceptors.request.use(function (config) {
-
 
     if (config.iLoading) {
         iView.Spin.show();
@@ -75,12 +77,29 @@ Ajax.interceptors.response.use(function (response) {
         iView.Spin.hide();
     }
 
+
     if (response.data.errCode === 'A0002') {
         Cookie.remove('uid');
         Cookie.remove('token');
         Cookie.remove('usertype');
         Cookie.remove('type');
         Cookie.remove('syscode');
+
+        iView.Modal.info({
+            title: '提示',
+            content: '会话过期请重新登陆！',
+            okText: '登陆',
+            onOk() {
+
+                if (window.location.href.indexOf('/manage/') > 0 || window.location.href.indexOf('/manageLog') > 0) {
+                    window.location.href = 'http://218.5.80.6:8091/OCEANAM/logout';
+                }
+                else {
+                    var url = "http://218.5.80.6:8070/OCEAN/api/login?url=" + window.location.href.replace('#', '\%23');
+                    window.location.href = url;
+                }
+            }
+        });
     }
 
     // if(response.data.errCode === "A0002") {

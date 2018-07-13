@@ -5,15 +5,15 @@
             <div class="title">账户信息</div>
             <div class="content-box">
                 <div class="item">
-                    <span>管理人：</span>
+                    <span>账号：</span>
                     <span>{{personInfo.account}}</span>
                     <span class="edit" @click="onClick_edit_userInfo"><Icon type="edit"></Icon></span>
                     <!--<span class="edit"><Icon type="edit"></Icon></span>-->
                 </div>
-                <div class="item">
-                    <span>账号ID：</span>
-                    <span></span>
-                </div>
+                <!--<div class="item">-->
+                    <!--<span>账号ID：</span>-->
+                    <!--<span>{{}}</span>-->
+                <!--</div>-->
                 <div class="item">
                     <span>所属单位：</span>
                     <span>{{personInfo.enterName}}</span>
@@ -24,11 +24,11 @@
         <div class="info-box">
             <div class="title">安全设置</div>
             <div class="content-box">
-                <div class="item">
-                    <span>密码设置：</span>
-                    <span>********</span>
-                    <span class="edit"></span>
-                </div>
+                <!--<div class="item">-->
+                    <!--<span>密码设置：</span>-->
+                    <!--<span>********</span>-->
+                    <!--<span class="edit"></span>-->
+                <!--</div>-->
                 <div class="item">
                     <span>绑定手机：</span>
                     <span>{{topThreeNum}}*****{{lastThreeNum}}</span>
@@ -125,14 +125,14 @@
                       :rules="userInfo_rules"
                       :label-width="80">
                     <FormItem label="用户名" prop="account">
-                        <Input v-model="editUserInfo.account" readonly type="text" placeholder="请输入用户名" />
+                        <Input v-model="editUserInfo.account" disabled readonly type="text" placeholder="请输入用户名" />
                     </FormItem>
                     <FormItem label="真实姓名" prop="name">
                         <Input v-model="editUserInfo.name" type="text" placeholder="请输入真实姓名" />
                     </FormItem>
-                    <FormItem label="联系电话" prop="mobile">
-                        <Input  v-model="editUserInfo.mobile" type="text" placeholder="请输入联系电话" />
-                    </FormItem>
+                    <!--<FormItem label="联系电话" prop="mobile">-->
+                        <!--<Input  v-model="editUserInfo.mobile" type="text" placeholder="请输入联系电话" />-->
+                    <!--</FormItem>-->
                     <FormItem label="单位名称" prop="enterName">
                         <Input  v-model="editUserInfo.enterName" type="text" placeholder="请输入单位名称" />
                     </FormItem>
@@ -218,9 +218,9 @@
                     name: [
                         { required: true, message: '真实姓名不能为空', trigger: 'blur'}
                     ],
-                    mobile: [
-                        { required: true, message: '联系电话不能为空', trigger: 'blur'}
-                    ],
+                    // mobile: [
+                    //     { required: true, message: '联系电话不能为空', trigger: 'blur'}
+                    // ],
                     enterName: [
                         { required: true, message: '单位名称不能为空', trigger: 'blur'}
                     ],
@@ -344,37 +344,40 @@
             onClick_getMobileCode() {
                 var that = this;
 
-                this.$refs.detail_form_mobile.validate((valid) => {
-                    if (valid) {
-
-                        that.mloading = true;
-                        that.$http({
-                            method: 'get',
-                            url: '/auth/sendCode',
-                            params: {
-                                mobile: that.updateMobile.mobile
-                            }
-                        }).then(function(response) {
-                            that.mloading = false;
-                            if(response.status === 1) {
-                                that.countDown_times();
-                            }
-                            else {
-                                that.$Message.error({
-                                    content: '验证码获取失败！'
-                                });
-                            }
-
-                        }).catch(function (e) {
-                            that.$Message.error({
-                                content: '验证码获取失败！'
-                            });
-                            that.mloading = false;
-                        })
+                that.mloading = true;
+                that.$http({
+                    method: 'get',
+                    url: '/auth/sendCode',
+                    params: {
+                        mobile: that.updateMobile.mobile
+                    }
+                }).then(function(response) {
+                    that.mloading = false;
+                    if(response.status === 1) {
+                        that.countDown_times();
                     }
                     else {
+                        that.$Message.error({
+                            content: '验证码获取失败！'
+                        });
+                        that.getPersonInfo();
                     }
-                });
+
+                }).catch(function (e) {
+                    that.$Message.error({
+                        content: '验证码获取失败！'
+                    });
+                    that.mloading = false;
+                })
+
+                // this.$refs.detail_form_mobile.validate((valid) => {
+                //     if (valid) {
+                //
+                //
+                //     }
+                //     else {
+                //     }
+                // });
 
             },
             // 获取验证码后按钮倒计时
@@ -413,7 +416,7 @@
                                 that.$Message.success({
                                     content: '修改成功!'
                                 });
-                                that.model_mobile_edit = true;
+                                that.model_mobile_edit = false;
                                 that.getPersonInfo();
                             }
                             else {

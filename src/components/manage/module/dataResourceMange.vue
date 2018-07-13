@@ -397,8 +397,50 @@
                     }
                 ],
                 // 水质
-                tableColumns_detail_water: [],
-                tableData_detail: [],
+                tableColumns_detail_water: [
+                    { title: '采集时间', key: 'collectionTime', align: 'center', width: 200, fixed: "left" },
+                    { title: '供电电压', key: 'battVolt', align: 'center', width: 120 },
+                    { title: 'tempEnc', key: '电子仓的温度', align: 'center', width: 120 },
+                    { title: '电子仓湿度', key: 'rhEnc', align: 'center', width: 120 },
+                    { title: '纬度时', key: 'latDeg', align: 'center', width: 120 },
+                    { title: '纬度分', key: 'longDeg', align: 'center',  width: 120 },
+                    { title: '经度分', key: 'longMin', align: 'center',  width: 120 },
+                    { title: '北斗经度时', key: 'bdLongDeg', align: 'center',  width: 120 },
+                    { title: '北斗经度分', key: 'bdLongMin', align: 'center',  width: 120 },
+                    { title: '北斗经度秒', key: 'bdLongSec', align: 'center',  width: 120 },
+                    { title: '北斗经度保留字段', key: 'bdLongSec1', align: 'center',  width: 120 },
+                    { title: '北斗纬度时', key: 'bdLatDeg', align: 'center',  width: 120 },
+                    { title: '北斗纬度分', key: 'bdLatMin', align: 'center',  width: 120 },
+                    { title: '北斗纬度秒', key: 'bdLatSec', align: 'center',  width: 120 },
+                    { title: '北斗纬度保留字段', key: 'bdLatSec1', align: 'center',  width: 120 },
+                    { title: '北斗精度', key: 'bdAccuracy', align: 'center',  width: 120 },
+                    { title: '温度', key: 'tempC', align: 'center',  width: 120 },
+                    { title: '相对电导', key: 'spCond', align: 'center',  width: 120 },
+                    { title: '电导', key: 'cond', align: 'center',  width: 120 },
+                    { title: '盐度', key: 'sal', align: 'center',  width: 120 },
+                    { title: 'TDS', key: 'tds', align: 'center',  width: 120 },
+                    { title: 'pH', key: 'ph', align: 'center',  width: 120 },
+                    { title: 'PH_mV', key: 'phMv', align: 'center',  width: 120 },
+                    { title: '溶解氧_百分比', key: 'doPer', align: 'center',  width: 120 },
+                    { title: '溶解氧', key: 'doPpm', align: 'center',  width: 120 },
+                    { title: '浊度', key: 'turbNtu', align: 'center',  width: 120 },
+                    { title: '叶绿素', key: 'chlPpb', align: 'center',  width: 120 },
+                    { title: '叶绿素Chl_RFU', key: 'chlRfu', align: 'center',  width: 120 },
+                    { title: '蓝绿藻', key: 'bgaPePpb', align: 'center',  width: 120 },
+                    { title: 'BGA_PE_RFU', key: 'bgaPeRfu', align: 'center',  width: 120 },
+                    { title: '磷酸盐', key: 'po4', align: 'center',  width: 120 },
+                    { title: '氨氮', key: 'nh3', align: 'center',  width: 120 },
+                    { title: '亚硝酸盐', key: 'no2', align: 'center',  width: 120 },
+                    { title: '硝酸盐', key: 'no3', align: 'center',  width: 120 },
+                    { title: '电子仓内温度', key: 'npaTemp', align: 'center',  width: 120 },
+                    { title: '电子仓内湿度', key: 'npaHumid', align: 'center',  width: 120 },
+                    { title: '气压', key: 'airPressure', align: 'center',  width: 120 },
+                    { title: '气温', key: 'airTemp', align: 'center',  width: 120 },
+                    { title: '湿度', key: 'humidness', align: 'center',  width: 120 },
+                    { title: '风速', key: 'windSpeed', align: 'center',  width: 120 },
+                    { title: '风向', key: 'windDir', align: 'center',  width: 120 }
+                ],
+                tableData_detail: [ ],
                 ajaxData_detail: [],
 
 
@@ -409,44 +451,6 @@
             'searchParams.pageNo': {
                 handler(val) {
                     this.getTableData();
-                }
-            },
-            ajaxData_detail: {
-                deep: true,
-                handler(val) {
-                    var that = this;
-                    that.tableColumns_detail_water = [];
-                    var keyList = [];
-
-                    val.forEach(function (v, idx) {
-                        for(var key in v) {
-                            if (keyList.indexOf(key) < 0) {
-
-                                keyList.push(key);
-                                if (key === 'collectionTime') {
-                                    that.tableColumns_detail_water.push({
-                                        title: '时间',
-                                        key: key,
-                                        width: 160,
-                                        fixed: "left",
-                                        align: 'center'
-                                    });
-                                }
-                                else {
-                                    that.tableColumns_detail_water.push({
-                                        title: key.replace(/'/g, ''),
-                                        key: key,
-                                        width: 120,
-                                        align: 'center'
-                                    });
-
-                                }
-
-                            }
-
-                        }
-                    })
-
                 }
             }
         },
@@ -569,6 +573,7 @@
                         that.$http({
                             method: 'post',
                             url: '/panoramic/industryData/add',
+                           // timeout: 5 * 60 * 1000,
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8'
                             },

@@ -99,12 +99,10 @@
             },
 
             onmousemove_person() {
-                console.log('over');
                 this.active_person = true;
             },
 
             onmouseleave_person() {
-                console.log('leave');
                 this.active_person = false;
             },
             onGotoHome() {

@@ -32,7 +32,7 @@
                     <div class="qr-img"></div>
                 </div>
             </div>
-            <div class="cop">Copyright@-2018版权归属haiyang</div>
+            <div class="cop">{{cop.copyrightYear}} {{cop.productName}} 版本:{{cop.version}}</div>
         </div>
     </div>
 </template>
@@ -41,7 +41,34 @@
     export default {
         name: "h-footer",
         data() {
-            return {};
+            return {
+                cop: {
+                    productName: '',
+                    copyrightYear: '',
+                    version: ''
+                }
+            };
+        },
+        mounted() {
+            this.getData();
+        },
+        methods: {
+            getData() {
+                var that = this;
+
+                that.$http({
+                    method: 'get',
+                    url: '/sys/projectInfo/getRrecordInfo',
+                    params: {}
+                }).then(function (response) {
+                    if(response.status === 1) {
+                        that.cop.productName = response.result.productName;
+                        that.cop.copyrightYear = response.result.copyrightYear;
+                        that.cop.version = response.result.version;
+
+                    }
+                })
+            }
         }
     }
 </script>

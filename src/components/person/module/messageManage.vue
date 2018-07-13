@@ -36,9 +36,12 @@
                     {
                         title: '消息内容',
                         key: 'noticeContent',
-                        align: 'center',
+                        align: 'left',
                         render (h, params) {
                             return h('div', {
+                                style: {
+                                    paddingLeft: '15px'
+                                },
                                 class: params.row.noticeStatus === 'unRead'? 'unread-message': ''
                             }, params.row.noticeContent)
                         }

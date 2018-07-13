@@ -158,7 +158,7 @@
 
         <!--驳回原因-->
         <Modal v-model="modal_freeApply_reject"
-               @onOk="onClick_reject"
+               @on-ok="onClick_reject"
                ok-text="驳回"
                title="驳回原因" >
             <div>
@@ -223,6 +223,7 @@
 
                 <div class="other-title">账号信息</div>
                 <Table border
+                       :height="200"
                        :columns="table_accound_columns"
                        :data="table_freeApply_data_detail.orderServerAccount"></Table>
 
@@ -250,7 +251,7 @@
                     pageNo: 1, // 当前页
                     pageSize: 10, // 每页几行
                     count: 0,     // 总页数
-                    startDate: '',
+                    beginDate: '',
                     endDate: '',
                     timeInterval: '',
                     keyword: '',
@@ -507,7 +508,7 @@
                     pageNo: 1, // 当前页
                     pageSize: 10, // 每页几行
                     count: 0,     // 总页数
-                    startDate: '',
+                    beginDate: '',
                     endDate: '',
                     timeInterval: '',
                     keyword: '',
@@ -627,31 +628,37 @@
                                     break;
 
                                 case 'AuditSucc':  // 审核成功
-                                    button1 = h('Button', {
-                                        props: {
-                                            type: 'text'
-                                        },
-                                        style: {
-                                            textDecoration: 'underline'
-                                        },
-                                        on: {
-                                            click() {
-                                                that.modal_freeApply_provideAccount = true;
-                                                that.provideAccound_orderId = params.row.orderId;
-                                                that.provideAccound_cloudServerId = params.row.cloudServerId;
 
-                                                that.cloudServerAccountList = [];
-                                               for(var i = 0; i < params.row.serverNumber; i++) {
-                                                   that.cloudServerAccountList.push({
-                                                       remoteAddress: '',
-                                                       account: '',
-                                                       password: ''
-                                                   });
-                                               }
+                                    if(params.row.accountNumber >= params.row.serverNumber) {
+
+                                    }
+                                    else {
+                                        button1 = h('Button', {
+                                            props: {
+                                                type: 'text'
+                                            },
+                                            style: {
+                                                textDecoration: 'underline'
+                                            },
+                                            on: {
+                                                click() {
+                                                    that.modal_freeApply_provideAccount = true;
+                                                    that.provideAccound_orderId = params.row.orderId;
+                                                    that.provideAccound_cloudServerId = params.row.cloudServerId;
+
+                                                    that.cloudServerAccountList = [];
+                                                    for (var i = 0; i < (params.row.serverNumber - params.row.accountNumber); i++) {
+                                                        that.cloudServerAccountList.push({
+                                                            remoteAddress: '',
+                                                            account: '',
+                                                            password: ''
+                                                        });
+                                                    }
+                                                }
                                             }
-                                        }
-                                    }, '发放账号');
-                                    array_list.push(button1);
+                                        }, '发放账号');
+                                        array_list.push(button1);
+                                    }
                                     break;
 
                                 case 'TurnDown':  // 已驳回
@@ -823,16 +830,16 @@
              * 已付订单时间选择
              */
             datePicker_onChange_paid(val) {
-                this.searchParams_paid.startTime = val[0];
-                this.searchParams_paid.endTime = val[1];
+                this.searchParams_paid.beginDate = val[0];
+                this.searchParams_paid.endDate = val[1];
                 this.searchParams_paid.timeInterval = '';
             },
             /**
              * 申请订单时间选择
              */
             datePicker_onChange_apply(val) {
-                this.searchParams_apply.startTime = val[0];
-                this.searchParams_apply.endTime = val[1];
+                this.searchParams_apply.beginDate = val[0];
+                this.searchParams_apply.endDate = val[1];
                 this.searchParams_apply.timeInterval = '';
             },
             /**
@@ -1007,6 +1014,7 @@
                         that.$Message.success({
                             content: '添加备注成功！'
                         });
+                        that.getPayOrderData();
                     }
                     else {
                         that.$Message.error({
@@ -1020,6 +1028,7 @@
 
             // 驳回
             onClick_reject() {
+
                 var that = this;
                 that.$http({
                     method: 'get',
@@ -1034,6 +1043,8 @@
                         that.$Message.success({
                             content: '驳回成功！'
                         });
+
+                        that.getApplyOrderData();
                     }
                     else {
                         that.$Message.error({
@@ -1080,6 +1091,7 @@
                 that.$http({
                     method: 'post',
                     url: '/panoramic/serverOrder/distributionServerAccount',
+                    mloading: true,
                     headers: {
                         'Content-Type': 'application/json;charset=utf-8',
                         orderId: that.provideAccound_orderId,
@@ -1092,6 +1104,7 @@
                         that.$Message.success({
                             content: '账号发放成功！'
                         });
+                        that.getApplyOrderData();
                     }
                     else {
                         that.$Modal.error({

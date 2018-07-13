@@ -72,6 +72,7 @@ const routerConfig = function () {
             });
         }
         else if (to.meta.requireAuth && Cookie.read('token') == null) {
+
             if (to.path.indexOf('/manage') === 0  &&  Cookie.read('syscode') != null) {
                 next();
             }
