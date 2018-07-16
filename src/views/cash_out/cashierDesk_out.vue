@@ -1,21 +1,15 @@
 <template>
-    <div class="cashierDesk-container">
+    <div class="cashierDesk-out-container">
         <vHeader></vHeader>
         <div class="container clearfix">
-            <vOrderInfo class="clearfix"
-                        :orderId="orderId"
-                        :orderNum="orderNum"
-                        :totalPrice="totalPrice"
-                        :insTime="insTime"
-                        :goodsName="goodsName"
-                        :isQj="isQj"></vOrderInfo>
+            <vOrderInfo class="clearfix"></vOrderInfo>
 
             <div class="col-box">
                 <div class="col col-left">
-                    <vBankPay :orderId="orderId"></vBankPay>
+                    <vBankPay></vBankPay>
                 </div>
                 <div class="col col-right">
-                    <vQrcodePay :orderId="orderId"></vQrcodePay>
+                    <vQrcodePay></vQrcodePay>
                 </div>
             </div>
         </div>
@@ -28,37 +22,18 @@
     import vBankPay from '../../components/payment/module/bankPay';
     import vQrcodePay from '../../components/payment/module/qrcodePay';
     export default {
-        name: "cashierDesk",
+        name: "cashierDesk_out",
         data() {
             return {
-                orderId: '',
-                orderNum: '',
-                totalPrice: 0,
-                insTime: '',
-                goodsName: '',
-
-                // 是否是海洋全景分析系统收银台或者其它 true: 是, false: 其它
-                isQj: true
 
             };
-        },
-        created() {
-            this.orderId = this.$route.query.orderId || '';
-            this.orderNum = this.$route.query.orderNum || '';
-            this.totalPrice = this.$route.query.totalPrice || '';
-            this.insTime = this.$route.query.insTime || '';
-            this.goodsName = this.$route.query.goodsName || '';
-
-            if (this.orderNum === '' && this.totalPrice === '' && this.insTime === '' && this.goodsName === '') {
-                this.isQj = false;
-            }
         },
         components: {vHeader, vOrderInfo, vBankPay, vQrcodePay}
     }
 </script>
 
 <style lang="scss" scoped>
-    .cashierDesk-container {
+    .cashierDesk-out-container {
         min-height: calc(100% - 100px);
         background-color: #e4e4e4;
         font-size: 14px;

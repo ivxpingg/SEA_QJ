@@ -65,7 +65,10 @@
             </div>
         </Modal>
 
-        <Modal v-model="modal_detail_invoiceApply" title="发票详情信息">
+        <Modal v-model="modal_detail_invoiceApply"
+               :class="{'modal-invoice-se': modal_detail_invoiceApply}"
+
+               title="发票详情信息">
             <div class="add-invoice">
                 <Form v-model="detail_invoiceApply" class="detail-form"  :label-width="100">
                     <FormItem label="开票金额:"> {{detail_invoiceApply.invoiceMoney}}</FormItem>
@@ -80,6 +83,10 @@
                     <FormItem label="邮编:">{{detail_invoiceApply.zipCode}}</FormItem>
                     <FormItem label="手机号码:">{{detail_invoiceApply.phone}}</FormItem>
                 </Form>
+            </div>
+
+            <div slot="footer" >
+                <Button v-if="modal_detail_invoiceApply_print" @click="onClick_print">打印</Button>
             </div>
 
         </Modal>
@@ -192,6 +199,7 @@
                 },
 
                 // 查看发票申请详情
+                modal_detail_invoiceApply_print: true,  // 打印
                 modal_detail_invoiceApply: false,
                 detail_invoiceApply: {
                     invoiceMoney: '',
@@ -385,11 +393,21 @@
                         that.detail_invoiceApply.phone = response.result.phone;
 
                         that.modal_detail_invoiceApply = true;
+                        that.modal_detail_invoiceApply_print = true;
                     }
                     
                 }).catch(function (e) {
                     console.dir(e);
                 });
+            },
+
+            onClick_print() {
+                var that = this;
+                this.modal_detail_invoiceApply_print = false;
+                setTimeout(function () {
+                    window.print();
+                    that.modal_detail_invoiceApply = false;
+                },0)
             }
         }
     }
@@ -444,6 +462,21 @@
     .detail-form {
         .ivu-form-item {
             margin-bottom: 8px;
+        }
+    }
+</style>
+<style lang="scss">
+    .modal-invoice-se {
+        .ivu-modal-close {
+            display: none;
+        }
+
+        .ivu-modal-header {
+            display: none;
+        }
+
+        .ivu-modal-footer {
+            /*display: none;*/
         }
     }
 </style>

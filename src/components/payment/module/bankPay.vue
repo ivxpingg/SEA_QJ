@@ -254,11 +254,28 @@
                     type: 'B2C'
                 },
 
-                orderId: ''
+                // orderId: ''
             };
         },
+        props: {
+            orderId: {
+                type: String,
+                required: true,
+                default() {
+                    return '';
+                }
+            },
+            // 判断是否是全景分析系统的
+            isQj: {
+                type: Boolean,
+                required: true,
+                default() {
+                    return true;
+                }
+            }
+        },
         created() {
-            this.orderId = this.$route.query.orderId || ''; // 0f1cf85e28f545efb1071e80d52ef2a2
+            // this.orderId = this.$route.query.orderId || '';
         },
         methods: {
             getCardTypeName(type) {
@@ -279,16 +296,29 @@
 
             onClick_next() {
                 var that = this;
+                var params = {}, url = '';
                 that.$Spin.show();
-                that.$http({
-                    method: 'get',
-                    url: '/panoramic/serverOrder/toPayment',
-                    params: {
+
+                if (this.isQj) {
+                    url = '/panoramic/serverOrder/toPayment';
+                    params = {
                         orderId: that.orderId,
                         directPayType: that.cardInfo.cardCode + '_' + that.cardInfo.type,
-                        // cardType: that.cardInfo.cardType,
                         userId: that.$store.state.uid
                     }
+                }
+                else {
+                    url = '/panoramic/serverOrder/toPay';
+                    params = {
+                        orderId: that.orderId,
+                        directPayType: that.cardInfo.cardCode + '_' + that.cardInfo.type
+                    }
+                }
+
+                that.$http({
+                    method: 'get',
+                    url: url,
+                    params: params
                 }).then(function (response) {
 
                     if (response.status === 1) {

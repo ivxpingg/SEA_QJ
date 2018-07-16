@@ -71,7 +71,6 @@
                     }
                 ],
 
-                orderId: '',
                 orderInfo: {},
 
                 qrcodeUrl: {
@@ -83,8 +82,22 @@
                 showQrcode: false
             };
         },
-        created() {
-            this.orderId = this.$route.query.orderId || ''; // 0f1cf85e28f545efb1071e80d52ef2a2
+        props: {
+            orderId: {
+                type: String,
+                required: true,
+                default() {
+                    return '';
+                }
+            },
+            // 判断是否是全景分析系统的
+            isQj: {
+                type: Boolean,
+                required: true,
+                default() {
+                    return true;
+                }
+            }
         },
         computed: {
             imgSrc() {

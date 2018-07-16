@@ -8,7 +8,8 @@ let config = {
         ajaxUrl: '/oceanobservation/ocean',
         imgUrl: '/oceanobservation',
         staticUrl: '/',
-        baseUrl: '/'
+        baseUrl: '/',
+        path: '/'    // 用于设置cookie
     },
     production: {
         // domain: 'http://localhost',
@@ -16,7 +17,8 @@ let config = {
         ajaxUrl: '/oceanobservation/ocean',
         imgUrl: '/oceanobservation',
         staticUrl: '/qj/',
-        baseUrl: '/qj/'
+        baseUrl: '/qj/',
+        path: '/'    // 用于设置cookie
     }
 };
 export default config;

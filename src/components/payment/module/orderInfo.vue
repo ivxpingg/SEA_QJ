@@ -2,13 +2,13 @@
     <div class="orderInfo-container">
         <div class="merchant-info-wrapper">
             <div class="merchant-info">
-                <p><span class="title">购买商品：</span><span>{{productName}}</span></p>
-                <p><span class="title">订单号：</span><span :title="orderNum">{{orderNum}}</span></p>
+                <p><span class="title">购买商品：</span><span>{{orderInfo.productName}}</span></p>
+                <p><span class="title">订单号：</span><span :title="orderInfo.orderNum">{{orderInfo.orderNum}}</span></p>
             </div>
             <!--<input type="checkbox" id="order-details-handler">-->
             <div class="merchant-info details">
                 <!--<p><span class="title">收款商家：</span><span></span></p>-->
-                <p><span class="title">交易时间：</span><span>{{insTime}}</span></p>
+                <p><span class="title">交易时间：</span><span>{{orderInfo.insTime}}</span></p>
             </div>
 
             <!--<label for="order-details-handler">-->
@@ -18,7 +18,7 @@
 
         <div class="amount">
             <span class="title">订单总额：</span>
-            <span class="money" :title="totalPrice">{{totalPrice}}</span>元
+            <span class="money" :title="totalPrice">{{orderInfo.totalPrice}}</span>元
         </div>
     </div>
 </template>
@@ -28,19 +28,74 @@
         name: "orderInfo",
         data() {
             return {
-                orderId: '',
+                // orderId: '',
 
-                orderNum: '',
-                productName: '',
-                totalPrice: '0.00',
-                insTime: ''
+                // 订单信息
+                orderInfo: {
+                    orderNum: '',
+                    productName: '',
+                    totalPrice: '0.00',
+                    insTime: ''
+                }
             };
         },
         created() {
-            this.orderId = this.$route.query.orderId || '';
+            // this.orderId = this.$route.query.orderId || '';
+        },
+        props: {
+            orderId: {
+                type: String,
+                required: true,
+                default() {
+                    return '';
+                }
+            },
+            orderNum: {
+                type: String,
+                required: false,
+                default() {
+                    return '';
+                }
+            },
+            productName: {
+                type: String,
+                required: false,
+                default() {
+                    return '';
+                }
+            },
+            totalPrice: {
+                type: String,
+                required: false,
+                default() {
+                    return '';
+                }
+            },
+            insTime: {
+                type: String,
+                required: false,
+                default() {
+                    return '';
+                }
+            },
+            isQj: {
+                type: Boolean,
+                required: true,
+                default() {
+                    return true;
+                }
+            }
         },
         mounted() {
-            this.getOrderDetail();
+            if (this.isQj) {
+                this.getOrderDetail();
+            }
+            else {
+                this.orderInfo.orderNum = this.orderNum || '';
+                this.orderInfo.productName = this.serverName || '';
+                this.orderInfo.totalPrice = this.totalPrice || '0.00';
+                this.orderInfo.insTime = this.insTime || '';
+            }
         },
         methods: {
             getOrderDetail() {
@@ -54,10 +109,10 @@
                 }).then(function (response) {
 
                     if (response.status === 1) {
-                        that.orderNum = response.result.orderNum || '';
-                        that.productName = response.result.serverName || '';
-                        that.totalPrice = response.result.totalPrice || '0.00';
-                        that.insTime = response.result.insTime || '';
+                        that.orderInfo.orderNum = response.result.orderNum || '';
+                        that.orderInfo.productName = response.result.serverName || '';
+                        that.orderInfo.totalPrice = response.result.totalPrice || '0.00';
+                        that.orderInfo.insTime = response.result.insTime || '';
                     }
                     else {
                         that.$Message.error({

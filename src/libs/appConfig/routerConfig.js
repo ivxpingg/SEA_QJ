@@ -36,31 +36,32 @@ const routerConfig = function () {
         if (to.query.token !== undefined) {
             // 登陆有效期2个小时
             var addTimes = 2 * 60 * 60 * 1000;
-            Cookie.write('token', to.query.token, new Date().getTime() + addTimes);       // 前台&后台
+            var path = Config[Config.env].path;
+            Cookie.write('token', to.query.token, new Date().getTime() + addTimes, path);       // 前台&后台
 
             if(to.query.uid !== undefined) {
-                Cookie.write('uid', to.query.uid, new Date().getTime() + addTimes);           // 前台&后台
+                Cookie.write('uid', to.query.uid, new Date().getTime() + addTimes, path);           // 前台&后台
             }
             else {
                 Cookie.remove('uid');
             }
 
             if(to.query.usertype !== undefined) {
-                Cookie.write('usertype', to.query.usertype, new Date().getTime() + addTimes); // 前台
+                Cookie.write('usertype', to.query.usertype, new Date().getTime() + addTimes, path); // 前台
             }
             else {
                 Cookie.remove('usertype');
             }
 
             if(to.query.type !== undefined) {
-                Cookie.write('type', to.query.type, new Date().getTime() + addTimes);      // 后台
+                Cookie.write('type', to.query.type, new Date().getTime() + addTimes, path);      // 后台
             }
             else {
                 Cookie.remove('type');
             }
 
             if(to.query.syscode !== undefined) {
-                Cookie.write('syscode', to.query.syscode, new Date().getTime() + addTimes);// 后台
+                Cookie.write('syscode', to.query.syscode, new Date().getTime() + addTimes, path);// 后台
             }
             else {
                 Cookie.remove('syscode');
