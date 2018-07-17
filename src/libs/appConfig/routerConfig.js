@@ -47,6 +47,7 @@ const routerConfig = function () {
             }
 
             if(to.query.usertype !== undefined) {
+                Cookie.remove('type');
                 Cookie.write('usertype', to.query.usertype, new Date().getTime() + addTimes, path); // 前台
             }
             else {
@@ -54,6 +55,7 @@ const routerConfig = function () {
             }
 
             if(to.query.type !== undefined) {
+                Cookie.remove('usertype');
                 Cookie.write('type', to.query.type, new Date().getTime() + addTimes, path);      // 后台
             }
             else {

@@ -12,10 +12,10 @@
 
             <div class="col-box">
                 <div class="col col-left">
-                    <vBankPay :orderId="orderId"></vBankPay>
+                    <vBankPay :orderId="orderId" :isQj="isQj"></vBankPay>
                 </div>
                 <div class="col col-right">
-                    <vQrcodePay :orderId="orderId"></vQrcodePay>
+                    <vQrcodePay :orderId="orderId" :isQj="isQj"></vQrcodePay>
                 </div>
             </div>
         </div>
@@ -50,10 +50,14 @@
             this.goodsName = this.$route.query.goodsName || '';
 
             if (this.orderNum === '' && this.totalPrice === '' && this.insTime === '' && this.goodsName === '') {
+                this.isQj = true;
+            }
+            else {
                 this.isQj = false;
             }
         },
-        components: {vHeader, vOrderInfo, vBankPay, vQrcodePay}
+        components: {vHeader, vOrderInfo, vBankPay, vQrcodePay},
+
     }
 </script>
 

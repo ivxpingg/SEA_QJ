@@ -86,16 +86,33 @@
                 }
             }
         },
+        watch: {
+            isQj: {
+                immediate: true,
+                handler(val) {
+                    if (val && this.orderId !== '') {
+                        this.getOrderDetail();
+                    }
+                }
+            },
+            orderNum(val) {
+                this.orderInfo.orderNum = val;
+            },
+            productName(val) {
+                this.orderInfo.productName = val;
+            },
+            totalPrice(val) {
+                this.orderInfo.totalPrice = val;
+            },
+            insTime(val) {
+                this.orderInfo.insTime = val;
+            }
+        },
         mounted() {
-            if (this.isQj) {
-                this.getOrderDetail();
-            }
-            else {
-                this.orderInfo.orderNum = this.orderNum || '';
-                this.orderInfo.productName = this.serverName || '';
-                this.orderInfo.totalPrice = this.totalPrice || '0.00';
-                this.orderInfo.insTime = this.insTime || '';
-            }
+            this.orderInfo.orderNum = this.orderNum || '';
+            this.orderInfo.productName = this.serverName || '';
+            this.orderInfo.totalPrice = this.totalPrice || '0.00';
+            this.orderInfo.insTime = this.insTime || '';
         },
         methods: {
             getOrderDetail() {
