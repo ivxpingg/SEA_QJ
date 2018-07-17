@@ -22,6 +22,7 @@
 
 <script>
     import Cookie from '../../../libs/helpers/cookies';
+    import Config from '../../../libs/appConfig/config';
     export default {
         name: "p-header",
         data() {
@@ -54,11 +55,12 @@
                 });
             },
             onClick_logout() {
+                var path = Config[Config.env].path;
+                Cookie.write('uid', '', Date.now() - (86400000 * 7), path);
+                Cookie.write('token', '', Date.now() - (86400000 * 7), path);
+                Cookie.write('type', '', Date.now() - (86400000 * 7), path);
+                Cookie.write('syscode', '', Date.now() - (86400000 * 7), path);
 
-                Cookie.remove('uid');
-                Cookie.remove('token');
-                Cookie.remove('type');
-                Cookie.remove('syscode');
                 window.location.href = 'http://218.5.80.6:8091/OCEANAM/logout';
             },
 

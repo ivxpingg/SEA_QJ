@@ -79,19 +79,19 @@ Ajax.interceptors.response.use(function (response) {
 
 
     if (response.data.errCode === 'A0002') {
-        Cookie.remove('uid');
-        Cookie.remove('token');
-        Cookie.remove('usertype');
-        Cookie.remove('type');
-        Cookie.remove('syscode');
+        var path = Config[Config.env].path;
+        Cookie.write('uid', '', Date.now() - (86400000 * 7), path);
+        Cookie.write('token', '', Date.now() - (86400000 * 7), path);
+        Cookie.write('usertype', '', Date.now() - (86400000 * 7), path);
+        Cookie.write('type', '', Date.now() - (86400000 * 7), path);
+        Cookie.write('syscode', '', Date.now() - (86400000 * 7), path);
 
         iView.Modal.info({
             title: '提示',
             content: '会话过期请重新登陆！',
             okText: '登陆',
             onOk() {
-
-                if (window.location.href.indexOf('/manage/') > 0 || window.location.href.indexOf('/manageLog') > 0) {
+                if (window.location.href.indexOf('/manage') > 0) {
                     window.location.href = 'http://218.5.80.6:8091/OCEANAM/logout';
                 }
                 else {

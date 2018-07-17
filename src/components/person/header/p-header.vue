@@ -45,6 +45,7 @@
 
 <script>
     import Cookie from '../../../libs/helpers/cookies';
+    import Config from '../../../libs/appConfig/config';
     export default {
         name: "p-header",
         data() {
@@ -119,9 +120,11 @@
                 });
             },
             onClick_logout() {
-                Cookie.remove('uid');
-                Cookie.remove('token');
-                Cookie.remove('usertype');
+                var path = Config[Config.env].path;
+                Cookie.write('uid', '', Date.now() - (86400000 * 7), path);
+                Cookie.write('token', '', Date.now() - (86400000 * 7), path);
+                Cookie.write('usertype', '', Date.now() - (86400000 * 7), path);
+
                 this.$router.push({
                     name: 'index'
                 });

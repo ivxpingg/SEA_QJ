@@ -47,7 +47,7 @@ const routerConfig = function () {
             }
 
             if(to.query.usertype !== undefined) {
-                Cookie.remove('type');
+                Cookie.write('type', '', new Date().getTime() - addTimes, path);
                 Cookie.write('usertype', to.query.usertype, new Date().getTime() + addTimes, path); // 前台
             }
             else {
@@ -55,7 +55,7 @@ const routerConfig = function () {
             }
 
             if(to.query.type !== undefined) {
-                Cookie.remove('usertype');
+                Cookie.write('usertype', '', new Date().getTime() - addTimes, path);
                 Cookie.write('type', to.query.type, new Date().getTime() + addTimes, path);      // 后台
             }
             else {
@@ -76,6 +76,7 @@ const routerConfig = function () {
         }
         else if (to.meta.requireAuth && Cookie.read('token') == null) {
 
+            debugger
             if (to.path.indexOf('/manage') === 0  &&  Cookie.read('syscode') != null) {
                 next();
             }
