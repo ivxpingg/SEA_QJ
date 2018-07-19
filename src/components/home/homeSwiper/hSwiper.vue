@@ -62,8 +62,8 @@
 </template>
 
 <script>
-    import Swiper from 'swiper';
-    import 'swiper/dist/css/swiper.min.css';
+    // import Swiper from 'swiper';
+    // import 'swiper/dist/css/swiper.min.css';
     import Config from '../../../libs/appConfig/config';
     export default {
         name: "hSwiper",

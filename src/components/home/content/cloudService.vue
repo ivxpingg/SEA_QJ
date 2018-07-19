@@ -95,7 +95,7 @@
             <div class="box-panel pay-panel">
                 <div class="notice">购买须知：本平台所提供服务器无法提供备案端口，仅作为企业或高校部署项目测试等用途，如果需要入网，可通过代理服务器来实现域名与服务器空间部署的项 目进行端口映射。</div>
 
-                <div class="agreement-p"><Checkbox v-model="single" size="large">用户服务器使用协议</Checkbox></div>
+                <div class="agreement-p"><Checkbox v-model="single" @on-change="onClick_agreement_content" size="large">用户服务器使用协议</Checkbox></div>
 
                 <div class="cost-b">
                     <span class="label">费用</span>
@@ -157,17 +157,24 @@
             </div>
         </Modal>
 
+        <Modal v-model="model_agreement_content"
+               :width="900"
+               title="协议内容">
+            <vAgreementConent></vAgreementConent>
+        </Modal>
+
     </div>
 </template>
 
 <script>
     import Config from '../../../libs/appConfig/config';
+    import vAgreementConent from './agreement_content';
     export default {
         name: "cloudService",
         data() {
             var that = this;
             return {
-                redirectUrl: window.location.origin+ '/\%23' + Config[Config.env].baseUrl + 'person/orderManage',
+                redirectUrl: window.location.origin+ Config[Config.env].baseUrl + '#/person/orderManage',
 
                 query: {
                     cloudServerId: ''  // 服务器ID
@@ -178,7 +185,8 @@
                 modal_freeApply: false,
 
                 // 字典
-                timeList: [{
+                timeList: [
+                    {
                     label: '一个月',
                     value: 1
                 },{
@@ -243,12 +251,18 @@
                 },
                 upload_data: {
 
-                }
+                },
+
+                // 协议内容
+                model_agreement_content: false
 
             };
         },
+        components: {
+            vAgreementConent
+        },
         created() {
-             this.query.cloudServerId = this.$route.query.cid || '';
+            this.query.cloudServerId = this.$route.query.cid || '';
         },
         computed: {
             price() {
@@ -270,6 +284,7 @@
         },
         mounted() {
             this.getServeData();
+            this.$parent.refreshIScroll('cloudService');
         },
         methods: {
             onClick_subtract_num() {
@@ -485,6 +500,11 @@
                 }).catch(function (e) {
                     that.$Spin.show();
                 });
+            },
+
+            // 同意协议选择变化, 弹出协议内容
+            onClick_agreement_content(value) {
+                this.model_agreement_content = value;
             }
         }
     }

@@ -63,7 +63,7 @@
         <div class="goback"
              @click="onClick_goback"
              :class="{'show': showPanel}"
-             v-if="showPanel">
+             v-if="edit">
             <Icon type="chevron-left"></Icon>返回
         </div>
 
@@ -102,7 +102,10 @@
         <Modal v-model="modal_equipment_add"
                title="新增">
             <div>
-                <Form ref="ref_addEquipment" :model="equipment_add_info" :label-width="85" :rules="rule_equipment_add_info">
+                <Form ref="ref_addEquipment"
+                      :model="equipment_add_info"
+                      :label-width="85"
+                      :rules="rule_equipment_add_info">
                     <FormItem label="名称：" prop="equipmentName">
                         <Input v-model="equipment_add_info.equipmentName" placeholder="请输入名称"></Input>
                     </FormItem>
@@ -128,6 +131,14 @@
                         <Input v-model="equipment_add_info.position" placeholder="请输入位置名称"></Input>
                     </FormItem>
 
+                    <FormItem label="经度：" prop="lat">
+                        <Input number v-model="equipment_add_info.lat" placeholder="请输入经度"></Input>
+                    </FormItem>
+
+                    <FormItem label="纬度：" prop="lon">
+                        <Input number v-model="equipment_add_info.lon" placeholder="请输入纬度"></Input>
+                    </FormItem>
+
                     <FormItem label="观测内容：" prop="observationContent">
                         <Input v-model="equipment_add_info.observationContent" placeholder="请输入观测内容"></Input>
                     </FormItem>
@@ -151,7 +162,10 @@
         <Modal v-model="modal_equipment_edit"
                title="编辑">
             <div>
-                <Form ref="ref_editEquipment" :model="equipment_edit_info" :label-width="85" :rules="rule_equipment_add_info">
+                <Form ref="ref_editEquipment"
+                      :model="equipment_edit_info"
+                      :label-width="85"
+                      :rules="rule_equipment_add_info">
                     <FormItem label="名称：" prop="equipmentName">
                         <Input v-model="equipment_edit_info.equipmentName" placeholder="请输入名称"></Input>
                     </FormItem>
@@ -175,6 +189,14 @@
 
                     <FormItem label="位置：" prop="position">
                         <Input v-model="equipment_edit_info.position" placeholder="请输入位置名称"></Input>
+                    </FormItem>
+
+                    <FormItem label="经度：" prop="lat">
+                        <Input v-model="equipment_edit_info.lat" number placeholder="请输入经度"></Input>
+                    </FormItem>
+
+                    <FormItem label="纬度：" prop="lon">
+                        <Input v-model="equipment_edit_info.lon" number placeholder="请输入纬度"></Input>
                     </FormItem>
 
                     <FormItem label="观测内容：" prop="observationContent">
@@ -320,7 +342,7 @@
                     equipmentStatus: "",
                     equipmentType: "",
                     insTime: "",
-                    lat: 0,
+                    lat: 0,     //纬度
                     lon: 0,
                     observationContent: "",
                     pictureUrl: "",
@@ -435,6 +457,12 @@
                     ],
                     position: [
                         { required: true, message: '位置名称不能为空', trigger: 'blur'}
+                    ],
+                    lat: [
+                        { required: true, type: 'number', message: '经度不能为空', trigger: 'blur'}
+                    ],
+                    lon: [
+                        { required: true, type: 'number', message: '纬度不能为空', trigger: 'blur'}
                     ],
                     observationContent: [
                         { required: true, message: '观测内容不能为空', trigger: 'blur'}
@@ -1145,7 +1173,7 @@
                         }).then(function (response) {
                             if(response.status === 1) {
                                 that.$Message.success({content: '更新成功！'});
-                                that.modal_equipment_add = false;
+                                that.modal_equipment_edit = false;
                                 that.getTableData();
                             }
                             else {

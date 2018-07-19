@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "dragula": "^3.7.2",
     "echarts": "^4.0.4",
     "iscroll": "^5.2.0",
@@ -16,7 +17,7 @@
     "jquery": "^2.1.1",
     "moment": "^2.21.0",
     "sortablejs": "^1.7.0",
-    "swiper": "^4.2.6",
+    "swiper": "^4.3.3",
     "vue": "^2.5.13",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"

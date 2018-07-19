@@ -46,7 +46,7 @@
                 <Input type="textarea"
                        readonly
                        :rows="5"
-                       :model="freeApply_result"
+                       v-model="freeApply_result"
                        placeholder="" />
             </div>
 
@@ -270,19 +270,8 @@
                 var that = this;
                 this.modal_freeApply_result = true;
 
-                that.$http({
-                    method: 'get',
-                    url: '/panoramic/serverOrder/',
-                    params: {
-                        orderId: row.orderId
-                    }
-                }).then(function (response) {
-                    if (response.status === 1) {
-                        that.freeApply_result = response.result || [];
-                    }
-                    else {
-                    }
-                }).catch(function (e) {})
+                that.freeApply_result = row.rejectReason;
+
             },
         }
     }

@@ -49,7 +49,7 @@
 
             </div>
             <div class="list-page-panel">
-                <Page :total="searchParams.count"></Page>
+                <Page :total="searchParams.count" @on-change="onPageNo_change"></Page>
             </div>
 
         </div>
@@ -359,11 +359,24 @@
                 this.$store.state.homeScroll.refresh();
             }
         },
-        watch: {},
+        watch: {
+            'searchParams.pageNo': {
+                handler(val) {
+                    this.getData();
+                }
+            }
+        },
         mounted() {
             this.getData();
         },
         methods: {
+            /**
+             * 页码切换
+             * @param pageNo
+             */
+            onPageNo_change(pageNo) {
+                this.searchParams.pageNo = pageNo;
+            },
             /**
              * 获取表格数据
              */

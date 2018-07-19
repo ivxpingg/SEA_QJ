@@ -77,6 +77,23 @@ Ajax.interceptors.response.use(function (response) {
         iView.Spin.hide();
     }
 
+    if (response.data.errCode === 'A0024') {
+        iView.Modal.info({
+            title: '提示',
+            content: '您还未登录请先登陆！',
+            okText: '登陆',
+            onOk() {
+                if (window.location.href.indexOf('/manage') > 0) {
+                    window.location.href = 'http://218.5.80.6:8091/OCEANAM/logout';
+                }
+                else {
+                    var url = "http://218.5.80.6:8070/OCEAN/api/login?url=" + window.location.href.replace('#', '\%23');
+                    window.location.href = url;
+                }
+            }
+        });
+    }
+
 
     if (response.data.errCode === 'A0002') {
         var path = Config[Config.env].path;

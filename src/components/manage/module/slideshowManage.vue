@@ -18,7 +18,10 @@
         <Modal v-model="modal_add"
                title="添加轮播图">
             <div class="">
-               <Form ref="addSilderShow" :model="obj_add_silderShow" :label-width="85" :rules="add_rule">
+               <Form ref="addSilderShow"
+                     :model="obj_add_silderShow"
+                     :label-width="85"
+                     :rules="add_rule">
                    <FormItem label="位置：">
                        首页轮播图
                    </FormItem>

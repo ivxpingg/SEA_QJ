@@ -1,6 +1,5 @@
 'use strict';
 
-// var utils = require('./../utils').default;
 import utils from '../utils';
 
 export default (

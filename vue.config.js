@@ -26,7 +26,7 @@ module.exports = {
     chainWebpack: () => {},
     // configureWebpack: () => {},
     configureWebpack: config => {
-
+        config.entry.app = ['babel-polyfill', './src/main.js'];
         if (process.env.NODE_ENV === 'production') {
             // 为生产环境修改配置...
 

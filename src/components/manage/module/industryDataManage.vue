@@ -77,7 +77,7 @@
             <div>
                 <Input type="textarea"
                        :rows="5"
-                       :model="rejectReason"
+                       v-model="rejectReason"
                        placeholder="请输入驳回原因" />
             </div>
 
