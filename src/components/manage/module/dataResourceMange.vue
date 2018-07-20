@@ -95,7 +95,7 @@
                         </Upload>
                     </FormItem>
                     <FormItem label="位置选择">
-                        <Select v-model="add_dataResource_info.position"
+                        <Select v-model="add_dataResource_info.showPosition"
                                 transfer
                                 style="width: 180px" placeholder="">
                             <Option v-for="item in dict_showPosition"
