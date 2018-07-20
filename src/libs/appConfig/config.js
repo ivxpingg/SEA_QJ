@@ -1,7 +1,7 @@
-import Env from './env';
+// import Env from './env';
 
 let config = {
-    env: Env,
+    env: process.env.NODE_ENV,
     development: {
         // domain: 'http://localhost',
         // port: '8090',

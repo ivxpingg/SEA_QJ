@@ -121,7 +121,6 @@
                 <Table border
                        :columns="table_pay_columns_account"
                        :data="table_pay_data_detail.orderServerAccount">
-
                 </Table>
             </div>
 
@@ -145,8 +144,9 @@
 
             <div>
                 <Table border
+                       :height="200"
                        :columns="table_freeApply_columns_account"
-                       :data="table_freeApply_data_account.orderServerAccount">
+                       :data="table_freeApply_data_account">
 
                 </Table>
             </div>
