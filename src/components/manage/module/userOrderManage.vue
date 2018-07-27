@@ -199,6 +199,7 @@
                                             case 'InHandle':
                                                 that.modal_finish = true;
                                                 that.workOrderFinish.workOrderId = params.row.workOrderId;
+                                                that.workOrderFinish.userId = params.row.userId;
                                                 break;
                                             case 'Finish': that.getWorkOrderDetail(params.row); break;
                                             case 'Cancel': that.getWorkOrderDetail(params.row); break;
@@ -219,7 +220,8 @@
                 workOrderFinish: {
                     workOrderId: '',
                     handleResult: '',
-                    account: ''
+                    account: '',
+                    userId: ''
                 },
 
                 // 查看工单详情
@@ -385,7 +387,8 @@
                     data: {
                         workOrderId: that.workOrderFinish.workOrderId,
                         finishAccount: that.workOrderFinish.account,
-                        handleResult: that.workOrderFinish.handleResult
+                        handleResult: that.workOrderFinish.handleResult,
+                        userId: that.workOrderFinish.userId
                     }
                 }).then(function (response) {
                     if(response.status === 1) {

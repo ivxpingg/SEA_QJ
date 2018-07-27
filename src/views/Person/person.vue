@@ -65,8 +65,7 @@
                     '2-1': { name: 'cloudServiceManage' },
                     '2-2': { name: 'industryDataManage' },
                     '3-1': { name: 'personInfoMange' },
-                    '4-1': { name: 'messageManage' },
-
+                    '4-1': { name: 'messageManage' }
                 },
                 open_names: ['1'],
                 active_name: '1-1'

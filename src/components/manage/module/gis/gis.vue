@@ -501,10 +501,12 @@
 
                 // 添加人工数据对比
                 modal_data_comparison: false,
-                datePicker_default: [MOMENT('2018-06-29 00:00:00'), MOMENT('2018-07-01 00:00:00')],
+                datePicker_default: [],
                 tableLoading: false,
                 searchParams_equipData: {
                     equipId: '',
+                    equipmentId: '',       // 设备标识
+                    equipmentNo: '',       // 设备编号
                     beginDate: '',
                     endDate: ''
                 },
@@ -517,7 +519,9 @@
                 isAnalysisResult: false,  // 是否是分析结果，用于切换添加人工数据分析的和分析结果
                 starLevel: 0,       // 装备评级
                 average: 0,         // 平均偏差值'
-                oDeviation: {}      // 因子偏差值
+                oDeviation: {},     // 因子偏差值
+
+                contrastRecordId: '',   //分析记录ID
             };
         },
         computed: {
@@ -561,6 +565,31 @@
 
 
                 return this.tableData.concat([col_data_avg, col_data_max]);
+            },
+            // 数据分析记录详情(平均值和最大值)
+            contrastDetail() {
+                var list = [];
+                for(var k in this.oDeviation) {
+                    var sum_value = 0, max_value = 0;
+                    this.oDeviation[k].forEach(function (val) {
+                        sum_value += parseFloat(val);
+                        if(parseFloat(val) > max_value) {
+                            max_value = parseFloat(val);
+                        }
+                    });
+
+                    if (this.oDeviation[k].length === 0) {
+                    }
+                    else {
+                        list.push({
+                            itemName: k.replace(/'/g, ''),
+                            averageDeviation: (sum_value / this.oDeviation[k].length).toFixed(2),
+                            maxDeviation: max_value
+                        });
+                    }
+                }
+
+                return list;
             }
         },
         components: {vImgUpload},
@@ -832,8 +861,8 @@
             this.setChart();
             this.getDict();
 
-            this.searchParams_equipData.beginDate = this.datePicker_default[0].format('YYYY-MM-DD HH:mm:ss');
-            this.searchParams_equipData.endDate = this.datePicker_default[1].format('YYYY-MM-DD HH:mm:ss');
+            // this.searchParams_equipData.beginDate = this.datePicker_default[0].format('YYYY-MM-DD HH:mm:ss');
+            // this.searchParams_equipData.endDate = this.datePicker_default[1].format('YYYY-MM-DD HH:mm:ss');
         },
         methods: {
             gisInit() {
@@ -1435,6 +1464,8 @@
                         that.equipmentInfo.unit = response.result.unit;
 
                         that.searchParams_equipData.equipId = response.result.equipmentNo;
+                        that.searchParams_equipData.equipmentNo = response.result.equipmentNo;
+                        that.searchParams_equipData.equipmentId = response.result.equipmentId;
 
                         that.getChartData(); // 获取图表数据
                     }
@@ -1468,7 +1499,17 @@
                     data: JSON.stringify(this.searchParams_equipData)
                 }).then(function (response) {
                     that.tableLoading = false;
-                    that.tableData = response.result;
+                    that.tableData = response.result.list;
+
+                    if (that.datePicker_default.length === 0) {
+                        that.datePicker_default = [MOMENT(response.result.beginDate),MOMENT(response.result.endDate)];
+                        that.searchParams_equipData.beginDate = response.result.beginDate;
+                        that.searchParams_equipData.endDate = response.result.endDate;
+                    }
+
+                    if (that.isAnalysisResult) {
+                        that.saveContrastDetail();
+                    }
 
                 }).catch(function (e) {
                     that.tableLoading = false;
@@ -1501,10 +1542,12 @@
                         data: JSON.stringify({
                             artificalData: attrList,
                             beginDate: that.searchParams_equipData.beginDate,
-                            endDate: that.searchParams_equipData.endDate
+                            endDate: that.searchParams_equipData.endDate,
+                            equipmentNo: that.searchParams_equipData.equipmentNo
                         })
                     }).then(function (response) {
                         if (response.status === 1) {
+                            that.contrastRecordId = response.result.contrastRecordId;
                             that.getEquipData();
                             that.isAnalysisResult = true;
                         }
@@ -1513,6 +1556,35 @@
                     }).catch(function (e) {
                     })
                 }
+            },
+
+            // 保存分析详情
+            saveContrastDetail() {
+                var that = this;
+                that.$http({
+                    method: 'post',
+                    url: '/panoramic/equipment/saveContrastDetail',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    data: JSON.stringify({
+                        contrastRecordId: that.contrastRecordId,
+                        contrastDetail: that.contrastDetail,
+                        equipmentNo: that.searchParams_equipData.equipmentNo
+                    })
+                }).then(function (response) {
+                    if (response.status === 1) {
+
+                    }
+                    else {
+                        that.$Message.error({
+                            content: '保存分析失败！'
+                        })
+                    }
+
+                }).catch(function (e) {
+
+                })
             },
             //
             onClick_modal_analyze_ok() {

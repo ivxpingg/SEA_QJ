@@ -141,12 +141,14 @@
 
         </Modal>
 
+
+
         <Modal v-model="modal_look_comparison"
                :width="1000"
                title="查看分析">
 
             <div class="modal_comparison">
-                <div class="handle-bar">
+                <div v-show="!modal_look_record" class="handle-bar">
                     <div class="hd">
                         <div class="form-item">
                             <label class="label">时间: </label>
@@ -168,11 +170,27 @@
                     </div>
 
                 </div>
-                <Table :height="400"
+                <Table v-show="!modal_look_record"
+                       :height="400"
                        border
                        :loading="tableLoading"
                        :columns="tableColumns2"
                        :data="tableData2"></Table>
+                <Table v-show="modal_look_record"
+                       :height="400"
+                       :width="900"
+                       border
+                       :loading="tableLoading"
+                       :columns="tableColumns_record"
+                       :data="tableData_record_factory"
+                       @on-row-click="onRowClick_record"></Table>
+            </div>
+
+            <div slot="footer">
+
+                <Button  v-show="!modal_look_record" type="primary" @click="onClick_look_comparison_back">返回</Button>
+                <Button @click="onClick_look_comparison_close">关闭</Button>
+
             </div>
 
         </Modal>
@@ -306,11 +324,12 @@
 
                 // 添加人工数据对比
                 modal_data_comparison: false,
-                datePicker_default: [MOMENT('2018-06-29 00:00:00'), MOMENT('2018-07-01 00:00:00')],
+                datePicker_default: [],
                 tableLoading: false,
                 searchParams_equipData: {
+                    equipId: '',
                     equipmentId: '',       // 设备标识
-                    equipId: '',           // 设备编号
+                    equipmentNo: '',       // 设备编号
                     beginDate: '',
                     endDate: ''
                 },
@@ -325,7 +344,22 @@
                 average: 0,         // 平均偏差值'
                 oDeviation: {},     // 因子偏差值
 
+                contrastRecordId: '',   //分析记录ID
+
                 // 查看分析
+                modal_look_record: true,   // 显示分析记录或者记录详情
+                searchParams_equipRecord: {
+                    pageNo: 1, // 当前页
+                    pageSize: 10, // 每页几行
+                    count: 0,     // 总页数
+                    equipmentNo: '',
+                    beginDate: '',
+                    endDate: '',
+                },
+                tableColumns_record: [],
+                tableData_record: [],
+                tableData_record_factory: [],
+
                 modal_look_comparison: false,
                 datePicker_default_look: [],
                 tableLoading_look: false,
@@ -370,6 +404,32 @@
 
 
                 return this.tableData.concat([col_data_avg, col_data_max]);
+            },
+
+            // 数据分析记录详情(平均值和最大值)
+            contrastDetail() {
+                var list = [];
+                for(var k in this.oDeviation) {
+                    var sum_value = 0, max_value = 0;
+                    this.oDeviation[k].forEach(function (val) {
+                        sum_value += parseFloat(val);
+                        if(parseFloat(val) > max_value) {
+                            max_value = parseFloat(val);
+                        }
+                    });
+
+                    if (this.oDeviation[k].length === 0) {
+                    }
+                    else {
+                        list.push({
+                            itemName: k.replace(/'/g, ''),
+                            averageDeviation: (sum_value / this.oDeviation[k].length).toFixed(2),
+                            maxDeviation: max_value
+                        });
+                    }
+                }
+
+                return list;
             }
         },
         components: {},
@@ -544,16 +604,97 @@
                         });
                     }
 
-                    console.dir(this.oDeviation);
+                    // console.dir(this.oDeviation);
 
                     that.average = (that.average / len).toFixed(2);
+
+                }
+            },
+
+            tableData_record: {
+                deep: true,
+                handler(val) {
+
+                    var that = this;
+                    that.tableColumns_record = [];
+                    that.tableData_record_factory = [];
+
+                    var col_list = [];
+
+                    val.forEach(function (v, idx) {
+                        that.tableData_record_factory[idx] = {};
+
+                        for(var key in v) {
+
+                            if(key === 'beginTime') {
+                                that.tableData_record_factory[idx].beginTime = v[key];
+
+                                if(col_list.indexOf(key) < 0) {
+                                    col_list.push(key);
+                                    that.tableColumns_record.unshift({
+                                        title: '时间区间',
+                                        align: 'center',
+                                        width: 160,
+                                        fixed: 'left',
+                                        render(h, params) {
+                                            return h('div', [
+                                                h('div',params.row.beginTime),
+                                                h('div',params.row.endTime)
+                                            ]);
+                                        }
+                                    });
+                                }
+                            }
+                            else if (key === 'endTime') {
+                                that.tableData_record_factory[idx].endTime = v[key];
+                            }
+                            else if (key === 'equipmentNo') {
+                                that.tableData_record_factory[idx].equipmentNo = v[key];
+                            }
+                            else if (key === 'rn' || key === 'insTime') {}
+                            else {
+
+                                that.tableData_record_factory[idx][key.replace(/'/g, '') + '_max'] = v[key].split('|')[1];
+                                that.tableData_record_factory[idx][key.replace(/'/g, '') + '_avg'] = v[key].split('|')[0];
+
+                                if(col_list.indexOf(key) < 0) {
+                                    col_list.push(key);
+                                    that.tableColumns_record.push({
+                                        title: key.replace(/'/g, ''),
+                                        align: 'center',
+                                        children: [
+                                            {
+                                                title: '最大偏差值',
+                                                align: 'center',
+                                                width: 120,
+                                                key: key.replace(/'/g, '') + '_max'
+                                            },
+                                            {
+                                                title: '平均偏差值',
+                                                align: 'center',
+                                                width: 120,
+                                                key: key.replace(/'/g, '') + '_avg'
+                                            }
+                                        ]
+                                    });
+                                }
+
+
+                            }
+
+                        }
+
+                    });
+                    //
+                    // console.dir(that.tableData_record_factory);
+                    // console.dir(that.tableColumns_record);
                 }
             }
         },
         mounted() {
             this.getTableData();
-            this.searchParams_equipData.beginDate = this.datePicker_default[0].format('YYYY-MM-DD HH:mm:ss');
-            this.searchParams_equipData.endDate = this.datePicker_default[1].format('YYYY-MM-DD HH:mm:ss');
+            // this.searchParams_equipData.beginDate = this.datePicker_default[0].format('YYYY-MM-DD HH:mm:ss');
+            // this.searchParams_equipData.endDate = this.datePicker_default[1].format('YYYY-MM-DD HH:mm:ss');
         },
         methods: {
             datePicker_onChange(val) {
@@ -615,8 +756,12 @@
              * 开始分析
              */
             onClick_table_add_analyze(row) {
-                this.searchParams_equipData.equipId = row.equipmentNo;
+                this.searchParams_equipData.equipmentNo = row.equipmentNo;
                 this.searchParams_equipData.equipmentId = row.equipmentId;
+
+                this.searchParams_equipData.beginDate = '';
+                this.searchParams_equipData.endDate = '';
+
                 this.isAnalysisResult = false;
                 this.modal_data_comparison = true;
                 this.getEquipData();
@@ -627,13 +772,52 @@
              */
             onClick_table_look_analyze(row) {
                 this.searchParams_equipData.equipId = row.equipmentNo;
+                this.searchParams_equipRecord.equipmentNo = row.equipmentNo;
                 this.modal_look_comparison = true;
-                this.getEquipData();
+                this.modal_look_record = true;
+                // this.getEquipData();
+               this.getEquipRecordList();
             },
+            // 获取设备分析记录
+            getEquipRecordList() {
+                var that = this;
+                that.tableLoading = true;
+                that.$http({
+                    method: 'post',
+                    url: '/panoramic/equipment/queryContrastRecordList',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    data: JSON.stringify(this.searchParams_equipRecord)
+                }).then(function (response) {
+                    that.tableLoading = false;
+                    if(response.status === 1) {
+                        that.tableData_record = response.result.page.list;
+                        that.searchParams_equipData.count = response.result.page.count;
+                    }
+
+                }).catch(function (e) {
+                    that.tableLoading = false;
+                })
+            },
+            // 选中表格单行触发
+            onRowClick_record(row, idx) {
+                this.searchParams_equipData.beginDate = row.beginTime;
+                this.searchParams_equipData.endDate = row.endTime;
+
+                this.datePicker_default = [MOMENT(row.beginTime), MOMENT(row.endTime)];
+
+                this.searchParams_equipData.equipmentNo = row.equipmentNo;
+                this.getEquipData();
+                this.modal_look_record = false;
+            },
+
             datePicker_onChange_2(val) {
                 this.searchParams_equipData.beginDate = val[0];
                 this.searchParams_equipData.endDate = val[1];
             },
+
+
             // 添加人工数据对比
             onClick_modal_search() {
                 this.getEquipData();
@@ -651,7 +835,19 @@
                     data: JSON.stringify(this.searchParams_equipData)
                 }).then(function (response) {
                     that.tableLoading = false;
-                    that.tableData = response.result;
+                    if(response.status === 1) {
+                        that.tableData = response.result.list;
+
+                        if (that.searchParams_equipData.beginDate === '') {
+                            that.datePicker_default = [MOMENT(response.result.beginDate),MOMENT(response.result.endDate)];
+                            that.searchParams_equipData.beginDate = response.result.beginDate;
+                            that.searchParams_equipData.endDate = response.result.endDate;
+                        }
+
+                        if (that.isAnalysisResult) {
+                            that.saveContrastDetail();
+                        }
+                    }
 
                 }).catch(function (e) {
                     that.tableLoading = false;
@@ -679,12 +875,15 @@
                         data: JSON.stringify({
                             artificalData: attrList,
                             beginDate: that.searchParams_equipData.beginDate,
-                            endDate: that.searchParams_equipData.endDate
+                            endDate: that.searchParams_equipData.endDate,
+                            equipmentNo: that.searchParams_equipData.equipmentNo
+
                         })
                     }).then(function (response) {
                         if (response.status === 1) {
-                            that.getEquipData();
+                            that.contrastRecordId = response.result.contrastRecordId;
                             that.isAnalysisResult = true;
+                            that.getEquipData();
                         }
                         else {}
 
@@ -692,6 +891,35 @@
                     })
                 }
             },
+            // 保存分析详情
+            saveContrastDetail() {
+                var that = this;
+                that.$http({
+                    method: 'post',
+                    url: '/panoramic/equipment/saveContrastDetail',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    data: JSON.stringify({
+                        contrastRecordId: that.contrastRecordId,
+                        contrastDetail: that.contrastDetail,
+                        equipmentNo: that.searchParams_equipData.equipmentNo
+                    })
+                }).then(function (response) {
+                    if (response.status === 1) {
+
+                    }
+                    else {
+                        that.$Message.error({
+                            content: '保存分析失败！'
+                        })
+                    }
+
+                }).catch(function (e) {
+
+                })
+            },
+
             //
             onClick_modal_analyze_ok() {
                 var that = this;
@@ -752,6 +980,13 @@
                     }
                 })
             },
+
+            onClick_look_comparison_back() {
+                this.modal_look_record = true;
+            },
+            onClick_look_comparison_close() {
+                this.modal_look_comparison = false;
+            }
         }
     }
 </script>

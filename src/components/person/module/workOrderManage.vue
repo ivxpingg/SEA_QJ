@@ -163,7 +163,8 @@
                     applyContent: '',
                     applyName: '',
                     phone: '',
-                    serverName: ''
+                    serverName: '',
+                    userId: that.$store.state.uid
                 }
             };
         },
@@ -251,7 +252,8 @@
                         keyword: this.searchParams.keyword,
                         beginDate: this.searchParams.startTime,
                         endDate: this.searchParams.endTime,
-                        timeInterval: this.searchParams.timeInterval
+                        timeInterval: this.searchParams.timeInterval,
+                        userId: that.$store.state.uid
                     })
                 }).then(function (response) {
                     that.tableLoading = false;

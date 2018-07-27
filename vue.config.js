@@ -83,7 +83,7 @@ module.exports = {
         proxy:{   // string | Object
 
             // '/oceanobservation': {
-            //     target: 'http://110.86.21.246:8088',
+            //     target: 'hhttp://xmsoc.com:20500',
             //
             //     ws: true,
             //     changeOrigin: true
