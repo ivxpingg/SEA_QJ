@@ -40,7 +40,8 @@
         </div>
         <div class="right-panel"  :class="{'show': showPanel}">
             <div class="equipment-name">设备实时检测数据</div>
-            <div class="factor-select">
+            <div class="factor-select"
+                 v-if="equipmentInfo.equipmentType === 'equipment'">
                 <Select v-model="factor_select_value"
                         size="small" style="width: 120px;">
                     <Option v-for="item in chart1_selectData"
@@ -51,11 +52,14 @@
             <div ref="chart1"
                  class="chart"></div>
 
-            <div class="equipment-name">人工分析对比情况</div>
+            <div class="equipment-name">
+                {{equipmentInfo.equipmentType === 'equipment'? '人工分析对比情况' : '设备分析'}}
+            </div>
+
             <div ref="chart2"
                  class="chart"></div>
 
-            <div class="my-btn-panel">
+            <div class="my-btn-panel" v-show="equipmentInfo.equipmentType === 'equipment'">
                 <Button class="my-btn" type="info" v-if="edit" @click="onClick_modal_addComparison">添加人工数据对比</Button>
             </div>
         </div>
@@ -384,6 +388,9 @@
 
                 chart2: null,  // 雷达图
                 chart2_option: {
+                    legend: {
+                        data: []
+                    },
                     radar: {
                         indicator: [
                             // {name: '', max: 0}
@@ -807,20 +814,27 @@
                     var that = this;
                     that.chart1_option.xAxis.data = [];
                     that.chart1_option.series[0].data = [];
-                    val.forEach(function (v) {
 
-                        that.chart1_option.xAxis.data.push(v.collectionTime);
-                        that.chart1_option.series[0].data.push(parseFloat(v.quantValue));
+                    if (that.equipmentInfo.equipmentType === 'equipment') {
+                        val.forEach(function (v) {
+                            that.chart1_option.xAxis.data.push(v.collectionTime);
+                            that.chart1_option.series[0].data.push(parseFloat(v.quantValue));
+                        });
 
-                    });
+                        for (var i = 0; i < that.chart1_selectData.length; i++) {
 
-                    for (var i = 0; i < that.chart1_selectData.length; i++) {
+                            if (that.chart1_selectData[i].itemId === that.factor_select_value) {
 
-                        if (that.chart1_selectData[i].itemId === that.factor_select_value) {
-
-                            that.chart1_option.series[0].name = that.chart1_selectData[i].itemName;
-                            break;
+                                that.chart1_option.series[0].name = that.chart1_selectData[i].itemName;
+                                break;
+                            }
                         }
+                    }
+                    else if(that.equipmentInfo.equipmentType === 'instrument') {
+                        val.forEach(function (v) {
+                            that.chart1_option.xAxis.data.push(v.collectionTime);
+                            that.chart1_option.series[0].data.push(parseFloat(v.electric));
+                        });
                     }
 
                     that.chart1.setOption(that.chart1_option);
@@ -828,7 +842,6 @@
             },
             // 图表1 因子选择变化重新获取数据
             factor_select_value(val) {
-
                 this.getChart1_data();
             },
             chart_data2: {
@@ -840,15 +853,34 @@
                     that.chart2_option.series[0].data[0].value = [];
                     that.chart2_option.series[0].data[1].value = [];
 
-                    val.forEach(function (v) {
-                        that.chart2_option.radar.indicator.push({
-                            name: v.itemName,
-                            max: parseFloat(v.standardMax)
-                        });
+                    if (that.equipmentInfo.equipmentType === 'equipment') {
+                        that.chart2_option.legend.data = ['设备采集', '人工采集'];
 
-                        that.chart2_option.series[0].data[0].value.push(parseFloat(v.quantValue || 0));
-                        that.chart2_option.series[0].data[1].value.push(parseFloat(v.artificialData || 0));
-                    })
+                        val.forEach(function (v) {
+                            that.chart2_option.radar.indicator.push({
+                                name: v.itemName,
+                                max: parseFloat(v.standardMax)
+                            });
+
+                            that.chart2_option.series[0].data[0].value.push(parseFloat(v.quantValue || 0));
+                            that.chart2_option.series[0].data[0].name = '设备采集';
+                            that.chart2_option.series[0].data[1].value.push(parseFloat(v.artificialData || 0));
+                            that.chart2_option.series[0].data[1].name = '人工采集';
+                        })
+                    }
+                    else if (that.equipmentInfo.equipmentType === 'instrument') {
+                        that.chart2_option.legend.data = ['设备运行时长'];
+
+                        val.forEach(function (v) {
+                            that.chart2_option.radar.indicator.push({
+                                name: MOMENT(v.collectionTime).format('hh'),
+                                max: parseFloat(v.runTime)
+                            });
+
+                            that.chart2_option.series[0].data[0].value.push(parseFloat(v.useTime || 0));
+                            that.chart2_option.series[0].data[0].name = '设备运行时长';
+                        })
+                    }
 
                     that.chart2.setOption(that.chart2_option);
                 }
@@ -1058,21 +1090,36 @@
             getChartData() {
                 var that = this;
                 // 获取折线图因子选择数据
-                that.$http({
-                    method: 'get',
-                    url: '/panoramic/equipment/getItemIdInOneDay',
-                    params: {
-                        equipmentNo: that.equipmentInfo.equipmentNo
-                    }
-                }).then(function (response) {
-                    if(response.status === 1) {
-                        that.chart1_selectData = response.result;
-                        that.factor_select_value = response.result[0].itemId;
-                    }
 
-                }).catch(function (e) {
 
-                })
+                if (that.equipmentInfo.equipmentType === 'equipment') {
+                    that.$http({
+                        method: 'get',
+                        url: '/panoramic/equipment/getItemIdInOneDay',
+                        params: {
+                            equipmentNo: that.equipmentInfo.equipmentNo
+                        }
+                    }).then(function (response) {
+                        if(response.status === 1) {
+                            if(response.result.length > 0) {
+                                that.chart1_selectData = response.result;
+                                that.factor_select_value = response.result[0].itemId;
+                            }
+                            else {
+                                that.chart1_selectData = response.result;
+                                that.chart_data1 = [];
+                            }
+
+                        }
+
+                    }).catch(function (e) {
+
+                    })
+                }
+                else {
+                    that.getChart1_data();
+                }
+
 
                 // 获取雷达图数据
 

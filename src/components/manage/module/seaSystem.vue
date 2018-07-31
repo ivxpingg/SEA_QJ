@@ -257,50 +257,43 @@
                         align: 'center',
                         width: 300,
                         render(h, params) {
+                            var bList = [];
 
-                            return h('div', [
-                                // h('Button', {
-                                //     props: {
-                                //         type: 'text'
-                                //     },
-                                //     style: {
-                                //         textDecoration: 'underline'
-                                //     },
-                                //     on: {
-                                //         click() {
-                                //             that.onClick_table_edit(params.row);
-                                //         }
-                                //     }
-                                // }, '编辑'),
-
-                                h('Button', {
-                                    props: {
-                                        type: 'text'
-                                    },
-                                    style: {
-                                        textDecoration: 'underline'
-                                    },
-                                    on: {
-                                        click() {
-                                            that.onClick_table_add_analyze(params.row);
+                            if (params.row.equipmentType === 'equipment') {
+                                bList.push(
+                                    h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_table_add_analyze(params.row);
+                                            }
                                         }
-                                    }
-                                },  '开始分析'),
+                                    },  '开始分析')
+                                );
 
-                                h('Button', {
-                                    props: {
-                                        type: 'text'
-                                    },
-                                    style: {
-                                        textDecoration: 'underline'
-                                    },
-                                    on: {
-                                        click() {
-                                            that.onClick_table_look_analyze(params.row);
+                                bList.push(
+                                    h('Button', {
+                                        props: {
+                                            type: 'text'
+                                        },
+                                        style: {
+                                            textDecoration: 'underline'
+                                        },
+                                        on: {
+                                            click() {
+                                                that.onClick_table_look_analyze(params.row);
+                                            }
                                         }
-                                    }
-                                }, '查看分析'),
+                                    }, '查看分析')
+                                );
+                            }
 
+                            bList.push(
                                 h('Button', {
                                     props: {
                                         type: 'text'
@@ -314,8 +307,9 @@
                                         }
                                     }
                                 }, '删除')
+                            );
 
-                            ]);
+                            return h('div', bList);
                         }
                     }
 
@@ -651,7 +645,9 @@
                             else if (key === 'equipmentNo') {
                                 that.tableData_record_factory[idx].equipmentNo = v[key];
                             }
-                            else if (key === 'rn' || key === 'insTime') {}
+                            else if (key === 'rn' || key === 'insTime' || key === 'contrastRecordId') {
+                                that.tableData_record_factory[idx][key] = v[key];
+                            }
                             else {
 
                                 that.tableData_record_factory[idx][key.replace(/'/g, '') + '_max'] = v[key].split('|')[1];
@@ -685,6 +681,54 @@
                         }
 
                     });
+
+                    that.tableColumns_record.push({
+                        title: '操作',
+                        align: 'center',
+                        render(h, params) {
+                            return h('div',[
+                                        h('Button', {
+                                            props: {
+                                                type: 'text'
+                                            },
+                                            style: {
+                                                textDecoration: 'underline'
+                                            },
+                                            on: {
+                                                click(e) {
+                                                    e.stopPropagation();
+                                                    that.$Modal.confirm({
+                                                        title: '提示',
+                                                        content: '确定要删除<'+ params.row.equipmentName +'>分析？',
+                                                        onOk() {
+                                                            that.$http({
+                                                                method: 'get',
+                                                                url: '/panoramic/equipment/deleteRecord',
+                                                                params: {
+                                                                    contrastRecordId: params.row.contrastRecordId
+                                                                }
+                                                            }).then(function (response) {
+                                                                if (response.status === 1) {
+                                                                    that.$Message.success({
+                                                                        content: '删除成功!'
+                                                                    });
+                                                                    that.getEquipRecordList();
+                                                                }
+                                                                else {
+                                                                    that.$Message.error({
+                                                                        content: '删除失败!'
+                                                                    });
+                                                                }
+                                                            }).catch(function (e) {})
+                                                        }
+                                                    })
+                                                }
+                                            }
+                                        }, '删除')
+                                    ])
+                        }
+                    });
+
                     //
                     // console.dir(that.tableData_record_factory);
                     // console.dir(that.tableColumns_record);
