@@ -80,37 +80,42 @@
                         title: '可用存储',
                         key: 'hardDisk',
                         align: 'center'
-                    },{
+                    },
+                    {
                         title: '主机配置',
                         align: 'center',
                         render(h, params) {
-                            var text = params.row.serverName
-                                + ';CPU：' + params.row.cpu
-                                + ';内存：' + params.row.memory
-                                + ';系统盘：' + params.row.systemDisk
-                                + ';存储盘：' + params.row.hardDisk
-                                + ';宽带：' + params.row.bandWidth
+                            var text = (params.row.serverName || '')
+                                + ';CPU：' + (params.row.cpu || '')
+                                + ';内存：' + (params.row.memory || '')
+                                + ';系统盘：' + (params.row.systemDisk || '')
+                                + ';存储盘：' + (params.row.hardDisk || '')
+                                + ';宽带：' + (params.row.bandWidth || '')
                             return h('div', text);
                         }
-                    },{
+                    },
+                    {
                         title: 'IP地址',
                         key: 'ip',
                         align: 'center'
-                    },{
+                    },
+                    {
                         title: '剩余使用时间',
                         key: 'remainDays',
                         align: 'center',
                         render(h, params) {
-                            return h('div', params.row.remainDays + '天');
+                            return h('div', (params.row.remainDays || '') + '天');
                         }
-                    },{
+                    },
+                    {
                         title: '到期时间',
                         key: 'expiryTime',
                         align: 'center'
-                    },{
+                    },
+                    {
                         title: '操作',
                         align: 'center',
-                        width: '250',
+                        width: 250,
                         render(h, params) {
                             return h('div', [
                                 h('Button', {
@@ -126,19 +131,6 @@
                                         }
                                     }
                                 }, '续费'),
-                                // h('Button', {
-                                //     props: {
-                                //         type: 'text'
-                                //     },
-                                //     style: {
-                                //         textDecoration: 'underline'
-                                //     },
-                                //     on: {
-                                //         click() {
-                                //
-                                //         }
-                                //     }
-                                // }, '重置密码'),
                                 h('Button', {
                                     props: {
                                         type: 'text'
@@ -156,19 +148,21 @@
                         }
                     }
                 ],
-                tableData: [{
-                    serverName: '服务器',
-                    orderNum: '1',
-                    monitorStatus: '1',
-                    hardDisk: '1',
-                    ip: '192.168.1.1',
-                    remainDays: '5',
-                    expiryTime: '1',
-                    cpu: '2核',
-                    memory: '4G',
-                    systemDisk: '500G',
-                    bandWidth: '10Mbps'
-                }],
+                tableData: [
+                //     {
+                //     serverName: '服务器',
+                //     orderNum: '1',
+                //     monitorStatus: '1',
+                //     hardDisk: '1',
+                //     ip: '192.168.1.1',
+                //     remainDays: '5',
+                //     expiryTime: '1',
+                //     cpu: '2核',
+                //     memory: '4G',
+                //     systemDisk: '500G',
+                //     bandWidth: '10Mbps'
+                // }
+                ],
 
                 // 详情
                 modal_pay_serve_account: false,
@@ -176,7 +170,7 @@
                     {
                         type: 'index',
                         title: '序号',
-                        width: '80',
+                        width: 80,
                         align: 'center'
                     },
                     {

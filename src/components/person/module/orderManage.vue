@@ -364,7 +364,7 @@
                     {
                         title: '订单号',
                         key: 'orderNum',
-                        width: '130',
+                        width: 130,
                         align: 'center'
                     },{
                         title: '商品名称',
@@ -373,7 +373,7 @@
                     },{
                         title: '商品内容',
                         key: 'name',
-                        width: '220',
+                        width: 220,
                         align: 'center',
                         render(h, params){
                             var text = '';
@@ -397,7 +397,7 @@
                     },{
                         title: '账号信息',
                         key: 'totalPrice',
-                        width: '340',
+                        width: 340,
                         align: 'center',
                         render(h, params) {
                             var array_list = [], text = '';
@@ -474,7 +474,7 @@
                     {
                         type: 'index',
                         title: '序号',
-                        width: '80',
+                        width: 80,
                         align: 'center'
                     },
                     {
@@ -622,7 +622,7 @@
                     {
                         type: 'index',
                         title: '序号',
-                        width: '80',
+                        width: 80,
                         align: 'center'
                     },
                     {
@@ -790,6 +790,7 @@
                         orderId: row.orderId
                     }
                 }).then(function (response) {
+
                     if (response.status === 1) {
                         that.table_pay_data_detail.bandWidth = response.result.bandWidth || '';
                         that.table_pay_data_detail.chargeStandard = response.result.chargeStandard || '';
@@ -811,6 +812,8 @@
 
                         that.table_pay_data_detail.orderServerAccount = response.result.accountList || [];
                         that.table_pay_data_detail.orderRemarkList = response.result.orderRemarkList || [];
+
+                        // that.table_freeApply_data_account = response.result.accountList || [];
 
                     }
                     else {
@@ -876,7 +879,7 @@
                     }
                 }).then(function (response) {
                     if (response.status === 1) {
-                        // that.table_pay_data_detail.orderServerAccount = response.result.orderServerAccount || [];
+                        that.table_pay_data_detail.orderServerAccount = response.result.accountList || [];
                     }
                     else {
                     }

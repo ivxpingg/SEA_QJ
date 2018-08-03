@@ -113,6 +113,16 @@
                                v-model="add_serve_info.description"
                                placeholder="描述" />
                     </FormItem>
+                    <FormItem label="位置选择">
+                        <Select v-model="add_serve_info.showPosition"
+                                transfer
+                                style="width: 180px" placeholder="">
+                            <Option v-for="item in dict_showPosition"
+                                    :key="item.id"
+                                    :value="item.value"
+                                    :label="item.label"></Option>
+                        </Select>
+                    </FormItem>
                     <FormItem label="免费申请:" prop="freeApply">
                         <i-switch
                                 v-model="add_serve_info.freeApply"
@@ -188,6 +198,16 @@
                         <Input type="textarea"
                                v-model="update_serve_info.description"
                                placeholder="描述" />
+                    </FormItem>
+                    <FormItem label="位置选择">
+                        <Select v-model="update_serve_info.showPosition"
+                                transfer
+                                style="width: 180px" placeholder="">
+                            <Option v-for="item in dict_showPosition"
+                                    :key="item.id"
+                                    :value="item.value"
+                                    :label="item.label"></Option>
+                        </Select>
                     </FormItem>
                     <FormItem label="免费申请:" prop="freeApply">
                         <i-switch
@@ -405,6 +425,9 @@
                 ],
                 tableData: [],
 
+                // 字典 - 展示位置
+                dict_showPosition: [],
+
                 // 详情表格
                 modal_table_detail: false,
                 tableLoading_detail: false,
@@ -509,7 +532,8 @@
                     hardDisk: '',
                     chargeStandard: '',
                     description: '',
-                    freeApply: '0'
+                    freeApply: '0',
+                    showPosition: ''
                 },
 
                 // 上传服务器信息
@@ -540,6 +564,7 @@
             this.downloadUrl = window.location.origin + Config[Config.env].imgUrl + '/static/download/xlsx/服务器账号导入模板.xlsx';
 
             this.getTableData();
+            this.getDict();
         },
         methods: {
             datePicker_onChange(val) {
@@ -555,6 +580,23 @@
              */
             onPageNo_change(pageNo) {
                 this.searchParams.pageNo = pageNo;
+            },
+
+            getDict() {
+                var that = this;
+                this.$http({
+                    method: 'get',
+                    url: '/sys/dict/listData',
+                    params: {
+                        type: 'showPosition'
+                    }
+                }).then(function (response) {
+                    if (response.status === 1) {
+                        that.dict_showPosition = response.result;
+                    }
+                    else {
+                    }
+                }).catch(function (e) {})
             },
             /**
              * 获取表格数据
@@ -784,6 +826,7 @@
                         that.update_serve_info.chargeStandard = response.result.chargeStandard + '';
                         that.update_serve_info.description = response.result.description;
                         that.update_serve_info.freeApply = response.result.freeApply || '0';
+                        that.update_serve_info.showPosition = response.result.showPosition || '';
 
                         that.modal_update_serve = true;
                         that.getTableData();

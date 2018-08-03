@@ -6,15 +6,15 @@
               :animated="false"
               closable
               @on-tab-remove="handleTabRemove">
-            <TabPane label="云服务器订单" name="cloudServeManage" v-if="tabs.cloudServeManage"> <vCloudServeManage></vCloudServeManage> </TabPane>
+            <TabPane label="用户管理" name="userManage" v-if="tabs.userManage"><vUserManage></vUserManage></TabPane>
+            <TabPane label="服务器管理" name="serverManage" v-if="tabs.serverManage"><vServerManage></vServerManage></TabPane>
             <TabPane label="数据资源管理" name="dataResourceMange" v-if="tabs.dataResourceMange"> <vDataResourceMange></vDataResourceMange> </TabPane>
+            <TabPane label="云服务器订单" name="cloudServeManage" v-if="tabs.cloudServeManage"> <vCloudServeManage></vCloudServeManage> </TabPane>
             <TabPane label="行业数据订单" name="industryDataManage" v-if="tabs.industryDataManage"> <vIndustryDataManage></vIndustryDataManage> </TabPane>
             <TabPane label="发票申请管理" name="invoiceApplyManage" v-if="tabs.invoiceApplyManage"><vInvoiceApplyManage></vInvoiceApplyManage></TabPane>
-            <TabPane label="全景观测分析" name="seaSystem" v-if="tabs.seaSystem"><vSeaSystem></vSeaSystem></TabPane>
-            <TabPane label="服务器管理" name="serverManage" v-if="tabs.serverManage"><vServerManage></vServerManage></TabPane>
-            <TabPane label="轮播图管理" name="slideshowManage" v-if="tabs.slideshowManage"><vSlideshowManage></vSlideshowManage></TabPane>
-            <TabPane label="用户管理" name="userManage" v-if="tabs.userManage"><vUserManage></vUserManage></TabPane>
             <TabPane label="用户工单管理" name="userOrderManage" v-if="tabs.userOrderManage"><vUserOrderManage></vUserOrderManage></TabPane>
+            <TabPane label="轮播图管理" name="slideshowManage" v-if="tabs.slideshowManage"><vSlideshowManage></vSlideshowManage></TabPane>
+            <TabPane label="全景观测分析" name="seaSystem" v-if="tabs.seaSystem"><vSeaSystem></vSeaSystem></TabPane>
         </Tabs>
     </div>
 </template>

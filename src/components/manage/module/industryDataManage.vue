@@ -241,7 +241,7 @@
                     {
                         title: '订单号',
                         key: 'orderNum',
-                        width: '130',
+                        width: 130,
                         align: 'center'
                     },{
                         title: '申请单位名称',

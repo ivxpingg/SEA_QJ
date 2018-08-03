@@ -199,6 +199,8 @@
                 //     }]
                 // }];
 
+                that.$Spin.show();
+
                 that.$http({
                     method: 'get',
                     url: '/auth/userMenu',
@@ -209,10 +211,17 @@
                         token: that.$store.state.token
                     }
                 }).then(function (response) {
+                    that.$Spin.hide();
                     if (response.status === 1) {
+                        if (response.result.userMenu.length === 0) {
+                            that.$Message.info({
+                                content: '您没有相关菜单权限！'
+                            });
+                        }
                         that.menuData = response.result.userMenu;
                     }
                 }).catch(function (e) {
+                    that.$Spin.hide();
                    console.dir(e);
                 });
             },

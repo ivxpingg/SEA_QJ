@@ -391,6 +391,9 @@
                     legend: {
                         data: []
                     },
+                    tooltip: {
+                        position: []
+                    },
                     radar: {
                         indicator: [
                             // {name: '', max: 0}
@@ -854,6 +857,7 @@
                     that.chart2_option.series[0].data[1].value = [];
 
                     if (that.equipmentInfo.equipmentType === 'equipment') {
+                        that.chart2_option.tooltip.position = 'left';
                         that.chart2_option.legend.data = ['设备采集', '人工采集'];
 
                         val.forEach(function (v) {
@@ -869,16 +873,52 @@
                         })
                     }
                     else if (that.equipmentInfo.equipmentType === 'instrument') {
+
+                        that.chart2_option.tooltip.position = 'left';
                         that.chart2_option.legend.data = ['设备运行时长'];
+                        that.chart2_option.radar.indicator = [
+                                                                { name: '24', max: 60},
+                                                                { name: '23', max: 60},
+                                                                { name: '22', max: 60},
+                                                                { name: '21', max: 60},
+                                                                { name: '20', max: 60},
+                                                                { name: '19', max: 60},
+                                                                { name: '18', max: 60},
+                                                                { name: '17', max: 60},
+                                                                { name: '16', max: 60},
+                                                                { name: '15', max: 60},
+                                                                { name: '14', max: 60},
+                                                                { name: '13', max: 60},
+                                                                { name: '12', max: 60},
+                                                                { name: '11', max: 60},
+                                                                { name: '10', max: 60},
+                                                                { name: '09', max: 60},
+                                                                { name: '08', max: 60},
+                                                                { name: '07', max: 60},
+                                                                { name: '06', max: 60},
+                                                                { name: '05', max: 60},
+                                                                { name: '04', max: 60},
+                                                                { name: '03', max: 60},
+                                                                { name: '02', max: 60},
+                                                                { name: '01', max: 60}
+                                                            ];
 
-                        val.forEach(function (v) {
-                            that.chart2_option.radar.indicator.push({
-                                name: MOMENT(v.collectionTime).format('hh'),
-                                max: parseFloat(v.runTime)
-                            });
+                        that.chart2_option.series[0].data[0].value = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,];
+                        that.chart2_option.series[0].data[0].name = '设备运行时长';
 
-                            that.chart2_option.series[0].data[0].value.push(parseFloat(v.useTime || 0));
-                            that.chart2_option.series[0].data[0].name = '设备运行时长';
+                        that.chart2_option.series[0].data[1].value = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,];
+                        that.chart2_option.series[0].data[1].name = '设备使用时长';
+
+                        // 测试数据
+                       // that.chart2_option.series[0].data[0].value = [60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60];
+                       // that.chart2_option.series[0].data[1].value = [0,0,0,30,30,0,0,30,60,60,0,0,0,30,60,30,0,0,0,0,0,0,0,0];
+
+                        val.forEach(function (v, idx) {
+
+
+                           that.chart2_option.series[0].data[0].value[24-parseInt(MOMENT(v.collectionTime).format('H'))] = parseFloat(v.runTime || 0);
+                           that.chart2_option.series[0].data[1].value[24-parseInt(MOMENT(v.collectionTime).format('H'))] = parseFloat(v.useTime || 0);
+
                         })
                     }
 
@@ -942,6 +982,7 @@
                     },
                     grid: {
                         top: 20,
+                        left: 40,
                         bottom: 60
                     },
                     xAxis: {
@@ -1027,7 +1068,9 @@
                         show: false,
                         text: '基础雷达图'
                     },
-                    tooltip: {},
+                    tooltip: {
+                        postion: []
+                    },
                     legend: {
                         show: false,
                         data: ['设备采集', '人工采集']
@@ -1041,11 +1084,6 @@
                         },
                         indicator: [
                             // { name: '销售', max: 6500},
-                            // { name: '管理', max: 16000},
-                            // { name: '信息技术', max: 30000},
-                            // { name: '客服', max: 38000},
-                            // { name: '研发', max: 52000},
-                            // { name: '市场', max: 25000}
                         ],
                         splitArea: {
                             show: false

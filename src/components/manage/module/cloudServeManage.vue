@@ -388,7 +388,7 @@
                     {
                         title: '订单号',
                         key: 'orderNum',
-                        width: '130',
+                        width: 130,
                         align: 'center'
                     },{
                         title: '商品名称',
@@ -397,7 +397,7 @@
                     },{
                         title: '商品内容',
                         key: 'name',
-                        width: '220',
+                        width: 220,
                         align: 'center',
                         render(h, params){
                             var text = '';
@@ -421,7 +421,7 @@
                     },{
                         title: '账号信息',
                         key: 'totalPrice',
-                        width: '340',
+                        width: 340,
                         align: 'center',
                         render(h, params) {
                             var array_list = [], text = '';
@@ -703,7 +703,7 @@
                     {
                         title: '订单号',
                         key: 'orderNum',
-                        width: '130',
+                        width: 130,
                         align: 'center'
                     },{
                         title: '申请单位名称',
@@ -723,7 +723,7 @@
                         align: 'center'
                     },{
                         title: '商品内容',
-                        width: '220',
+                        width: 220,
                         align: 'center',
                         render(h, params){
                             var text = '';

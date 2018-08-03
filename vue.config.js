@@ -27,9 +27,10 @@ module.exports = {
     // configureWebpack: () => {},
     configureWebpack: config => {
         config.entry.app = ['babel-polyfill', './src/main.js'];
+
         if (process.env.NODE_ENV === 'production') {
             // 为生产环境修改配置...
-
+            config.devtool = '#source-map';
         } else {
             // 为开发环境修改配置...
         }
@@ -82,18 +83,18 @@ module.exports = {
         // 查阅 https://github.com/vuejs/vue-docs-zh-cn/blob/master/vue-cli/cli-service.md#configuring-proxy配置代理
         proxy:{   // string | Object
 
-            '/oceanobservation': {
-                target: 'hhttp://xmsoc.com:20500',
-
-                ws: true,
-                changeOrigin: true
-            }
             // '/oceanobservation': {
-            //     target: 'http://192.168.0.140:8080',
+            //     target: 'hhttp://xmsoc.com:20500',
             //
             //     ws: true,
             //     changeOrigin: true
             // }
+            '/oceanobservation': {
+                target: 'http://192.168.0.140:8080',
+
+                ws: true,
+                changeOrigin: true
+            }
         },
         before: app => {}
     },
