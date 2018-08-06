@@ -1718,6 +1718,7 @@
         overflow-y: auto;
         overflow-x: hidden;
         .gis-box {
+            min-height: 800px;
             height: 100%;
         }
 
@@ -1807,6 +1808,7 @@
             right: 0;
             bottom: 0;
             width: 314px;
+            min-height: 820px;
             background-color: #272b2f;
             transition: all 0.5s;
             transform: translate(314px, 0px);

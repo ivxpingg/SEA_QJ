@@ -468,10 +468,6 @@
                         render(h, params) {
                             return h('div', params.row.isFree ==='0' ? '支付购买':'免费申请');
                         }
-                    },{
-                        title: '备注',
-                        key: 'remark',
-                        align: 'center'
                     }
                 ],
                 tableData_detail: [],
