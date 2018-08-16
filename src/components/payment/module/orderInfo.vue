@@ -36,8 +36,16 @@
                     productName: '',
                     totalPrice: '0.00',
                     insTime: ''
-                }
+                },
+
+                // 循环调用, 判断订单是否待支付、已支付等。
+                circleTime: null
             };
+        },
+        destroyed() {
+            if (!!this.circleTime) {
+                clearInterval(this.circleTime);
+            }
         },
         created() {
             // this.orderId = this.$route.query.orderId || '';
@@ -113,6 +121,8 @@
             this.orderInfo.productName = this.serverName || '';
             this.orderInfo.totalPrice = this.totalPrice || '0.00';
             this.orderInfo.insTime = this.insTime || '';
+
+            this.getOrderStatus();
         },
         methods: {
             getOrderDetail() {
@@ -124,7 +134,6 @@
                         orderId: that.orderId
                     }
                 }).then(function (response) {
-
                     if (response.status === 1) {
                         that.orderInfo.orderNum = response.result.orderNum || '';
                         that.orderInfo.productName = response.result.serverName || '';
@@ -138,6 +147,53 @@
                     }
                 }).catch(function (e) {
                 });
+            },
+
+            // 获取订单支付状态
+            getOrderStatus() {
+                var that = this;
+                this.circleTime = setInterval(function () {
+                    that.$http({
+                        method: 'get',
+                        url: '/panoramic/serverOrder/pay',
+                        params: {
+                            orderId: that.orderId
+                        }
+                    }).then(function (response) {
+                        if (response.status === 1) {
+                            if (response.result.orderStatus === 'WaitPay') {
+
+                            }
+                            else if (response.result.orderStatus === 'Cancel') {
+                                that.$Modal.error({
+                                    title: '提示',
+                                    content: '该订单已取消,请重新下单！',
+                                    onOk() {
+                                        that.$router.push({
+                                            name: 'cloudService'
+                                        })
+                                    }
+                                })
+                            }
+                            else if (response.result.orderStatus === 'Pay') {
+                                that.$Modal.success({
+                                    title: '提示',
+                                    content: '订单支付成功！',
+                                    onOk() {
+                                        that.$router.push({
+                                            name: 'orderManage'
+                                        })
+                                    }
+                                })
+                            }
+                            else {
+
+                            }
+                        }
+                    }).catch(function (e) {
+
+                    })
+                }, 3000);
             }
         }
     }

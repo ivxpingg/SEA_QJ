@@ -9,7 +9,9 @@ let config = {
         imgUrl: '/oceanobservation',
         staticUrl: '/',
         baseUrl: '/',
-        path: '/'    // 用于设置cookie
+        path: '/',    // 用于设置cookie
+        manageLogUrl: 'http://xmsoc.com:20506/OCEANAM/logout',    // 后端登陆地址
+        personLogUrl: 'http://xmsoc.com:20507/OCEAN/api/login'    // 个人中心登陆地址
     },
     production: {
         // domain: 'http://localhost',
@@ -18,7 +20,9 @@ let config = {
         imgUrl: '/oceanobservation',
         staticUrl: '/qj/',
         baseUrl: '/qj/',
-        path: '/'    // 用于设置cookie
+        path: '/',   // 用于设置cookie
+        manageLogUrl: 'http://xmsoc.com:20506/OCEANAM/logout',
+        personLogUrl: 'http://xmsoc.com:20507/OCEAN/api/login'
     }
 };
 export default config;

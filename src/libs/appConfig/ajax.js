@@ -84,10 +84,10 @@ Ajax.interceptors.response.use(function (response) {
             okText: '登陆',
             onOk() {
                 if (window.location.href.indexOf('/manage') > 0) {
-                    window.location.href = 'http://218.5.80.6:8091/OCEANAM/logout';
+                    window.location.href = Config[Config.env].manageLogUrl;
                 }
                 else {
-                    var url = "http://218.5.80.6:8070/OCEAN/api/login?url=" + window.location.href.replace('#', '\%23');
+                    var url = Config[Config.env].personLogUrl + "?url=" + window.location.href.replace('#', '\%23');
                     window.location.href = url;
                 }
             }
@@ -109,10 +109,10 @@ Ajax.interceptors.response.use(function (response) {
             okText: '登陆',
             onOk() {
                 if (window.location.href.indexOf('/manage') > 0) {
-                    window.location.href = 'http://218.5.80.6:8091/OCEANAM/logout';
+                    window.location.href = Config[Config.env].manageLogUrl;
                 }
                 else {
-                    var url = "http://218.5.80.6:8070/OCEAN/api/login?url=" + window.location.href.replace('#', '\%23');
+                    var url = Config[Config.env].personLogUrl + "?url=" + window.location.href.replace('#', '\%23');
                     window.location.href = url;
                 }
             }

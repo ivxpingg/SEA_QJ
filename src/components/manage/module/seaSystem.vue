@@ -685,6 +685,8 @@
                     that.tableColumns_record.push({
                         title: '操作',
                         align: 'center',
+                        width: 120,
+                        fixed: 'right',
                         render(h, params) {
                             return h('div',[
                                         h('Button', {
@@ -731,7 +733,7 @@
 
                     //
                     // console.dir(that.tableData_record_factory);
-                    // console.dir(that.tableColumns_record);
+                    console.dir(that.tableColumns_record);
                 }
             }
         },
@@ -883,7 +885,7 @@
                         that.tableData = response.result.list;
 
                         if (that.searchParams_equipData.beginDate === '') {
-                            that.datePicker_default = [MOMENT(response.result.beginDate),MOMENT(response.result.endDate)];
+                            that.datePicker_default = [new Date(response.result.beginDate),new Date(response.result.endDate)];
                             that.searchParams_equipData.beginDate = response.result.beginDate;
                             that.searchParams_equipData.endDate = response.result.endDate;
                         }

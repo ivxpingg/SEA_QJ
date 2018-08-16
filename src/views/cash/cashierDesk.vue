@@ -57,6 +57,12 @@
             }
         },
         components: {vHeader, vOrderInfo, vBankPay, vQrcodePay},
+        mounted() {
+            // this.getOrderStatus();
+        },
+        methods: {
+
+        }
 
     }
 </script>

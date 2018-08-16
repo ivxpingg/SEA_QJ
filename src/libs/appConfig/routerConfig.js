@@ -8,6 +8,8 @@ import iView from 'iview';
 import Cookie from '../helpers/cookies';
 import Config from '../appConfig/config';
 
+import Ajax from './ajax';
+
 const Title = function(title) {
     title = title ? title + '' : '';
     window.document.title = title;
@@ -69,10 +71,45 @@ const routerConfig = function () {
                 Cookie.remove('syscode');
             }
 
+
+            if (to.query.type === '3') {
+                // 获取用户信息
+                new Promise((resolve => {
+                    Ajax({
+                        method: 'get',
+                        url: '/auth/getUserInfoById',
+                        params: {
+                            type: to.query.type,
+                            uid: to.query.uid,
+                            token: to.query.token
+                        }
+                    }).then(function(response) {
+                        if(response.status === 1) {
+                            Cookie.write('account', response.result.account, new Date().getTime() + addTimes, path);
+                        }
+                        resolve();
+
+                    }).catch(function (e) {
+
+                    })
+                })).then(function () {
+                    next({
+                        path: to.path
+                    });
+                }).catch(function () {
+                })
+            }
+            else {
+                next({
+                    path: to.path
+                });
+            }
+
+
             // next();s
-            next({
-                path: to.path
-            });
+            // next({
+            //     path: to.path
+            // });
         }
         else if (to.meta.requireAuth && Cookie.read('token') == null) {
 
@@ -81,53 +118,19 @@ const routerConfig = function () {
             }
 
             else if (to.path.indexOf('/manage') === 0) {
-                window.location.href = 'http://218.5.80.6:8091/OCEANAM/logout';
+                window.location.href =  Config[Config.env].manageLogUrl;
             }
 
             else {
                 var pUrl = window.location.origin + Config[Config.env].baseUrl + '\%23'+ to.path;
-                var url = "http://218.5.80.6:8070/OCEAN/api/login?url=" + pUrl;
+                var url = Config[Config.env].personLogUrl + "?url=" + pUrl;
                 window.location.href = url;
-                //
-                // next({
-                //     path: '/home/index'
-                // });
             }
 
         }
         else {
             next();
         }
-
-
-
-        // 目前没有拦截配置
-
-        // if (to.path === '/' || !to.meta.requireAuth) {
-        //     next();
-        //     return;
-        // }
-        //
-        //
-        // if (to.meta.requireAuth) {
-        //
-        //     if (store.state.token) {  // 通过vuex state获取当前的token是否存在
-        //         iView.LoadingBar.start();
-        //         next();
-        //     }
-        //     else {
-        //         next({
-        //             path: '/',
-        //             query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
-        //         });
-        //     }
-        // } else {
-        //     next({
-        //         path: '/',
-        //         query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
-        //     });
-        // }
-
 
     });
 

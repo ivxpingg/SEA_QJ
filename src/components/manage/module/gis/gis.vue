@@ -1587,7 +1587,7 @@
                     that.tableData = response.result.list;
 
                     if (that.datePicker_default.length === 0) {
-                        that.datePicker_default = [MOMENT(response.result.beginDate),MOMENT(response.result.endDate)];
+                        that.datePicker_default = [new Date(response.result.beginDate),new Date(response.result.endDate)];
                         that.searchParams_equipData.beginDate = response.result.beginDate;
                         that.searchParams_equipData.endDate = response.result.endDate;
                     }

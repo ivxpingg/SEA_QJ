@@ -61,7 +61,7 @@
                 Cookie.write('type', '', Date.now() - (86400000 * 7), path);
                 Cookie.write('syscode', '', Date.now() - (86400000 * 7), path);
 
-                window.location.href = 'http://218.5.80.6:8091/OCEANAM/logout';
+                window.location.href = Config[Config.env].manageLogUrl;
             },
 
             // 获取未读消息数据量

@@ -15,7 +15,8 @@
                      <!--v-show="showQrcode"-->
                      <!--alt="二维码">-->
                 <img class="img"
-                     src="./images/qr-code-img.png"
+                     :src="imgSrc"
+                     style="display: block; height: 130px; width: 130px;"
                      alt="二维码">
                 <div v-show="!showQrcode" class="btn-qr">
                     <Button type="success"
@@ -36,14 +37,11 @@
 
             <div class="support-app">
                 <i class="icon iconfont icon-weixinzhifu"
-                   @click="onClick_qrcode('WECHAT')"
-                   :class="{'active': qrcodeType === 'WECHAT'}"></i>
+                   @click="onClick_qrcode('Wechatpay')"
+                   :class="{'active': qrcodeType === 'Wechatpay'}"></i>
                 <i class="icon iconfont icon-zhifubao"
-                   @click="onClick_qrcode('ALIPAY')"
-                   :class="{'active': qrcodeType === 'ALIPAY'}"></i>
-                <!--<i class="icon iconfont icon-yinlian1193427easyiconnet"-->
-                   <!--@click="onClick_qrcode('yinlian')"-->
-                   <!--:class="{'active': qrcodeType === 'yinlian'}"></i>-->
+                   @click="onClick_qrcode('Alipay')"
+                   :class="{'active': qrcodeType === 'Alipay'}"></i>
             </div>
 
         </div>
@@ -55,30 +53,22 @@
         name: "qrcodePay",
         data() {
             return {
-                qrcodeType: 'WECHAT',
+                qrcodeType: 'Wechatpay',
                 qrcodeApp: [
                     {
-                        type: 'WECHAT',
+                        type: 'Wechatpay',
                         tip: '打开微信扫一扫直接付款'
                     },
                     {
-                        type: 'ALIPAY',
+                        type: 'Alipay',
                         tip: '打开支付宝扫一扫直接付款'
-                    },
-                    {
-                        type: 'yinlian',
-                        tip: '打开银联钱包扫一扫直接付款'
                     }
                 ],
-
                 orderInfo: {},
-
                 qrcodeUrl: {
-                    WECHAT: '',
-                    ALIPAY: '',
-                    yinlian: ''
+                    Wechatpay: '',
+                    Alipay: ''
                 },
-
                 showQrcode: false
             };
         },
@@ -101,7 +91,7 @@
         },
         computed: {
             imgSrc() {
-                return this.qrcodeUrl[this.qrcodeType];
+                return 'data:image/png;base64,' + this.qrcodeUrl[this.qrcodeType];
             },
             tipMsg() {
                 for(var i = 0; i < this.qrcodeApp.length; i++ ) {
@@ -113,31 +103,40 @@
             }
         },
         watch: {
-            qrcodeType() {
-                this.onClick_getQR();
-            }
+            // qrcodeType: {
+            //     immediate: true,
+            //     handler(val) {
+            //         this.onClick_getQR();
+            //     }
+            // }
+        },
+        mounted() {
+            this.onClick_getQR();
         },
         methods: {
             // 获取二维码
             onClick_getQR() {
                 var that = this;
-
                 that.$http({
                     method: 'get',
-                    url: '/panoramic/serverOrder/toPayment',
+                    url: '/panoramic/serverOrder/genQrPay',
+                    iLoading: true,
                     params: {
                         orderId: that.orderId,
-                        directPayType: that.qrcodeType,
-                        userId: that.$store.state.uid
+                        payType: that.qrcodeType
                     }
                 }).then(function (response) {
                     if (response.status === 1) {
-                        that.qrcodeUrl[that.qrcodeType] = response.result.payUrl;
+                        that.qrcodeUrl[that.qrcodeType] = response.result;
                         that.showQrcode = true;
                     }
-                    else {}
+                    else {
+                        that.$Message.error({
+                           content: '二维码获取失败！'
+                        });
+                    }
                 }).catch(function (e) {
-                    
+
                 })
             },
 
@@ -147,10 +146,9 @@
                     this.showQrcode = true;
                 }
                 this.qrcodeType = type;
-
-            },
-
-            getOrderInfo() {
+                if (this.qrcodeUrl[this.qrcodeType] === '') {
+                    this.onClick_getQR();
+                }
 
             }
         }
