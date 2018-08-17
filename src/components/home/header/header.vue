@@ -75,8 +75,13 @@
         },
         created() {
 
-            if(!!Cookie.read('uid') && !!Cookie.read('token') && !!Cookie.read('usertype')) {
-                this.userId = Cookie.read('uid');
+        },
+        beforeMount() {
+
+        },
+        mounted() {
+            if(!!Cookie.read('sea_qj_uid') && !!Cookie.read('sea_qj_token') && !!Cookie.read('sea_qj_usertype')) {
+                this.userId = Cookie.read('sea_qj_uid');
                 this.isLogin = true;
             }
             else {
@@ -84,8 +89,6 @@
                 this.isLogin = false;
             }
 
-        },
-        mounted() {
             if (this.$route.path === '/mapShow') {
                 this.$refs.menu1.className += ' active';
             }
@@ -141,9 +144,9 @@
                 });
             },
             onClick_layout() {
-                Cookie.remove('uid');
-                Cookie.remove('token');
-                Cookie.remove('usertype');
+                Cookie.remove('sea_qj_uid');
+                Cookie.remove('sea_qj_sea_qj_token');
+                Cookie.remove('sea_qj_usertype');
                 this.isLogin = false;
                 this.userId = '';
             },

@@ -28,11 +28,11 @@ new Vue({
     store: store,
     render: h => h(App),
     created() {
-        this.$store.commit('setToken', Cookie.read('token'));
-        this.$store.commit('setUid', Cookie.read('uid'));
-        this.$store.commit('setUsertype', Cookie.read('usertype'));
-        this.$store.commit('setType', Cookie.read('type'));
-        this.$store.commit('setSyscode', Cookie.read('syscode'));
+        this.$store.commit('setToken', Cookie.read('sea_qj_token'));
+        this.$store.commit('setUid', Cookie.read('sea_qj_uid'));
+        this.$store.commit('setUsertype', Cookie.read('sea_qj_usertype'));
+        this.$store.commit('setType', Cookie.read('sea_qj_type'));
+        this.$store.commit('setSyscode', Cookie.read('sea_qj_syscode'));
     },
     mounted() {}
 });

@@ -107,7 +107,10 @@
                 </Form>
             </div>
             <div slot="footer">
-                <Button type="primary" size="large" @click="onClick_add_dataResource">保存</Button>
+                <Button type="primary"
+                        :loading="modal_btn_loading"
+                        size="large"
+                        @click="onClick_add_dataResource">保存</Button>
             </div>
         </Modal>
 
@@ -234,6 +237,7 @@
                 ],
 
                 // 发布数据
+                modal_btn_loading: false,
                 modal_add_dataResource: false,
                 datePicker_add_default: [],
                 add_dataResource_info: {
@@ -573,7 +577,7 @@
                         that.$http({
                             method: 'post',
                             url: '/panoramic/industryData/add',
-                           // timeout: 5 * 60 * 1000,
+                            timeout: 10 * 60 * 1000,
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8'
                             },

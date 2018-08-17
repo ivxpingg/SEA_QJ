@@ -939,7 +939,7 @@
         methods: {
             gisInit() {
                 var that = this;
-                this.map = new BMap.Map('gis_box', {enableMapClick:false, minZoom:12,maxZoom:18});    // 创建Map实例,关闭底图可点功能
+                this.map = new BMap.Map('gis_box', {enableMapClick:false, minZoom:3,maxZoom:18});    // 创建Map实例,关闭底图可点功能
                 this.map.centerAndZoom(new BMap.Point(118.117348,24.552869), 13);  // 初始化地图,设置中心点坐标和地图级别
                 this.map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
 

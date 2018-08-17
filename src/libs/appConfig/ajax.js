@@ -97,11 +97,11 @@ Ajax.interceptors.response.use(function (response) {
 
     if (response.data.errCode === 'A0002') {
         var path = Config[Config.env].path;
-        Cookie.write('uid', '', Date.now() - (86400000 * 7), path);
-        Cookie.write('token', '', Date.now() - (86400000 * 7), path);
-        Cookie.write('usertype', '', Date.now() - (86400000 * 7), path);
-        Cookie.write('type', '', Date.now() - (86400000 * 7), path);
-        Cookie.write('syscode', '', Date.now() - (86400000 * 7), path);
+        Cookie.write('sea_qj_uid', '', Date.now() - (86400000 * 7), path);
+        Cookie.write('sea_qj_token', '', Date.now() - (86400000 * 7), path);
+        Cookie.write('sea_qj_usertype', '', Date.now() - (86400000 * 7), path);
+        Cookie.write('sea_qj_type', '', Date.now() - (86400000 * 7), path);
+        Cookie.write('sea_qj_syscode', '', Date.now() - (86400000 * 7), path);
 
         iView.Modal.info({
             title: '提示',

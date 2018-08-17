@@ -56,10 +56,10 @@
             },
             onClick_logout() {
                 var path = Config[Config.env].path;
-                Cookie.write('uid', '', Date.now() - (86400000 * 7), path);
-                Cookie.write('token', '', Date.now() - (86400000 * 7), path);
-                Cookie.write('type', '', Date.now() - (86400000 * 7), path);
-                Cookie.write('syscode', '', Date.now() - (86400000 * 7), path);
+                Cookie.write('sea_qj_uid', '', Date.now() - (86400000 * 7), path);
+                Cookie.write('sea_qj_sea_qj_token', '', Date.now() - (86400000 * 7), path);
+                Cookie.write('sea_qj_type', '', Date.now() - (86400000 * 7), path);
+                Cookie.write('sea_qj_syscode', '', Date.now() - (86400000 * 7), path);
 
                 window.location.href = Config[Config.env].manageLogUrl;
             },

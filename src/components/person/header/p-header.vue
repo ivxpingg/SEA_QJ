@@ -59,8 +59,8 @@
         },
         created() {
 
-            if(!!Cookie.read('uid') && !!Cookie.read('token') && !!Cookie.read('usertype')) {
-                this.userId = Cookie.read('uid');
+            if(!!Cookie.read('sea_qj_uid') && !!Cookie.read('sea_qj_token') && !!Cookie.read('sea_qj_usertype')) {
+                this.userId = Cookie.read('sea_qj_uid');
                 this.isLogin = true;
             }
             else {
@@ -121,9 +121,9 @@
             },
             onClick_logout() {
                 var path = Config[Config.env].path;
-                Cookie.write('uid', '', Date.now() - (86400000 * 7), path);
-                Cookie.write('token', '', Date.now() - (86400000 * 7), path);
-                Cookie.write('usertype', '', Date.now() - (86400000 * 7), path);
+                Cookie.write('sea_qj_uid', '', Date.now() - (86400000 * 7), path);
+                Cookie.write('sea_qj_token', '', Date.now() - (86400000 * 7), path);
+                Cookie.write('sea_qj_usertype', '', Date.now() - (86400000 * 7), path);
 
                 this.$router.push({
                     name: 'index'
