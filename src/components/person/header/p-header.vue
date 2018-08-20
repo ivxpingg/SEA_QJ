@@ -36,6 +36,9 @@
                     <li class="user-li user-li-logout">
                         <Button type="text" @click="onClick_logout">退出</Button>
                     </li>
+                    <li class="user-li user-li-logout">
+                        <Button type="text" icon="home" @click="onClick_backHome" title="返回首页"></Button>
+                    </li>
                 </ul>
 
             </div>
@@ -59,8 +62,9 @@
         },
         created() {
 
-            if(!!Cookie.read('sea_qj_uid') && !!Cookie.read('sea_qj_token') && !!Cookie.read('sea_qj_usertype')) {
-                this.userId = Cookie.read('sea_qj_uid');
+            if(!!this.$store.state.uid && !!this.$store.state.token && !!this.$store.state.usertype) {
+            //if(!!Cookie.read('sea_qj_uid') && !!Cookie.read('sea_qj_token') && !!Cookie.read('sea_qj_usertype')) {
+                this.userId = this.$store.state.uid;
                 this.isLogin = true;
             }
             else {
@@ -128,6 +132,10 @@
                 this.$router.push({
                     name: 'index'
                 });
+            },
+
+            onClick_backHome() {
+                window.location.href = Config[Config.env].homeSeaBaseUrl_person + '/OCEAN/login_default';
             },
 
             // 获取未读消息数据量

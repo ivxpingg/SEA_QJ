@@ -34,7 +34,6 @@ const routerConfig = function () {
         Title(to.meta.title);
         iView.LoadingBar.start();
 
-
         if (to.query.token !== undefined) {
             // 登陆有效期2个小时
             var addTimes = 2 * 60 * 60 * 1000;

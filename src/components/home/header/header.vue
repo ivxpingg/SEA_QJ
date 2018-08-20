@@ -80,8 +80,10 @@
 
         },
         mounted() {
-            if(!!Cookie.read('sea_qj_uid') && !!Cookie.read('sea_qj_token') && !!Cookie.read('sea_qj_usertype')) {
-                this.userId = Cookie.read('sea_qj_uid');
+
+            if(!!this.$store.state.uid && !!this.$store.state.token && !!this.$store.state.usertype) {
+            // if(!!Cookie.read('sea_qj_uid') && !!Cookie.read('sea_qj_token') && !!Cookie.read('sea_qj_usertype')) {
+                this.userId = this.$store.state.uid;
                 this.isLogin = true;
             }
             else {

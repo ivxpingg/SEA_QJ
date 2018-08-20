@@ -398,7 +398,7 @@
             onClick_freeApply_modal() {
                 var that = this;
 
-                if (!!this.$store.state.uid) {
+                if (!!this.$store.state.uid && !!this.$store.state.usertype) {
 
                     that.$http({
                         method: 'get',

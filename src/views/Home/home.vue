@@ -79,6 +79,9 @@
             },
             refreshIScroll(name) {
                 var that = this;
+
+                if (this.myScroll == null) { return;}
+
                 setTimeout(function(){
                     that.myScroll.refresh();
                 }, 100);

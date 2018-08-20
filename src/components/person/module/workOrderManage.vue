@@ -39,10 +39,12 @@
         <Modal v-model="modal_add_workOrder"
                title="添加工单" >
             <div>
-                <Form v-model="workOrderInfo" :label-width="80">
+                <Form v-model="workOrderInfo"
+                      :rules="workOrderInfo_rules"
+                      :label-width="80">
                     <FormItem label="选择产品" prop="orderId">
                         <Select v-model="workOrderInfo.orderId" placeholder="请选择产品">
-                            <Option v-for="item in serverList_bought"
+                            <Option v-for="item in filter_serverList_bought"
                                     :key="item.orderId"
                                     :value="item.orderId">{{item.serverName}}</Option>
                         </Select>
@@ -77,7 +79,7 @@
         data() {
             var that = this;
             return {
-                datePicker_default: [Moment().subtract(1, 'month'), Moment()],
+                datePicker_default: [new Date(Moment().subtract(1, 'month').format('YYYY-MM-DD')), new Date(Moment().format('YYYY-MM-DD'))],
 
                 searchParams: {
                     pageNo: 1, // 当前页
@@ -165,6 +167,9 @@
                     phone: '',
                     serverName: '',
                     userId: that.$store.state.uid
+                },
+                workOrderInfo_rules: {
+
                 }
             };
         },
@@ -189,8 +194,21 @@
             }
         },
         created() {
-            this.searchParams.startTime = this.datePicker_default[0].format('YYYY-MM-DD');
-            this.searchParams.endTime = this.datePicker_default[1].format('YYYY-MM-DD');
+            // this.searchParams.startTime = this.datePicker_default[0].format('YYYY-MM-DD');
+            // this.searchParams.endTime = this.datePicker_default[1].format('YYYY-MM-DD');
+        },
+        computed: {
+            // 过滤没有服务器IP的已购服务器产品
+            filter_serverList_bought() {
+                var list = [];
+
+                this.serverList_bought.forEach(function (val) {
+                    if(val.remoteAddress && val.remoteAddress.length > 0) {
+                        list.push(val);
+                    }
+                });
+                return list;
+            }
         },
         mounted() {
             this.getDict();

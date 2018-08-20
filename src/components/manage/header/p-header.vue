@@ -13,6 +13,11 @@
                         <i class="icon iconfont icon-tuichu"></i>
                         <div class="name">退出系统</div>
                     </li>
+                    <li @click="onClick_backHome">
+                        <Icon type="home"
+                              :size="30"></Icon>
+                        <div class="name">返回首页</div>
+                    </li>
                 </ul>
 
             </div>
@@ -62,6 +67,9 @@
                 Cookie.write('sea_qj_syscode', '', Date.now() - (86400000 * 7), path);
 
                 window.location.href = Config[Config.env].manageLogUrl;
+            },
+            onClick_backHome() {
+                window.location.href = Config[Config.env].homeSeaBaseUrl_manage + '/OCEANAM/nav/index';
             },
 
             // 获取未读消息数据量
