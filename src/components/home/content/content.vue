@@ -148,68 +148,6 @@
                         </div>
                     </div>
 
-                    <!--<div class="item">-->
-                        <!--<div class="img img-3"></div>-->
-                        <!--<div class="title">海洋水质数据</div>-->
-                        <!--<div class="attr">-->
-                            <!--<span class="label">数据数量</span>-->
-                            <!--<span class="value">1000条</span>-->
-                        <!--</div>-->
-                        <!--<div class="attr">-->
-                            <!--<span class="label">数据时效</span>-->
-                            <!--<span class="value">近2年</span>-->
-                        <!--</div>-->
-                        <!--<div class="attr">-->
-                            <!--<span class="label">数据格式</span>-->
-                            <!--<span class="value">EXCEL</span>-->
-                        <!--</div>-->
-                        <!--<div class="btn-panel">-->
-                            <!--<Button size="large">前往申请</Button>-->
-                        <!--</div>-->
-                    <!--</div>-->
-
-
-
-                    <!--<div class="item">-->
-                        <!--<div class="img img-4"></div>-->
-                        <!--<div class="title">海洋水质数据</div>-->
-                        <!--<div class="attr">-->
-                            <!--<span class="label">数据数量</span>-->
-                            <!--<span class="value">1000条</span>-->
-                        <!--</div>-->
-                        <!--<div class="attr">-->
-                            <!--<span class="label">数据时效</span>-->
-                            <!--<span class="value">近2年</span>-->
-                        <!--</div>-->
-                        <!--<div class="attr">-->
-                            <!--<span class="label">数据格式</span>-->
-                            <!--<span class="value">EXCEL</span>-->
-                        <!--</div>-->
-                        <!--<div class="btn-panel">-->
-                            <!--<Button size="large">前往申请</Button>-->
-                        <!--</div>-->
-                    <!--</div>-->
-
-                    <!--<div class="item">-->
-                        <!--<div class="img img-4"></div>-->
-                        <!--<div class="title">海洋水质数据</div>-->
-                        <!--<div class="attr">-->
-                            <!--<span class="label">数据数量</span>-->
-                            <!--<span class="value">1000条</span>-->
-                        <!--</div>-->
-                        <!--<div class="attr">-->
-                            <!--<span class="label">数据时效</span>-->
-                            <!--<span class="value">近2年</span>-->
-                        <!--</div>-->
-                        <!--<div class="attr">-->
-                            <!--<span class="label">数据格式</span>-->
-                            <!--<span class="value">EXCEL</span>-->
-                        <!--</div>-->
-                        <!--<div class="btn-panel">-->
-                            <!--<Button size="large">前往申请</Button>-->
-                        <!--</div>-->
-                    <!--</div>-->
-
                 </div>
             </div>
         </div>
@@ -472,15 +410,15 @@
                             float: left;
                             /*flex: 1;*/
                             margin-top: 20px;
-                            margin-left: 20px;
+                            margin-left: 12px;
                             padding:  24px 44px 42px;
                             width: 285px;
                             height: 390px;
                             border: 2px solid #ececec;
 
-                            &:nth-child(3n + 4) {
-                                margin-left: auto;
-                            }
+                            /*&:nth-child(3n + 4) {*/
+                                /*margin-left: auto;*/
+                            /*}*/
 
                             &:hover {
                                 //box-shadow: 0 -5px 3px #e6e6e6, 0 5px 3px #e6e6e6, 5px 0 3px #e6e6e6, -5px 0 3px #e6e6e6;

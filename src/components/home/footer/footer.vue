@@ -22,9 +22,9 @@
                 </div>
                 <div class="link-panel link-panel-4">
                     <div class="title">支持与服务</div>
-                    <span class="text">电话：400-123-1234</span>
-                    <span class="text">邮箱：123456789@qq.com</span>
-                    <span class="text">地址：厦门市思明区软件园二期125号</span>
+                    <span class="text">电话：0592-5937233</span>
+                    <span class="text">邮箱：xxg@xminfoport.com</span>
+                    <span class="text">地址：福建省厦门市思明区观日路44号软件园2期信息港大厦</span>
                 </div>
 
                 <div class="link-panel link-panel-5">
@@ -32,6 +32,7 @@
                     <div class="qr-img"></div>
                 </div>
             </div>
+            <div class="visitor">今日访问量：{{dayVisitCount}} 总访问量：{{totalVisitCount}}</div>
             <div class="cop">{{cop.copyrightYear}} {{cop.productName}} 版本:{{cop.version}}</div>
         </div>
     </div>
@@ -46,11 +47,15 @@
                     productName: '',
                     copyrightYear: '',
                     version: ''
-                }
+                },
+
+                dayVisitCount: 0,
+                totalVisitCount: 0
             };
         },
         mounted() {
             this.getData();
+            this.getVisitor();
         },
         methods: {
             getData() {
@@ -68,7 +73,20 @@
 
                     }
                 })
-            }
+            },
+
+            getVisitor() {
+                this.$http({
+                    method: 'get',
+                    url: '/sys/visitCount/getVisitCount'
+                }).then((response) => {
+                    if(response.status === 1) {
+                        this.dayVisitCount = response.result.dayVisitCount || 0;
+                        this.totalVisitCount = response.result.totalVisitCount || 0;
+                    }
+                })
+            },
+
         }
     }
 </script>
@@ -121,7 +139,8 @@
                     .qr-img {
                         width: 97px;
                         height: 97px;
-                        background: url('./images/qr-code-img.png') no-repeat center;
+                        background: url('./images/qr_code.png') no-repeat center;
+                        background-size: 97px;
                     }
 
                     &.link-panel-4 {
@@ -137,7 +156,13 @@
             }
             
             .cop {
-                margin-top: 86px;
+                text-align: center;
+                color: #9a9d9f;
+                font-size: 12px;
+            }
+
+            .visitor {
+                margin-top: 56px;
                 text-align: center;
                 color: #9a9d9f;
                 font-size: 12px;

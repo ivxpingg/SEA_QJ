@@ -15,8 +15,18 @@ export default {
         // console.log('created');
     },
     mounted() {
-
-
+        this.addVisitCount();
+    },
+    methods: {
+        addVisitCount() {
+            this.$http({
+                url: '/sys/visitCount/addVisitCount',
+                methods: 'get',
+                params: {
+                    sysCode: 'YFWQ'
+                }
+            })
+        }
     }
 }
 </script>
