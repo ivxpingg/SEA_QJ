@@ -10,7 +10,7 @@
                 <img class="image" :src="equipment_pictureUrl" alt="设备图片">
             </div>
             <div class="equipment-state">
-                <span class="text">{{equipmentStatus_label}}</span>
+                <span class="text" :class="{running: equipmentStatus_label === '运行中'}">{{equipmentStatus_label}}</span>
             </div>
             <div class="info-list">
                 <div class="item">
@@ -817,9 +817,11 @@
                     var that = this;
                     that.chart1_option.xAxis.data = [];
                     that.chart1_option.series[0].data = [];
+                    that.chart1_option.tooltip = {};
 
                     if (that.equipmentInfo.equipmentType === 'equipment') {
                         val.forEach(function (v) {
+                            that.chart1_option.tooltip.formatter = '{a}:{c}';
                             that.chart1_option.xAxis.data.push(v.collectionTime);
                             that.chart1_option.series[0].data.push(parseFloat(v.quantValue));
                         });
@@ -837,6 +839,8 @@
                         val.forEach(function (v) {
                             that.chart1_option.xAxis.data.push(v.collectionTime);
                             that.chart1_option.series[0].data.push(parseFloat(v.electric));
+                            that.chart1_option.series[0].name = '电流';
+                            that.chart1_option.tooltip.formatter = '{a}(mA):{c}';
                         });
                     }
 
@@ -939,7 +943,7 @@
         methods: {
             gisInit() {
                 var that = this;
-                this.map = new BMap.Map('gis_box', {enableMapClick:false, minZoom:3,maxZoom:18});    // 创建Map实例,关闭底图可点功能
+                this.map = new BMap.Map('gis_box', {enableMapClick:false, minZoom:3,maxZoom:24});    // 创建Map实例,关闭底图可点功能
                 this.map.centerAndZoom(new BMap.Point(118.117348,24.552869), 13);  // 初始化地图,设置中心点坐标和地图级别
                 this.map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
 
@@ -1139,6 +1143,7 @@
                         }
                     }).then(function (response) {
                         if(response.status === 1) {
+                            
                             if(response.result.length > 0) {
                                 that.chart1_selectData = response.result;
                                 that.factor_select_value = response.result[0].itemId;
@@ -1762,7 +1767,6 @@
             }
 
             .equipment-image {
-                height: 155px;
                 background-color: #75777a;
                 text-align: center;
                 overflow: hidden;
@@ -1783,6 +1787,11 @@
                     color: #b3b5b6;
                     line-height: 20px;
                     background-color: #6a6d6f;
+
+                    &.running {
+                        color: #FFF;
+                        background-color: #2b85e4;
+                    }
                 }
             }
             
