@@ -223,6 +223,7 @@
 
                 <div class="other-title">账号信息</div>
                 <Table border
+                       size="small"
                        :height="200"
                        :columns="table_accound_columns"
                        :data="table_freeApply_data_detail.orderServerAccount"></Table>
@@ -777,24 +778,10 @@
                 },
 
                 table_accound_columns: [
-                    {
-                        type: 'index',
-                        title: '序号',
-                        width: '80',
-                        align: 'center'
-                    },{
-                        title: '登陆IP',
-                        key: 'remoteAddress',
-                        align: 'center'
-                    },{
-                        title: '账号',
-                        key: 'account',
-                        align: 'center'
-                    },{
-                        title: '密码',
-                        key: 'password',
-                        align: 'center'
-                    }
+                    { type: 'index',title: '序号', width: 80, align: 'center'},
+                    { title: '登陆IP', key: 'remoteAddress', align: 'center' },
+                    { title: '账号', key: 'account', align: 'center' },
+                    { title: '密码', key: 'password', align: 'center'}
                 ],
 
                 // 查看附件窗口
